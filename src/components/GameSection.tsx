@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
@@ -36,6 +37,35 @@ export default function GameSection({
   onRobotTap, 
   onClaimDailyBonus 
 }: GameSectionProps) {
+  const [timeToFullEnergy, setTimeToFullEnergy] = useState('')
+
+  useEffect(() => {
+    if (!currentUser) return
+
+    const updateTimer = () => {
+      const missingEnergy = currentUser.gameStats.maxTaps - currentUser.gameStats.tapsLeft
+      if (missingEnergy <= 0) {
+        setTimeToFullEnergy('Полная')
+        return
+      }
+
+      const minutesLeft = missingEnergy * 3
+      const hours = Math.floor(minutesLeft / 60)
+      const minutes = minutesLeft % 60
+
+      if (hours > 0) {
+        setTimeToFullEnergy(`${hours}ч ${minutes}мин`)
+      } else {
+        setTimeToFullEnergy(`${minutes}мин`)
+      }
+    }
+
+    updateTimer()
+    const timer = setInterval(updateTimer, 60000) // Обновляем каждую минуту
+
+    return () => clearInterval(timer)
+  }, [currentUser])
+
   if (!currentUser) {
     return (
       <div className="text-center space-y-4">
@@ -95,6 +125,13 @@ export default function GameSection({
           <span className="text-primary">⚡</span>
         </div>
         <Progress value={(currentUser.gameStats.tapsLeft / currentUser.gameStats.maxTaps) * 100} className="h-3" />
+        <div className="text-center text-xs text-muted-foreground">
+          {currentUser.gameStats.tapsLeft < currentUser.gameStats.maxTaps ? (
+            <>До полного восстановления: {timeToFullEnergy}</>
+          ) : (
+            'Энергия полная!'
+          )}
+        </div>
       </div>
 
       <Button onClick={onClaimDailyBonus} className="w-full max-w-md bg-secondary hover:bg-secondary/90">
