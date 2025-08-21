@@ -3,6 +3,7 @@ import AuthForm from '@/components/AuthForm'
 import GameSection, { User, GameStats } from '@/components/GameSection'
 import ProfileSection from '@/components/ProfileSection'
 import UpgradesSection from '@/components/UpgradesSection'
+import AutoSection from '@/components/AutoSection'
 import WithdrawSection from '@/components/WithdrawSection'
 import RatingSection from '@/components/RatingSection'
 import TasksSection from '@/components/TasksSection'
@@ -232,6 +233,13 @@ export default function Index() {
           <UpgradesSection 
             currentUser={currentUser}
             onUpgradeRobot={handleUpgradeRobot}
+          />
+        )
+      case 'auto': 
+        return (
+          <AutoSection 
+            currentUser={currentUser}
+            onUpdateStats={updateUserStats}
           />
         )
       case 'withdraw': 

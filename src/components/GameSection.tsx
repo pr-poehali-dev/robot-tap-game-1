@@ -13,6 +13,11 @@ export interface GameStats {
   robotPower: number
   totalEarned: number
   lastDailyBonusTime?: string
+  autoTapData?: {
+    chargingStarted: number | null
+    activatedAt: number | null
+    expiresAt: number | null
+  }
 }
 
 export interface User {

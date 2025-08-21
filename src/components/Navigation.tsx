@@ -13,6 +13,7 @@ export default function Navigation({ activeTab, currentUser, onTabChange }: Navi
     { id: 'game', label: 'Игра', icon: 'Gamepad2' },
     { id: 'profile', label: 'Профиль', icon: 'User' },
     { id: 'upgrades', label: 'Улучшения', icon: 'Zap' },
+    { id: 'auto', label: 'Авто', icon: 'Bot' },
     { id: 'withdraw', label: 'Вывод', icon: 'Wallet' },
     { id: 'rating', label: 'Рейтинг', icon: 'Trophy' },
     { id: 'tasks', label: 'Задания', icon: 'CheckSquare' }
@@ -20,7 +21,7 @@ export default function Navigation({ activeTab, currentUser, onTabChange }: Navi
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border">
-      <div className="grid grid-cols-6 gap-1 p-2">
+      <div className="grid grid-cols-7 gap-1 p-2">
         {tabs.map((tab) => (
           <Button
             key={tab.id}
