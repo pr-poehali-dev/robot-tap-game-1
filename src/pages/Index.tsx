@@ -27,17 +27,27 @@ export default function Index() {
   }
 
   const handleRegister = () => {
-    if (!authForm.username || !authForm.email || !authForm.password) return
+    if (!authForm.username.trim() || !authForm.email.trim() || !authForm.password.trim()) {
+      alert('Заполните все поля')
+      return
+    }
+    
+    const users = JSON.parse(localStorage.getItem('robotGameUsers') || '[]')
+    const existingUser = users.find((u: User) => u.username === authForm.username.trim())
+    
+    if (existingUser) {
+      alert('Пользователь с таким именем уже существует')
+      return
+    }
     
     const newUser: User = {
       id: Date.now().toString(),
-      username: authForm.username,
-      email: authForm.email,
+      username: authForm.username.trim(),
+      email: authForm.email.trim(),
       gameStats: { ...initialGameStats },
       registeredAt: new Date().toISOString()
     }
     
-    const users = JSON.parse(localStorage.getItem('robotGameUsers') || '[]')
     users.push(newUser)
     localStorage.setItem('robotGameUsers', JSON.stringify(users))
     localStorage.setItem('currentUserId', newUser.id)
@@ -47,15 +57,20 @@ export default function Index() {
   }
 
   const handleLogin = () => {
-    if (!authForm.username || !authForm.password) return
+    if (!authForm.username.trim() || !authForm.password.trim()) {
+      alert('Заполните все поля')
+      return
+    }
     
     const users = JSON.parse(localStorage.getItem('robotGameUsers') || '[]')
-    const user = users.find((u: User) => u.username === authForm.username)
+    const user = users.find((u: User) => u.username === authForm.username.trim())
     
     if (user) {
       localStorage.setItem('currentUserId', user.id)
       setCurrentUser(user)
       setAuthForm({ username: '', email: '', password: '' })
+    } else {
+      alert('Пользователь не найден')
     }
   }
 
