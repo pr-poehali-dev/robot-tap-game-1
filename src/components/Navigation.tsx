@@ -31,7 +31,7 @@ export default function Navigation({ activeTab, currentUser, onTabChange }: Navi
             disabled={!currentUser && tab.id !== 'profile'}
           >
             <Icon name={tab.icon as any} size={18} />
-            <span className="text-xs mt-1">{tab.label}</span>
+            <span className="text-xs mt-1 hidden sm:block">{tab.label}</span>
           </Button>
         ))}
       </div>
