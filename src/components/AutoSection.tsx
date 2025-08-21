@@ -151,28 +151,28 @@ export default function AutoSection({ currentUser, onUpdateStats }: AutoSectionP
   const status = getAutoTapStatus()
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Icon name="Bot" />
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+            <Icon name="Bot" size={20} />
             Автоматический тап
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="text-center space-y-4">
-            <div className="w-32 h-32 mx-auto bg-gradient-to-b from-primary to-primary/80 rounded-full flex items-center justify-center">
-              <Icon name="Zap" size={64} className="text-white" />
+        <CardContent className="space-y-4">
+          <div className="text-center space-y-3">
+            <div className="w-24 h-24 sm:w-28 sm:h-28 mx-auto bg-gradient-to-b from-primary to-primary/80 rounded-full flex items-center justify-center">
+              <Icon name="Zap" size={40} className="text-white sm:w-12 sm:h-12" />
             </div>
             
-            <div className="space-y-2">
-              <h3 className="text-xl font-semibold">
+            <div className="space-y-1">
+              <h3 className="text-lg sm:text-xl font-semibold">
                 {autoTapStatus === 'inactive' && 'Автотап неактивен'}
                 {autoTapStatus === 'charging' && 'Зарядка автотапа'}
                 {autoTapStatus === 'active' && 'Автотап активен'}
               </h3>
               
-              <p className="text-muted-foreground">
+              <p className="text-sm text-muted-foreground">
                 {autoTapStatus === 'inactive' && 'Активируйте автотап для автоматического заработка'}
                 {autoTapStatus === 'charging' && `Автотап будет готов через: ${timeToAutoTap}`}
                 {autoTapStatus === 'active' && `Остается времени: ${timeToAutoTap}`}
@@ -180,9 +180,9 @@ export default function AutoSection({ currentUser, onUpdateStats }: AutoSectionP
             </div>
           </div>
 
-          <div className="bg-secondary/20 p-4 rounded-lg space-y-3">
-            <h4 className="font-semibold">Как работает автотап:</h4>
-            <div className="space-y-2 text-sm text-muted-foreground">
+          <div className="bg-secondary/20 p-3 rounded-lg space-y-2">
+            <h4 className="font-semibold text-sm">Как работает автотап:</h4>
+            <div className="space-y-1 text-xs text-muted-foreground">
               <div className="flex items-start gap-2">
                 <span className="text-primary">1.</span>
                 <span>Покупаете автотап за {AUTO_TAP_COST.toLocaleString()} монет</span>

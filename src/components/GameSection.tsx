@@ -124,18 +124,18 @@ export default function GameSection({
   }
 
   return (
-    <div className="flex flex-col items-center space-y-6">
-      <div className="grid grid-cols-2 gap-4 w-full max-w-md">
+    <div className="flex flex-col items-center space-y-3 sm:space-y-4">
+      <div className="grid grid-cols-2 gap-2 sm:gap-4 w-full">
         <Card className="bg-gradient-to-r from-primary/10 to-secondary/10">
-          <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-primary">{currentUser.gameStats.coins.toLocaleString()}</div>
-            <div className="text-sm text-muted-foreground">Монеты</div>
+          <CardContent className="p-2 sm:p-3 text-center">
+            <div className="text-lg sm:text-xl font-bold text-primary">{currentUser.gameStats.coins.toLocaleString()}</div>
+            <div className="text-xs sm:text-sm text-muted-foreground">Монеты</div>
           </CardContent>
         </Card>
         <Card className="bg-gradient-to-r from-secondary/10 to-primary/10">
-          <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-secondary">+{currentUser.gameStats.robotPower}</div>
-            <div className="text-sm text-muted-foreground">За тап</div>
+          <CardContent className="p-2 sm:p-3 text-center">
+            <div className="text-lg sm:text-xl font-bold text-secondary">+{currentUser.gameStats.robotPower}</div>
+            <div className="text-xs sm:text-sm text-muted-foreground">За тап</div>
           </CardContent>
         </Card>
       </div>
@@ -144,14 +144,14 @@ export default function GameSection({
         <Button
           onClick={onRobotTap}
           disabled={currentUser.gameStats.tapsLeft <= 0}
-          className={`w-64 h-64 rounded-full p-0 bg-gradient-to-b from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 border-4 border-primary/30 shadow-2xl ${
+          className={`w-48 h-48 sm:w-56 sm:h-56 rounded-full p-0 bg-gradient-to-b from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 border-4 border-primary/30 shadow-2xl ${
             isAnimating ? 'animate-tap-bounce' : ''
           }`}
         >
           <img 
             src="/img/61a04de9-f347-4c44-b1fb-99ec94268c4e.jpg" 
             alt="Робот" 
-            className="w-48 h-48 rounded-full object-cover"
+            className="w-36 h-36 sm:w-44 sm:h-44 rounded-full object-cover"
           />
         </Button>
       
@@ -166,12 +166,12 @@ export default function GameSection({
         ))}
       </div>
 
-      <div className="w-full max-w-md space-y-2">
-        <div className="flex justify-between text-sm">
+      <div className="w-full space-y-2">
+        <div className="flex justify-between text-xs sm:text-sm">
           <span>Энергия: {currentUser.gameStats.tapsLeft}/{currentUser.gameStats.maxTaps}</span>
           <span className="text-primary">⚡</span>
         </div>
-        <Progress value={(currentUser.gameStats.tapsLeft / currentUser.gameStats.maxTaps) * 100} className="h-3" />
+        <Progress value={(currentUser.gameStats.tapsLeft / currentUser.gameStats.maxTaps) * 100} className="h-2 sm:h-3" />
         <div className="text-center text-xs text-muted-foreground">
           {currentUser.gameStats.tapsLeft < currentUser.gameStats.maxTaps ? (
             <>До полного восстановления: {timeToFullEnergy}</>
@@ -184,9 +184,9 @@ export default function GameSection({
       <Button 
         onClick={onClaimDailyBonus} 
         disabled={!canClaimBonus}
-        className="w-full max-w-md bg-secondary hover:bg-secondary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full bg-secondary hover:bg-secondary/90 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base py-2 sm:py-3"
       >
-        <Icon name="Gift" className="mr-2" />
+        <Icon name="Gift" className="mr-2 w-4 h-4" />
         {canClaimBonus ? (
           `Получить дневной бонус: ${currentUser.gameStats.dailyBonus} монет`
         ) : (
