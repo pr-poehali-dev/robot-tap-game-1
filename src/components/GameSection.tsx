@@ -12,6 +12,7 @@ export interface GameStats {
   level: number
   robotPower: number
   totalEarned: number
+  lastDailyBonusTime?: string
 }
 
 export interface User {
@@ -38,6 +39,32 @@ export default function GameSection({
   onClaimDailyBonus 
 }: GameSectionProps) {
   const [timeToFullEnergy, setTimeToFullEnergy] = useState('')
+  const [timeToNextBonus, setTimeToNextBonus] = useState('')
+  const [canClaimBonus, setCanClaimBonus] = useState(true)
+
+  const getDailyBonusStatus = () => {
+    if (!currentUser?.gameStats.lastDailyBonusTime) {
+      return { canClaim: true, timeLeft: '' }
+    }
+
+    const lastBonusDate = new Date(currentUser.gameStats.lastDailyBonusTime)
+    const now = new Date()
+    const timeDiff = now.getTime() - lastBonusDate.getTime()
+    const dayInMs = 24 * 60 * 60 * 1000
+
+    if (timeDiff >= dayInMs) {
+      return { canClaim: true, timeLeft: '' }
+    }
+
+    const timeLeft = dayInMs - timeDiff
+    const hours = Math.floor(timeLeft / (60 * 60 * 1000))
+    const minutes = Math.floor((timeLeft % (60 * 60 * 1000)) / (60 * 1000))
+    
+    return { 
+      canClaim: false, 
+      timeLeft: hours > 0 ? `${hours}ч ${minutes}мин` : `${minutes}мин`
+    }
+  }
 
   useEffect(() => {
     if (!currentUser) return
@@ -64,6 +91,21 @@ export default function GameSection({
     const timer = setInterval(updateTimer, 60000) // Обновляем каждую минуту
 
     return () => clearInterval(timer)
+  }, [currentUser])
+
+  useEffect(() => {
+    if (!currentUser) return
+
+    const updateBonusStatus = () => {
+      const status = getDailyBonusStatus()
+      setCanClaimBonus(status.canClaim)
+      setTimeToNextBonus(status.timeLeft)
+    }
+
+    updateBonusStatus()
+    const bonusTimer = setInterval(updateBonusStatus, 60000) // Обновляем каждую минуту
+
+    return () => clearInterval(bonusTimer)
   }, [currentUser])
 
   if (!currentUser) {
@@ -134,9 +176,17 @@ export default function GameSection({
         </div>
       </div>
 
-      <Button onClick={onClaimDailyBonus} className="w-full max-w-md bg-secondary hover:bg-secondary/90">
+      <Button 
+        onClick={onClaimDailyBonus} 
+        disabled={!canClaimBonus}
+        className="w-full max-w-md bg-secondary hover:bg-secondary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
         <Icon name="Gift" className="mr-2" />
-        Получить дневной бонус: {currentUser.gameStats.dailyBonus} монет
+        {canClaimBonus ? (
+          `Получить дневной бонус: ${currentUser.gameStats.dailyBonus} монет`
+        ) : (
+          `Следующий бонус через: ${timeToNextBonus}`
+        )}
       </Button>
     </div>
   )

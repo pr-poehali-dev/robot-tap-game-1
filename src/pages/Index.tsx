@@ -123,10 +123,29 @@ export default function Index() {
   const handleClaimDailyBonus = () => {
     if (!currentUser) return
     
+    // Проверяем можно ли получить бонус
+    const lastBonusTime = currentUser.gameStats.lastDailyBonusTime
+    if (lastBonusTime) {
+      const lastBonusDate = new Date(lastBonusTime)
+      const now = new Date()
+      const timeDiff = now.getTime() - lastBonusDate.getTime()
+      const dayInMs = 24 * 60 * 60 * 1000
+      
+      if (timeDiff < dayInMs) {
+        const timeLeft = dayInMs - timeDiff
+        const hours = Math.floor(timeLeft / (60 * 60 * 1000))
+        const minutes = Math.floor((timeLeft % (60 * 60 * 1000)) / (60 * 1000))
+        const timeLeftStr = hours > 0 ? `${hours}ч ${minutes}мин` : `${minutes}мин`
+        alert(`Дневной бонус уже получен! Следующий бонус через: ${timeLeftStr}`)
+        return
+      }
+    }
+    
     const updatedStats = {
       ...currentUser.gameStats,
       coins: currentUser.gameStats.coins + currentUser.gameStats.dailyBonus,
-      totalEarned: currentUser.gameStats.totalEarned + currentUser.gameStats.dailyBonus
+      totalEarned: currentUser.gameStats.totalEarned + currentUser.gameStats.dailyBonus,
+      lastDailyBonusTime: new Date().toISOString()
     }
     
     updateUserStats(updatedStats)
