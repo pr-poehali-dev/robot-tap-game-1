@@ -20,6 +20,12 @@ export default function AuthForm({
   onRegister, 
   onModeChange 
 }: AuthFormProps) {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    console.log('Form submitted:', authMode)
+    authMode === 'login' ? onLogin() : onRegister()
+  }
+
   return (
     <div className="max-w-md mx-auto space-y-6">
       <Card>
@@ -33,7 +39,7 @@ export default function AuthForm({
             </p>
           </div>
 
-          <div className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <Label htmlFor="username">Имя пользователя</Label>
               <Input
@@ -69,25 +75,50 @@ export default function AuthForm({
             </div>
 
             <Button 
-              onClick={authMode === 'login' ? onLogin : onRegister}
-              onTouchStart={() => {}} 
-              className="w-full touch-manipulation select-none active:scale-95 transition-transform"
-              type="button"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                console.log('Button clicked:', authMode)
+                authMode === 'login' ? onLogin() : onRegister()
+              }}
+              onTouchStart={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+              }}
+              onTouchEnd={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                console.log('Touch button clicked:', authMode)
+                authMode === 'login' ? onLogin() : onRegister()
+              }}
+              className="w-full touch-manipulation select-none active:scale-95 transition-transform bg-primary hover:bg-primary/90 text-white font-medium py-3"
+              type="submit"
             >
               {authMode === 'login' ? 'Войти' : 'Зарегистрироваться'}
             </Button>
 
             <Button 
               variant="ghost"
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                console.log('Switch mode clicked')
                 onModeChange(authMode === 'login' ? 'register' : 'login')
                 onAuthFormChange({ username: '', email: '', password: '' })
               }}
-              className="w-full"
+              onTouchEnd={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                console.log('Switch mode touch clicked')
+                onModeChange(authMode === 'login' ? 'register' : 'login')
+                onAuthFormChange({ username: '', email: '', password: '' })
+              }}
+              className="w-full hover:bg-secondary/10 text-muted-foreground hover:text-foreground transition-colors py-3"
+              type="button"
             >
               {authMode === 'login' ? 'Нет аккаунта? Регистрация' : 'Есть аккаунт? Войти'}
             </Button>
-          </div>
+          </form>
         </CardContent>
       </Card>
     </div>
