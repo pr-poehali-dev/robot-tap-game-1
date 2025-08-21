@@ -70,7 +70,9 @@ export default function AuthForm({
 
             <Button 
               onClick={authMode === 'login' ? onLogin : onRegister}
-              className="w-full"
+              onTouchStart={() => {}} 
+              className="w-full touch-manipulation select-none active:scale-95 transition-transform"
+              type="button"
             >
               {authMode === 'login' ? 'Войти' : 'Зарегистрироваться'}
             </Button>
