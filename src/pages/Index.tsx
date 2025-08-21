@@ -13,6 +13,10 @@ export default function Index() {
   const [currentUser, setCurrentUser] = useState<User | null>(null)
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login')
   const [authForm, setAuthForm] = useState({ username: '', email: '', password: '' })
+
+  useEffect(() => {
+    document.title = 'YaTitan - Робот кликер'
+  }, [])
   const [isAnimating, setIsAnimating] = useState(false)
   const [coinAnimations, setCoinAnimations] = useState<Array<{ id: number; x: number; y: number }>>([])
 
