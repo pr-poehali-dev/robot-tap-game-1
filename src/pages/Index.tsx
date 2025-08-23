@@ -108,11 +108,14 @@ export default function Index() {
     setIsAnimating(true)
     setCoinAnimations(prev => [...prev, { id: Date.now(), x, y }])
     
+    const newTapsLeft = currentUser.gameStats.tapsLeft - 1
     const updatedStats = {
       ...currentUser.gameStats,
       coins: currentUser.gameStats.coins + currentUser.gameStats.robotPower,
-      tapsLeft: currentUser.gameStats.tapsLeft - 1,
-      totalEarned: currentUser.gameStats.totalEarned + currentUser.gameStats.robotPower
+      tapsLeft: newTapsLeft,
+      totalEarned: currentUser.gameStats.totalEarned + currentUser.gameStats.robotPower,
+      // Если энергия заканчивается, устанавливаем время истощения
+      energyDepletedAt: newTapsLeft <= 0 ? Date.now() : currentUser.gameStats.energyDepletedAt
     }
     
     updateUserStats(updatedStats)
@@ -186,16 +189,29 @@ export default function Index() {
       const users = JSON.parse(localStorage.getItem('robotGameUsers') || '[]')
       const userIndex = users.findIndex((u: User) => u.id === currentUser.id)
       if (userIndex !== -1) {
-        const updatedStats = {
-          ...users[userIndex].gameStats,
-          tapsLeft: Math.min(users[userIndex].gameStats.tapsLeft + 1, users[userIndex].gameStats.maxTaps)
-        }
+        const now = Date.now()
+        const user = users[userIndex]
         
-        users[userIndex] = { ...users[userIndex], gameStats: updatedStats }
-        localStorage.setItem('robotGameUsers', JSON.stringify(users))
-        setCurrentUser(users[userIndex])
+        // Проверяем, нужно ли восстановить энергию после 5 часов
+        if (user.gameStats.energyDepletedAt) {
+          const timeSinceDepletion = now - user.gameStats.energyDepletedAt
+          const fiveHours = 5 * 60 * 60 * 1000
+          
+          if (timeSinceDepletion >= fiveHours) {
+            // Восстанавливаем энергию полностью
+            const updatedStats = {
+              ...user.gameStats,
+              tapsLeft: user.gameStats.maxTaps,
+              energyDepletedAt: null
+            }
+            
+            users[userIndex] = { ...user, gameStats: updatedStats }
+            localStorage.setItem('robotGameUsers', JSON.stringify(users))
+            setCurrentUser(users[userIndex])
+          }
+        }
       }
-    }, 180000)
+    }, 1000) // Проверяем каждую секунду
     
     return () => clearInterval(timer)
   }, [currentUser])

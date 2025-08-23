@@ -13,6 +13,7 @@ export interface GameStats {
   robotPower: number
   totalEarned: number
   lastDailyBonusTime?: string
+  energyDepletedAt?: number | null
   autoTapData?: {
     chargingStarted: number | null
     activatedAt: number | null
@@ -75,25 +76,42 @@ export default function GameSection({
     if (!currentUser) return
 
     const updateTimer = () => {
-      const missingEnergy = currentUser.gameStats.maxTaps - currentUser.gameStats.tapsLeft
-      if (missingEnergy <= 0) {
+      const now = Date.now()
+      
+      // Если энергия полная
+      if (currentUser.gameStats.tapsLeft >= currentUser.gameStats.maxTaps) {
         setTimeToFullEnergy('Полная')
         return
       }
 
-      const minutesLeft = missingEnergy * 3
-      const hours = Math.floor(minutesLeft / 60)
-      const minutes = minutesLeft % 60
+      // Если энергия истощена и установлена метка времени
+      if (currentUser.gameStats.energyDepletedAt) {
+        const restoreTime = currentUser.gameStats.energyDepletedAt + (5 * 60 * 60 * 1000) // 5 часов в миллисекундах
+        
+        if (now >= restoreTime) {
+          setTimeToFullEnergy('Готово к восстановлению')
+          return
+        }
 
-      if (hours > 0) {
-        setTimeToFullEnergy(`${hours}ч ${minutes}мин`)
-      } else {
-        setTimeToFullEnergy(`${minutes}мин`)
+        const timeLeft = restoreTime - now
+        const hours = Math.floor(timeLeft / (60 * 60 * 1000))
+        const minutes = Math.floor((timeLeft % (60 * 60 * 1000)) / (60 * 1000))
+        const seconds = Math.floor((timeLeft % (60 * 1000)) / 1000)
+
+        if (hours > 0) {
+          setTimeToFullEnergy(`${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`)
+        } else {
+          setTimeToFullEnergy(`${minutes}:${seconds.toString().padStart(2, '0')}`)
+        }
+        return
       }
+
+      // Если нет метки времени истощения, но энергия не полная
+      setTimeToFullEnergy('Восстанавливается...')
     }
 
     updateTimer()
-    const timer = setInterval(updateTimer, 60000) // Обновляем каждую минуту
+    const timer = setInterval(updateTimer, 1000) // Обновляем каждую секунду для точности
 
     return () => clearInterval(timer)
   }, [currentUser])
