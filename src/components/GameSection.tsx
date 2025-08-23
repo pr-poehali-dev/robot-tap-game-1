@@ -4,32 +4,11 @@ import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import Icon from '@/components/ui/icon'
 import StatsHeader from './StatsHeader'
+import { User, GameStats } from '@/types/user'
 
-export interface GameStats {
-  coins: number
-  dailyBonus: number
-  tapsLeft: number
-  maxTaps: number
-  level: number
-  robotPower: number
-  totalEarned: number
-  lastDailyBonusTime?: string
-  energyDepletedAt?: number | null
-  autoTapData?: {
-    chargingStarted: number | null
-    activatedAt: number | null
-    expiresAt: number | null
-  }
-}
 
-export interface User {
-  id: string
-  username: string
-  email: string
-  password: string
-  gameStats: GameStats
-  registeredAt: string
-}
+
+
 
 interface GameSectionProps {
   currentUser: User | null

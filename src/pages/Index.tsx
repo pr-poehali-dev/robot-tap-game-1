@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import AuthForm from '@/components/AuthForm'
-import GameSection, { User, GameStats } from '@/components/GameSection'
+import GameSection from '@/components/GameSection'
+import { User, GameStats } from '@/types/user'
 import ProfileSection from '@/components/ProfileSection'
 import UpgradesSection from '@/components/UpgradesSection'
 import AutoSection from '@/components/AutoSection'
