@@ -198,6 +198,9 @@ export default function GameSection({
     )
   }
 
+  const isVIP = localStorage.getItem(`vipStatus_${currentUser.id}`) === 'true'
+  const hasUnlimitedEnergy = localStorage.getItem(`unlimitedEnergy_${currentUser.id}`) === 'true'
+
   return (
     <div className="flex flex-col items-center space-y-3 sm:space-y-4">
       <StatsHeader 
@@ -252,23 +255,15 @@ export default function GameSection({
         <p className="text-xs text-muted-foreground">
           Мощность тапа: {currentUser.gameStats.robotPower} × {currentRobot.tapPower} = {currentUser.gameStats.robotPower * currentRobot.tapPower} монет
         </p>
-        {(() => {
-          const hasUnlimitedEnergy = localStorage.getItem(`unlimitedEnergy_${currentUser.id}`) === 'true'
-          if (hasUnlimitedEnergy) {
-            return (
-              <p className="text-xs text-purple-600 font-medium">
-                ⚡ Безлимитная энергия: восстановление 15 минут
-              </p>
-            )
-          } else if (isVIP) {
-            return (
-              <p className="text-xs text-yellow-600 font-medium">
-                ⚡ VIP восстановление энергии: 1 час вместо 5 часов
-              </p>
-            )
-          }
-          return null
-        })()}
+        {hasUnlimitedEnergy ? (
+          <p className="text-xs text-purple-600 font-medium">
+            ⚡ Безлимитная энергия: восстановление 15 минут
+          </p>
+        ) : isVIP ? (
+          <p className="text-xs text-yellow-600 font-medium">
+            ⚡ VIP восстановление энергии: 1 час вместо 5 часов
+          </p>
+        ) : null}
       </div>
 
       <div className="w-full space-y-2">
