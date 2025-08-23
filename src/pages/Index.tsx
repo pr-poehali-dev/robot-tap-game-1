@@ -10,7 +10,7 @@ import TasksSection from '@/components/TasksSection'
 import Navigation from '@/components/Navigation'
 
 export default function Index() {
-  const [activeTab, setActiveTab] = useState('withdraw')
+  const [activeTab, setActiveTab] = useState('game')
   const [currentUser, setCurrentUser] = useState<User | null>(null)
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login')
   const [authForm, setAuthForm] = useState({ username: '', email: '', password: '' })
@@ -227,6 +227,7 @@ export default function Index() {
             onRobotTap={handleRobotTap}
             onClaimDailyBonus={handleClaimDailyBonus}
             onAutoTapClick={() => setActiveTab('auto')}
+            onWithdrawClick={() => setActiveTab('withdraw')}
           />
         )
       case 'profile': 

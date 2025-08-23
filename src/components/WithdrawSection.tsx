@@ -16,7 +16,7 @@ export default function WithdrawSection({ currentUser, onAutoTapClick }: Withdra
 
   return (
     <div className="space-y-6">
-      <StatsHeader currentUser={currentUser} onAutoTapClick={onAutoTapClick} />
+      <StatsHeader currentUser={currentUser} onAutoTapClick={onAutoTapClick} onWithdrawClick={() => {}} />
       <Card>
         <CardContent className="p-6 text-center">
           <h2 className="text-2xl font-bold mb-4">Вывод средств</h2>
