@@ -19,6 +19,34 @@ export default function Index() {
   useEffect(() => {
     document.title = 'YaTitan - Робот кликер'
   }, [])
+
+  // Отслеживание активности пользователя
+  useEffect(() => {
+    const updateActivity = () => {
+      if (currentUser) {
+        localStorage.setItem(`lastActivity_${currentUser.id}`, Date.now().toString())
+      }
+    }
+
+    // Обновляем активность при загрузке
+    updateActivity()
+
+    // Обновляем активность каждые 30 секунд
+    const interval = setInterval(updateActivity, 30000)
+
+    // Обновляем активность при различных событиях
+    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart']
+    events.forEach(event => {
+      document.addEventListener(event, updateActivity, true)
+    })
+
+    return () => {
+      clearInterval(interval)
+      events.forEach(event => {
+        document.removeEventListener(event, updateActivity, true)
+      })
+    }
+  }, [currentUser])
   const [isAnimating, setIsAnimating] = useState(false)
   const [coinAnimations, setCoinAnimations] = useState<Array<{ id: number; x: number; y: number }>>([])
 
