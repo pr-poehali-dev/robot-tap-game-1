@@ -43,14 +43,16 @@ export default function ProfileSection({ currentUser, onLogout }: ProfileSection
       </div>
 
       <div className="space-y-3">
-        <Button 
-          onClick={() => window.location.href = '/admin'} 
-          variant="outline" 
-          className="w-full"
-        >
-          <Icon name="Shield" className="mr-2" />
-          Админка (тест)
-        </Button>
+        {currentUser.username === 'admin' && (
+          <Button 
+            onClick={() => window.location.href = '/admin'} 
+            variant="outline" 
+            className="w-full"
+          >
+            <Icon name="Shield" className="mr-2" />
+            Админка (тест)
+          </Button>
+        )}
         
         <Button onClick={onLogout} variant="destructive" className="w-full">
           <Icon name="LogOut" className="mr-2" />
