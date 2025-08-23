@@ -22,7 +22,7 @@ export default function LeaderboardTab({ currentUser }: LeaderboardTabProps) {
     <div className="space-y-3">
       <h3 className="font-semibold text-center">🏆 Топ игроков</h3>
       {leaderboard.map(user => (
-        <Card key={user.id} className={user.id === currentUser.id ? 'border-blue-300 bg-blue-50' : ''}>
+        <Card key={user.id} className={user.id === currentUser.id ? 'border-blue-500 bg-blue-50' : ''}>
           <CardContent className="p-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -34,18 +34,26 @@ export default function LeaderboardTab({ currentUser }: LeaderboardTabProps) {
                   #{user.rank}
                 </span>
                 <div>
-                  <p className="font-medium">
+                  <p className={`font-medium ${
+                    user.id === currentUser.id ? 'text-blue-800' : 'text-foreground'
+                  }`}>
                     {user.username}
                     {user.id === currentUser.id && ' (Вы)'}
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className={`text-xs ${
+                    user.id === currentUser.id ? 'text-blue-600' : 'text-muted-foreground'
+                  }`}>
                     Уровень {user.gameStats.level}
                   </p>
                 </div>
               </div>
               <div className="text-right">
-                <p className="font-semibold">{user.gameStats.totalEarned.toLocaleString()}</p>
-                <p className="text-xs text-muted-foreground">монет заработано</p>
+                <p className={`font-semibold ${
+                  user.id === currentUser.id ? 'text-blue-800' : 'text-foreground'
+                }`}>{user.gameStats.totalEarned.toLocaleString()}</p>
+                <p className={`text-xs ${
+                  user.id === currentUser.id ? 'text-blue-600' : 'text-muted-foreground'
+                }`}>монет заработано</p>
               </div>
             </div>
           </CardContent>
