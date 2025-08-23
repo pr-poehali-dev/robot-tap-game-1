@@ -2,18 +2,21 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import Icon from '@/components/ui/icon'
 import { User } from './GameSection'
+import StatsHeader from './StatsHeader'
 
 interface WithdrawSectionProps {
   currentUser: User | null
+  onAutoTapClick: () => void
 }
 
-export default function WithdrawSection({ currentUser }: WithdrawSectionProps) {
+export default function WithdrawSection({ currentUser, onAutoTapClick }: WithdrawSectionProps) {
   if (!currentUser) {
     return null
   }
 
   return (
     <div className="space-y-6">
+      <StatsHeader currentUser={currentUser} onAutoTapClick={onAutoTapClick} />
       <Card>
         <CardContent className="p-6 text-center">
           <h2 className="text-2xl font-bold mb-4">Вывод средств</h2>

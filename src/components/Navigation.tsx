@@ -13,14 +13,13 @@ export default function Navigation({ activeTab, currentUser, onTabChange }: Navi
     { id: 'game', label: 'Игра', icon: 'Gamepad2' },
     { id: 'profile', label: 'Профиль', icon: 'User' },
     { id: 'upgrades', label: 'Улучшения', icon: 'Zap' },
-    { id: 'withdraw', label: 'Вывод', icon: 'Wallet' },
     { id: 'rating', label: 'Рейтинг', icon: 'Trophy' },
     { id: 'tasks', label: 'Задания', icon: 'CheckSquare' }
   ]
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border">
-      <div className="grid grid-cols-6 gap-0.5 sm:gap-1 p-1 sm:p-2">
+      <div className="grid grid-cols-5 gap-0.5 sm:gap-1 p-1 sm:p-2">
         {tabs.map((tab) => (
           <Button
             key={tab.id}

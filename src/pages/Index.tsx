@@ -10,7 +10,7 @@ import TasksSection from '@/components/TasksSection'
 import Navigation from '@/components/Navigation'
 
 export default function Index() {
-  const [activeTab, setActiveTab] = useState('game')
+  const [activeTab, setActiveTab] = useState('withdraw')
   const [currentUser, setCurrentUser] = useState<User | null>(null)
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login')
   const [authForm, setAuthForm] = useState({ username: '', email: '', password: '' })
@@ -260,7 +260,7 @@ export default function Index() {
           />
         )
       case 'withdraw': 
-        return <WithdrawSection currentUser={currentUser} />
+        return <WithdrawSection currentUser={currentUser} onAutoTapClick={() => setActiveTab('auto')} />
       case 'rating': 
         return <RatingSection currentUser={currentUser} />
       case 'tasks': 
