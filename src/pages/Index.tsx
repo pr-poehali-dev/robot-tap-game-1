@@ -49,6 +49,7 @@ export default function Index() {
       id: Date.now().toString(),
       username: authForm.username.trim(),
       email: authForm.email.trim(),
+      password: authForm.password.trim(),
       gameStats: { ...initialGameStats },
       registeredAt: new Date().toISOString()
     }
@@ -68,14 +69,17 @@ export default function Index() {
     }
     
     const users = JSON.parse(localStorage.getItem('robotGameUsers') || '[]')
-    const user = users.find((u: User) => u.username === authForm.username.trim())
+    const user = users.find((u: User) => 
+      u.username === authForm.username.trim() && 
+      (u.password === authForm.password.trim() || u.email === authForm.password.trim()) // Проверяем и новое поле password, и старое email для совместимости
+    )
     
     if (user) {
       localStorage.setItem('currentUserId', user.id)
       setCurrentUser(user)
       setAuthForm({ username: '', email: '', password: '' })
     } else {
-      alert('Пользователь не найден')
+      alert('Неверный логин или пароль')
     }
   }
 
