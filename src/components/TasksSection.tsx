@@ -14,6 +14,21 @@ export default function TasksSection({ currentUser, onUpdateStats }: TasksSectio
     return null
   }
 
+  const handleTelegramSubscribe = () => {
+    // Открываем Telegram группу
+    window.open('https://t.me/roboyatitan', '_blank')
+    
+    // Через небольшую задержку предлагаем подтвердить подписку
+    setTimeout(() => {
+      const confirmed = confirm('Вы подписались на Telegram группу? Нажмите OK если да.')
+      if (confirmed) {
+        localStorage.setItem(`telegramSubscribed_${currentUser.id}`, 'true')
+        // Принудительно обновляем состояние
+        window.location.reload()
+      }
+    }, 2000)
+  }
+
   const tasks = [
     { 
       id: 'taps_50',
@@ -22,6 +37,13 @@ export default function TasksSection({ currentUser, onUpdateStats }: TasksSectio
       completed: (currentUser.gameStats.totalEarned - currentUser.gameStats.coins + (currentUser.gameStats.maxTaps - currentUser.gameStats.tapsLeft)) >= 50
     },
     { id: 'login', title: "Войти в игру", reward: 100, completed: true },
+    { 
+      id: 'telegram', 
+      title: "Подписаться на Telegram группу", 
+      reward: 1500, 
+      completed: localStorage.getItem(`telegramSubscribed_${currentUser.id}`) === 'true',
+      link: 'https://t.me/roboyatitan'
+    },
     { id: 'upgrade', title: "Улучшить робота", reward: 1000, completed: currentUser.gameStats.level > 1 },
     { id: 'earn_10k', title: "Заработать 10,000 монет", reward: 5000, completed: currentUser.gameStats.totalEarned >= 10000 }
   ]
@@ -65,20 +87,28 @@ export default function TasksSection({ currentUser, onUpdateStats }: TasksSectio
           <CardContent className="p-4 flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <Icon 
-                name={task.completed ? "CheckCircle" : "Circle"} 
-                className={task.completed ? "text-green-500" : "text-muted-foreground"} 
+                name={task.completed ? "CheckCircle" : task.id === 'telegram' ? "Send" : "Circle"} 
+                className={task.completed ? "text-green-500" : task.id === 'telegram' ? "text-blue-500" : "text-muted-foreground"} 
               />
               <div>
                 <div className="font-semibold">{task.title}</div>
                 <div className="text-sm text-secondary">+{task.reward} монет</div>
+                {task.id === 'telegram' && !task.completed && (
+                  <div className="text-xs text-blue-600">t.me/roboyatitan</div>
+                )}
               </div>
             </div>
             <Button 
               size="sm" 
               disabled={task.completed}
               variant={task.completed ? "outline" : "default"}
+              onClick={() => {
+                if (task.id === 'telegram' && !task.completed) {
+                  handleTelegramSubscribe()
+                }
+              }}
             >
-              {task.completed ? "Выполнено" : "Выполнить"}
+              {task.completed ? "Выполнено" : task.id === 'telegram' ? "Подписаться" : "Выполнить"}
             </Button>
           </CardContent>
         </Card>
