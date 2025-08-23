@@ -226,6 +226,7 @@ export default function Index() {
             coinAnimations={coinAnimations}
             onRobotTap={handleRobotTap}
             onClaimDailyBonus={handleClaimDailyBonus}
+            onAutoTapClick={() => setActiveTab('auto')}
           />
         )
       case 'profile': 

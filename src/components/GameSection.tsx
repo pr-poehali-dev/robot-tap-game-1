@@ -35,6 +35,7 @@ interface GameSectionProps {
   coinAnimations: Array<{ id: number; x: number; y: number }>
   onRobotTap: (e: React.MouseEvent<HTMLButtonElement>) => void
   onClaimDailyBonus: () => void
+  onAutoTapClick: () => void
 }
 
 export default function GameSection({ 
@@ -42,7 +43,8 @@ export default function GameSection({
   isAnimating, 
   coinAnimations, 
   onRobotTap, 
-  onClaimDailyBonus 
+  onClaimDailyBonus,
+  onAutoTapClick 
 }: GameSectionProps) {
   const [timeToFullEnergy, setTimeToFullEnergy] = useState('')
   const [timeToNextBonus, setTimeToNextBonus] = useState('')
@@ -143,7 +145,7 @@ export default function GameSection({
 
   return (
     <div className="flex flex-col items-center space-y-3 sm:space-y-4">
-      <div className="grid grid-cols-2 gap-2 sm:gap-4 w-full">
+      <div className="grid grid-cols-3 gap-2 sm:gap-3 w-full">
         <Card className="bg-gradient-to-r from-primary/10 to-secondary/10">
           <CardContent className="p-2 sm:p-3 text-center">
             <div className="text-lg sm:text-xl font-bold text-primary">{currentUser.gameStats.coins.toLocaleString()}</div>
@@ -154,6 +156,14 @@ export default function GameSection({
           <CardContent className="p-2 sm:p-3 text-center">
             <div className="text-lg sm:text-xl font-bold text-secondary">+{currentUser.gameStats.robotPower}</div>
             <div className="text-xs sm:text-sm text-muted-foreground">За тап</div>
+          </CardContent>
+        </Card>
+        <Card className="bg-gradient-to-r from-orange-500/10 to-yellow-500/10 cursor-pointer hover:shadow-md transition-shadow" onClick={onAutoTapClick}>
+          <CardContent className="p-2 sm:p-3 text-center">
+            <div className="flex items-center justify-center mb-1">
+              <Icon name="Car" size={16} className="text-orange-500" />
+            </div>
+            <div className="text-xs sm:text-sm text-muted-foreground">Автотап</div>
           </CardContent>
         </Card>
       </div>
