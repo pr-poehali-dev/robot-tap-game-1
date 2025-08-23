@@ -42,10 +42,21 @@ export default function ProfileSection({ currentUser, onLogout }: ProfileSection
         </Card>
       </div>
 
-      <Button onClick={onLogout} variant="destructive" className="w-full">
-        <Icon name="LogOut" className="mr-2" />
-        Выйти из аккаунта
-      </Button>
+      <div className="space-y-3">
+        <Button 
+          onClick={() => window.location.href = '/admin'} 
+          variant="outline" 
+          className="w-full"
+        >
+          <Icon name="Shield" className="mr-2" />
+          Админка (тест)
+        </Button>
+        
+        <Button onClick={onLogout} variant="destructive" className="w-full">
+          <Icon name="LogOut" className="mr-2" />
+          Выйти из аккаунта
+        </Button>
+      </div>
     </div>
   )
 }
