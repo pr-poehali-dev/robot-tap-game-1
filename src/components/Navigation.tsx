@@ -13,7 +13,7 @@ export default function Navigation({ activeTab, currentUser, onTabChange }: Navi
     { id: 'game', label: 'Игра', icon: 'Gamepad2' },
     { id: 'profile', label: 'Профиль', icon: 'User' },
     { id: 'upgrades', label: 'Улучшения', icon: 'Zap' },
-    { id: 'auto', label: 'Авто', icon: 'Bot' },
+    { id: 'auto', label: 'Авто', icon: 'Car' },
     { id: 'withdraw', label: 'Вывод', icon: 'Wallet' },
     { id: 'rating', label: 'Рейтинг', icon: 'Trophy' },
     { id: 'tasks', label: 'Задания', icon: 'CheckSquare' }
