@@ -65,7 +65,7 @@ export default function ChatTab({ currentUser }: ChatTabProps) {
               onChange={(e) => setChatMessage(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && sendChatMessage()}
               placeholder="Введите сообщение..."
-              className="flex-1 px-3 py-2 border border-gray-300 rounded"
+              className="flex-1 px-3 py-2 border border-border rounded bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               maxLength={200}
             />
             <Button onClick={sendChatMessage}>Отправить</Button>
@@ -76,7 +76,7 @@ export default function ChatTab({ currentUser }: ChatTabProps) {
       {/* Сообщения чата */}
       <Card>
         <CardContent className="p-4">
-          <h4 className="font-semibold mb-3">💬 Общий чат</h4>
+          <h4 className="font-semibold mb-3 text-foreground">💬 Общий чат</h4>
           <div className="space-y-2 max-h-96 overflow-y-auto">
             {chatMessages.length === 0 ? (
               <p className="text-muted-foreground text-center py-4">Сообщений пока нет</p>
@@ -84,17 +84,19 @@ export default function ChatTab({ currentUser }: ChatTabProps) {
               chatMessages.map(message => (
                 <div 
                   key={message.id} 
-                  className={`p-2 rounded ${
-                    message.username === currentUser.username ? 'bg-blue-50 border-blue-200 border' : 'bg-gray-50'
+                  className={`p-3 rounded-lg border ${
+                    message.username === currentUser.username 
+                      ? 'bg-primary/10 border-primary/20 ml-4' 
+                      : 'bg-secondary/20 border-secondary/40 mr-4'
                   }`}
                 >
-                  <div className="flex justify-between items-start">
-                    <p className="font-medium text-sm">{message.username}</p>
-                    <span className="text-xs text-muted-foreground">
+                  <div className="flex justify-between items-start mb-1">
+                    <p className="font-semibold text-sm text-foreground">{message.username}</p>
+                    <span className="text-xs text-muted-foreground bg-background/50 px-1.5 py-0.5 rounded">
                       {new Date(message.timestamp).toLocaleTimeString()}
                     </span>
                   </div>
-                  <p className="text-sm mt-1">{message.message}</p>
+                  <p className="text-sm text-foreground leading-relaxed">{message.message}</p>
                 </div>
               ))
             )}
