@@ -56,10 +56,10 @@ export default function GameSection({
 
   // Получаем текущего робота пользователя
   const getUserRobot = () => {
-    if (!currentUser) return { emoji: '🤖', tapPower: 1, name: 'Базовый робот' }
+    if (!currentUser) return { emoji: '🤖', image: '/img/0c89b02e-e86a-4f7d-ab06-628ffeff8291.jpg', tapPower: 1, name: 'Базовый робот' }
     
     const robotData = localStorage.getItem(`userRobot_${currentUser.id}`)
-    if (!robotData) return { emoji: '🤖', tapPower: 1, name: 'Базовый робот' }
+    if (!robotData) return { emoji: '🤖', image: '/img/0c89b02e-e86a-4f7d-ab06-628ffeff8291.jpg', tapPower: 1, name: 'Базовый робот' }
     
     const { robotId, purchaseDate } = JSON.parse(robotData)
     
