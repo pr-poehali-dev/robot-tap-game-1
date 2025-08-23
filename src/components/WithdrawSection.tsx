@@ -28,7 +28,7 @@ export default function WithdrawSection({ currentUser, onAutoTapClick }: Withdra
 
       <div className="space-y-4">
         <Button 
-          disabled={currentUser.gameStats.coins < 10000} 
+          disabled={currentUser.gameStats.coins < 5000000} 
           className="w-full bg-green-600 hover:bg-green-700"
         >
           <Icon name="Banknote" className="mr-2" />
@@ -36,7 +36,7 @@ export default function WithdrawSection({ currentUser, onAutoTapClick }: Withdra
         </Button>
         
         <div className="text-center text-sm text-muted-foreground">
-          Минимальная сумма для вывода: 10,000 монет (1₽)
+          Минимальная сумма для вывода: 5,000,000 монет (500₽)
         </div>
       </div>
     </div>
