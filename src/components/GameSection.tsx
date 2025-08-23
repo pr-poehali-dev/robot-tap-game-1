@@ -55,6 +55,7 @@ export default function GameSection({
   const [timeToFullEnergy, setTimeToFullEnergy] = useState('')
   const [timeToNextBonus, setTimeToNextBonus] = useState('')
   const [canClaimBonus, setCanClaimBonus] = useState(true)
+  const [isRobotAnimating, setIsRobotAnimating] = useState(false)
 
   // Получаем текущего робота пользователя
   const getUserRobot = () => {
@@ -199,6 +200,14 @@ export default function GameSection({
   }
 
   const hasUnlimitedEnergy = localStorage.getItem(`unlimitedEnergy_${currentUser.id}`) === 'true'
+  
+  const handleRobotClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (currentUser.gameStats.tapsLeft > 0) {
+      setIsRobotAnimating(true)
+      setTimeout(() => setIsRobotAnimating(false), 400)
+    }
+    onRobotTap(e)
+  }
 
   return (
     <div className="flex flex-col items-center space-y-3 sm:space-y-4">
@@ -211,17 +220,21 @@ export default function GameSection({
 
       <div className="relative">
         <Button
-          onClick={onRobotTap}
+          onClick={handleRobotClick}
           disabled={currentUser.gameStats.tapsLeft <= 0}
-          className={`w-48 h-48 sm:w-56 sm:h-56 rounded-full p-0 bg-gradient-to-b from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 border-4 shadow-2xl overflow-hidden ${
-            hasUnlimitedEnergy ? 'border-purple-400 shadow-purple-300/50' :
+          className={`w-48 h-48 sm:w-56 sm:h-56 rounded-full p-0 bg-gradient-to-b from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 border-4 shadow-2xl overflow-hidden transition-all duration-300 ${
+            hasUnlimitedEnergy ? 'border-purple-400 shadow-purple-300/50 animate-energy-pulse' :
             isVIP ? 'border-yellow-400 shadow-yellow-300/50' : 'border-primary/30'
-          } ${isAnimating ? 'animate-tap-bounce' : ''}`}
+          } ${isAnimating ? 'animate-tap-bounce' : ''} ${isRobotAnimating ? 'animate-robot-active animate-tap-glow' : ''} ${
+            currentUser.gameStats.tapsLeft > 0 ? 'hover:scale-105 cursor-pointer' : 'opacity-60'
+          }`}
         >
           <img
             src={currentRobot.image}
             alt={currentRobot.name}
-            className="w-full h-full object-cover rounded-full hover:scale-110 transition-transform duration-200"
+            className={`w-full h-full object-cover rounded-full transition-all duration-300 ${
+              isRobotAnimating ? 'scale-110 brightness-110' : 'hover:scale-110'
+            }`}
           />
           {hasUnlimitedEnergy && (
             <div className="absolute -top-2 -right-2 text-3xl animate-pulse">
