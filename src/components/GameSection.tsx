@@ -65,12 +65,12 @@ export default function GameSection({
     
     // Список роботов (должен совпадать с RobotsSection)
     const robots = {
-      'basic': { emoji: '🤖', tapPower: 1, name: 'Базовый робот', lifespan: 999999 },
-      'worker': { emoji: '👷‍♂️', tapPower: 2, name: 'Рабочий робот', lifespan: 30 },
-      'engineer': { emoji: '👨‍💻', tapPower: 3, name: 'Инженер', lifespan: 45 },
-      'scientist': { emoji: '👨‍🔬', tapPower: 5, name: 'Учёный', lifespan: 60 },
-      'commander': { emoji: '👨‍✈️', tapPower: 10, name: 'Командир', lifespan: 90 },
-      'cyborg': { emoji: '🦾', tapPower: 20, name: 'Киборг', lifespan: 100 }
+      'basic': { emoji: '🤖', image: '/img/0c89b02e-e86a-4f7d-ab06-628ffeff8291.jpg', tapPower: 1, name: 'Базовый робот', lifespan: 999999 },
+      'worker': { emoji: '👷‍♂️', image: '/img/6298380d-94b8-449b-8539-a248456cf888.jpg', tapPower: 2, name: 'Рабочий робот', lifespan: 30 },
+      'engineer': { emoji: '👨‍💻', image: '/img/8b9dcf07-12d5-4043-a5a5-907c0a63627b.jpg', tapPower: 3, name: 'Инженер', lifespan: 45 },
+      'scientist': { emoji: '👨‍🔬', image: '/img/2ec52712-5033-4e4d-91cd-4251a6f218c1.jpg', tapPower: 5, name: 'Учёный', lifespan: 60 },
+      'commander': { emoji: '👨‍✈️', image: '/img/646c617e-8b01-47fc-a700-b85b270caaee.jpg', tapPower: 10, name: 'Командир', lifespan: 90 },
+      'cyborg': { emoji: '🦾', image: '/img/89a0d696-e417-48e9-82be-fc15e0417ff4.jpg', tapPower: 20, name: 'Киборг', lifespan: 100 }
     }
     
     const robot = robots[robotId as keyof typeof robots]
@@ -197,13 +197,15 @@ export default function GameSection({
         <Button
           onClick={onRobotTap}
           disabled={currentUser.gameStats.tapsLeft <= 0}
-          className={`w-48 h-48 sm:w-56 sm:h-56 rounded-full p-0 bg-gradient-to-b from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 border-4 border-primary/30 shadow-2xl ${
+          className={`w-48 h-48 sm:w-56 sm:h-56 rounded-full p-0 bg-gradient-to-b from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 border-4 border-primary/30 shadow-2xl overflow-hidden ${
             isAnimating ? 'animate-tap-bounce' : ''
           }`}
         >
-          <span className="text-8xl sm:text-9xl" role="img" aria-label={currentRobot.name}>
-            {currentRobot.emoji}
-          </span>
+          <img
+            src={currentRobot.image}
+            alt={currentRobot.name}
+            className="w-full h-full object-cover rounded-full hover:scale-110 transition-transform duration-200"
+          />
         </Button>
       
         {coinAnimations.map(coin => (

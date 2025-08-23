@@ -9,6 +9,7 @@ interface Robot {
   id: string
   name: string
   emoji: string
+  image: string
   price: number
   tapPower: number
   lifespan: number // в днях
@@ -25,6 +26,7 @@ const availableRobots: Robot[] = [
     id: 'basic',
     name: 'Базовый робот',
     emoji: '🤖',
+    image: '/img/0c89b02e-e86a-4f7d-ab06-628ffeff8291.jpg',
     price: 0,
     tapPower: 1,
     lifespan: 999999,
@@ -34,6 +36,7 @@ const availableRobots: Robot[] = [
     id: 'worker',
     name: 'Рабочий робот',
     emoji: '👷‍♂️',
+    image: '/img/6298380d-94b8-449b-8539-a248456cf888.jpg',
     price: 5000,
     tapPower: 2,
     lifespan: 30,
@@ -43,6 +46,7 @@ const availableRobots: Robot[] = [
     id: 'engineer',
     name: 'Инженер',
     emoji: '👨‍💻',
+    image: '/img/8b9dcf07-12d5-4043-a5a5-907c0a63627b.jpg',
     price: 15000,
     tapPower: 3,
     lifespan: 45,
@@ -52,6 +56,7 @@ const availableRobots: Robot[] = [
     id: 'scientist',
     name: 'Учёный',
     emoji: '👨‍🔬',
+    image: '/img/2ec52712-5033-4e4d-91cd-4251a6f218c1.jpg',
     price: 50000,
     tapPower: 5,
     lifespan: 60,
@@ -61,6 +66,7 @@ const availableRobots: Robot[] = [
     id: 'commander',
     name: 'Командир',
     emoji: '👨‍✈️',
+    image: '/img/646c617e-8b01-47fc-a700-b85b270caaee.jpg',
     price: 150000,
     tapPower: 10,
     lifespan: 90,
@@ -70,6 +76,7 @@ const availableRobots: Robot[] = [
     id: 'cyborg',
     name: 'Киборг',
     emoji: '🦾',
+    image: '/img/89a0d696-e417-48e9-82be-fc15e0417ff4.jpg',
     price: 500000,
     tapPower: 20,
     lifespan: 100,
@@ -162,7 +169,13 @@ export default function RobotsSection({ currentUser, onUpdateStats }: RobotsSect
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-4">
-            <span className="text-4xl">{currentRobot.emoji}</span>
+            <div className="w-20 h-20 rounded-lg overflow-hidden bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center">
+              <img 
+                src={currentRobot.image}
+                alt={currentRobot.name}
+                className="w-full h-full object-cover"
+              />
+            </div>
             <div className="flex-1">
               <h3 className="font-semibold">{currentRobot.name}</h3>
               <p className="text-sm text-muted-foreground">{currentRobot.description}</p>
@@ -187,46 +200,84 @@ export default function RobotsSection({ currentUser, onUpdateStats }: RobotsSect
         {availableRobots.slice(1).map((robot) => (
           <Card 
             key={robot.id}
-            className={`transition-colors ${
-              selectedRobot === robot.id ? 'border-primary' : ''
-            } ${currentUser.gameStats.coins < robot.price ? 'opacity-50' : ''}`}
+            className={`transition-all duration-300 hover:shadow-lg hover:-translate-y-1 ${
+              selectedRobot === robot.id ? 'border-primary shadow-lg' : ''
+            } ${currentUser.gameStats.coins < robot.price ? 'opacity-50' : 'hover:border-primary/50'}
+            ${currentRobot.id === robot.id ? 'border-green-500 bg-green-50/50' : ''}`}
           >
-            <CardContent className="p-4">
-              <div className="flex items-center gap-4">
-                <span className="text-3xl">{robot.emoji}</span>
-                <div className="flex-1">
-                  <h3 className="font-semibold">{robot.name}</h3>
-                  <p className="text-sm text-muted-foreground mb-2">{robot.description}</p>
-                  
-                  <div className="flex items-center gap-2 mb-3">
-                    <Badge variant="secondary" className="text-xs">
-                      <Icon name="Zap" size={12} className="mr-1" />
-                      {robot.tapPower}x монет
-                    </Badge>
-                    <Badge variant="outline" className="text-xs">
-                      <Icon name="Clock" size={12} className="mr-1" />
-                      {robot.lifespan} дней
-                    </Badge>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1">
-                      <Icon name="Coins" size={16} />
-                      <span className="font-semibold text-yellow-600">
-                        {robot.price.toLocaleString()}
-                      </span>
+            <CardContent className="p-0">
+              <div className="flex">
+                {/* Красивое изображение робота */}
+                <div className={`w-32 h-40 flex items-end justify-center rounded-l-lg overflow-hidden ${
+                  robot.id === 'cyborg' 
+                    ? 'bg-gradient-to-br from-purple-500/20 via-blue-500/20 to-cyan-500/20 animate-pulse' 
+                    : robot.id === 'commander'
+                    ? 'bg-gradient-to-br from-yellow-500/15 via-orange-500/15 to-red-500/15'
+                    : robot.id === 'scientist'
+                    ? 'bg-gradient-to-br from-green-500/15 via-emerald-500/15 to-teal-500/15'
+                    : 'bg-gradient-to-br from-primary/10 via-primary/5 to-secondary/10'
+                }`}>
+                  <img 
+                    src={robot.image}
+                    alt={robot.name}
+                    className={`w-full h-full object-cover transition-transform duration-300 ${
+                      robot.id === 'cyborg' ? 'hover:scale-110 filter hover:brightness-110' : 'hover:scale-105'
+                    }`}
+                  />
+                  {robot.id === 'cyborg' && (
+                    <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-cyan-400/10 pointer-events-none" />
+                  )}
+                </div>
+                
+                {/* Информация о роботе */}
+                <div className="flex-1 p-4">
+                  <div className="space-y-2">
+                    <div>
+                      <h3 className="font-bold text-lg">{robot.name}</h3>
+                      <p className="text-sm text-muted-foreground">{robot.description}</p>
                     </div>
                     
-                    <Button
-                      size="sm"
-                      onClick={() => handleBuyRobot(robot)}
-                      disabled={
-                        currentUser.gameStats.coins < robot.price || 
-                        currentRobot.id === robot.id
-                      }
-                    >
-                      {currentRobot.id === robot.id ? 'Активен' : 'Купить'}
-                    </Button>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="secondary" className="text-xs">
+                        <Icon name="Zap" size={12} className="mr-1" />
+                        {robot.tapPower}x мощность
+                      </Badge>
+                      <Badge variant="outline" className="text-xs">
+                        <Icon name="Clock" size={12} className="mr-1" />
+                        {robot.lifespan} дней
+                      </Badge>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2">
+                      <div className="flex items-center gap-1">
+                        <Icon name="Coins" size={18} className="text-yellow-500" />
+                        <span className="font-bold text-lg text-yellow-600">
+                          {robot.price.toLocaleString()}
+                        </span>
+                      </div>
+                      
+                      <Button
+                        size="sm"
+                        onClick={() => handleBuyRobot(robot)}
+                        disabled={
+                          currentUser.gameStats.coins < robot.price || 
+                          currentRobot.id === robot.id
+                        }
+                        className={currentRobot.id === robot.id ? "bg-green-500 hover:bg-green-600" : ""}
+                      >
+                        {currentRobot.id === robot.id ? (
+                          <>
+                            <Icon name="Check" size={16} className="mr-1" />
+                            Активен
+                          </>
+                        ) : (
+                          <>
+                            <Icon name="ShoppingCart" size={16} className="mr-1" />
+                            Купить
+                          </>
+                        )}
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
