@@ -269,7 +269,7 @@ export default function Index() {
       case 'rating': 
         return <RatingSection currentUser={currentUser} />
       case 'tasks': 
-        return <TasksSection currentUser={currentUser} />
+        return <TasksSection currentUser={currentUser} onUpdateStats={updateUserStats} />
       default: 
         return (
           <GameSection 

@@ -1,27 +1,60 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import Icon from '@/components/ui/icon'
-import { User } from './GameSection'
+import { User, GameStats } from './GameSection'
+import { useEffect } from 'react'
 
 interface TasksSectionProps {
   currentUser: User | null
+  onUpdateStats: (stats: GameStats) => void
 }
 
-export default function TasksSection({ currentUser }: TasksSectionProps) {
+export default function TasksSection({ currentUser, onUpdateStats }: TasksSectionProps) {
   if (!currentUser) {
     return null
   }
 
   const tasks = [
     { 
+      id: 'taps_50',
       title: "Сделать 50 тапов", 
       reward: 500, 
       completed: (currentUser.gameStats.totalEarned - currentUser.gameStats.coins + (currentUser.gameStats.maxTaps - currentUser.gameStats.tapsLeft)) >= 50
     },
-    { title: "Войти в игру", reward: 100, completed: true },
-    { title: "Улучшить робота", reward: 1000, completed: currentUser.gameStats.level > 1 },
-    { title: "Заработать 10,000 монет", reward: 5000, completed: currentUser.gameStats.totalEarned >= 10000 }
+    { id: 'login', title: "Войти в игру", reward: 100, completed: true },
+    { id: 'upgrade', title: "Улучшить робота", reward: 1000, completed: currentUser.gameStats.level > 1 },
+    { id: 'earn_10k', title: "Заработать 10,000 монет", reward: 5000, completed: currentUser.gameStats.totalEarned >= 10000 }
   ]
+
+  // Проверяем выполненные задания и автоматически начисляем награды
+  useEffect(() => {
+    if (!currentUser) return
+    
+    const completedTasks = localStorage.getItem(`completedTasks_${currentUser.id}`) 
+      ? JSON.parse(localStorage.getItem(`completedTasks_${currentUser.id}`) || '[]')
+      : []
+    
+    let rewardToAdd = 0
+    const newCompletedTasks = [...completedTasks]
+    
+    tasks.forEach(task => {
+      if (task.completed && !completedTasks.includes(task.id)) {
+        rewardToAdd += task.reward
+        newCompletedTasks.push(task.id)
+      }
+    })
+    
+    if (rewardToAdd > 0) {
+      const updatedStats = {
+        ...currentUser.gameStats,
+        coins: currentUser.gameStats.coins + rewardToAdd,
+        totalEarned: currentUser.gameStats.totalEarned + rewardToAdd
+      }
+      
+      localStorage.setItem(`completedTasks_${currentUser.id}`, JSON.stringify(newCompletedTasks))
+      onUpdateStats(updatedStats)
+    }
+  }, [currentUser, tasks, onUpdateStats])
 
   return (
     <div className="space-y-4">
