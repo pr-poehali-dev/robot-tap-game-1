@@ -13,7 +13,7 @@ export default function AutoSection({ currentUser, onUpdateStats }: AutoSectionP
   const [timeToAutoTap, setTimeToAutoTap] = useState('')
   const [autoTapStatus, setAutoTapStatus] = useState<'inactive' | 'charging' | 'active'>('inactive')
   
-  const AUTO_TAP_COST = 15000
+  const AUTO_TAP_COST = 50000
   const AUTO_TAP_DURATION = 30 * 24 * 60 * 60 * 1000 // 30 дней в миллисекундах
   const CHARGE_TIME = 5 * 60 * 60 * 1000 // 5 часов в миллисекундах
 
