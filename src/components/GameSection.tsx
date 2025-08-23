@@ -54,6 +54,44 @@ export default function GameSection({
   const [timeToNextBonus, setTimeToNextBonus] = useState('')
   const [canClaimBonus, setCanClaimBonus] = useState(true)
 
+  // Получаем текущего робота пользователя
+  const getUserRobot = () => {
+    if (!currentUser) return { emoji: '🤖', tapPower: 1, name: 'Базовый робот' }
+    
+    const robotData = localStorage.getItem(`userRobot_${currentUser.id}`)
+    if (!robotData) return { emoji: '🤖', tapPower: 1, name: 'Базовый робот' }
+    
+    const { robotId, purchaseDate } = JSON.parse(robotData)
+    
+    // Список роботов (должен совпадать с RobotsSection)
+    const robots = {
+      'basic': { emoji: '🤖', tapPower: 1, name: 'Базовый робот', lifespan: 999999 },
+      'worker': { emoji: '👷‍♂️', tapPower: 2, name: 'Рабочий робот', lifespan: 30 },
+      'engineer': { emoji: '👨‍💻', tapPower: 3, name: 'Инженер', lifespan: 45 },
+      'scientist': { emoji: '👨‍🔬', tapPower: 5, name: 'Учёный', lifespan: 60 },
+      'commander': { emoji: '👨‍✈️', tapPower: 10, name: 'Командир', lifespan: 90 },
+      'cyborg': { emoji: '🦾', tapPower: 20, name: 'Киборг', lifespan: 100 }
+    }
+    
+    const robot = robots[robotId as keyof typeof robots]
+    if (!robot) return robots.basic
+    
+    // Проверяем срок жизни робота
+    const daysPassed = Math.floor((Date.now() - purchaseDate) / (1000 * 60 * 60 * 24))
+    if (daysPassed >= robot.lifespan && robotId !== 'basic') {
+      // Срок истёк, возвращаем базового робота
+      localStorage.setItem(`userRobot_${currentUser.id}`, JSON.stringify({
+        robotId: 'basic',
+        purchaseDate: Date.now()
+      }))
+      return robots.basic
+    }
+    
+    return robot
+  }
+
+  const currentRobot = getUserRobot()
+
   const getDailyBonusStatus = () => {
     if (!currentUser?.gameStats.lastDailyBonusTime) {
       return { canClaim: true, timeLeft: '' }
@@ -163,11 +201,9 @@ export default function GameSection({
             isAnimating ? 'animate-tap-bounce' : ''
           }`}
         >
-          <img 
-            src="/img/61a04de9-f347-4c44-b1fb-99ec94268c4e.jpg" 
-            alt="Робот" 
-            className="w-36 h-36 sm:w-44 sm:h-44 rounded-full object-cover"
-          />
+          <span className="text-8xl sm:text-9xl" role="img" aria-label={currentRobot.name}>
+            {currentRobot.emoji}
+          </span>
         </Button>
       
         {coinAnimations.map(coin => (
@@ -176,9 +212,17 @@ export default function GameSection({
             className="absolute text-2xl font-bold text-secondary animate-coin-collect pointer-events-none"
             style={{ left: coin.x, top: coin.y }}
           >
-            +{currentUser.gameStats.robotPower}
+            +{currentUser.gameStats.robotPower * currentRobot.tapPower}
           </div>
         ))}
+      </div>
+
+      {/* Информация о текущем роботе */}
+      <div className="text-center space-y-1">
+        <h3 className="font-semibold text-sm sm:text-base">{currentRobot.name}</h3>
+        <p className="text-xs text-muted-foreground">
+          Мощность тапа: {currentUser.gameStats.robotPower} × {currentRobot.tapPower} = {currentUser.gameStats.robotPower * currentRobot.tapPower} монет
+        </p>
       </div>
 
       <div className="w-full space-y-2">

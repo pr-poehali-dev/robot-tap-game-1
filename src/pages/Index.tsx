@@ -7,6 +7,7 @@ import AutoSection from '@/components/AutoSection'
 import WithdrawSection from '@/components/WithdrawSection'
 import RatingSection from '@/components/RatingSection'
 import TasksSection from '@/components/TasksSection'
+import RobotsSection from '@/components/RobotsSection'
 import Navigation from '@/components/Navigation'
 
 export default function Index() {
@@ -105,6 +106,36 @@ export default function Index() {
   const handleRobotTap = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!currentUser || currentUser.gameStats.tapsLeft <= 0) return
     
+    // Получаем мощность текущего робота
+    const getRobotTapPower = () => {
+      const robotData = localStorage.getItem(`userRobot_${currentUser.id}`)
+      if (!robotData) return 1
+      
+      const { robotId, purchaseDate } = JSON.parse(robotData)
+      const robots = {
+        'basic': { tapPower: 1, lifespan: 999999 },
+        'worker': { tapPower: 2, lifespan: 30 },
+        'engineer': { tapPower: 3, lifespan: 45 },
+        'scientist': { tapPower: 5, lifespan: 60 },
+        'commander': { tapPower: 10, lifespan: 90 },
+        'cyborg': { tapPower: 20, lifespan: 100 }
+      }
+      
+      const robot = robots[robotId as keyof typeof robots]
+      if (!robot) return 1
+      
+      // Проверяем срок жизни
+      const daysPassed = Math.floor((Date.now() - purchaseDate) / (1000 * 60 * 60 * 24))
+      if (daysPassed >= robot.lifespan && robotId !== 'basic') {
+        return 1 // Базовый робот
+      }
+      
+      return robot.tapPower
+    }
+    
+    const robotTapPower = getRobotTapPower()
+    const totalTapPower = currentUser.gameStats.robotPower * robotTapPower // Базовая мощность × мощность робота
+    
     const rect = e.currentTarget.getBoundingClientRect()
     const x = e.clientX - rect.left
     const y = e.clientY - rect.top
@@ -115,9 +146,9 @@ export default function Index() {
     const newTapsLeft = currentUser.gameStats.tapsLeft - 1
     const updatedStats = {
       ...currentUser.gameStats,
-      coins: currentUser.gameStats.coins + currentUser.gameStats.robotPower,
+      coins: currentUser.gameStats.coins + totalTapPower,
       tapsLeft: newTapsLeft,
-      totalEarned: currentUser.gameStats.totalEarned + currentUser.gameStats.robotPower,
+      totalEarned: currentUser.gameStats.totalEarned + totalTapPower,
       // Если энергия заканчивается, устанавливаем время истощения
       energyDepletedAt: newTapsLeft <= 0 ? Date.now() : currentUser.gameStats.energyDepletedAt
     }
@@ -268,6 +299,8 @@ export default function Index() {
         return <WithdrawSection currentUser={currentUser} onAutoTapClick={() => setActiveTab('auto')} />
       case 'rating': 
         return <RatingSection currentUser={currentUser} />
+      case 'robots':
+        return <RobotsSection currentUser={currentUser} onUpdateStats={updateUserStats} />
       case 'tasks': 
         return <TasksSection currentUser={currentUser} onUpdateStats={updateUserStats} />
       default: 
