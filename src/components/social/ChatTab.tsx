@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import Icon from '@/components/ui/icon'
 import { User } from '../GameSection'
 
 interface ChatMessage {
@@ -43,15 +44,37 @@ export default function ChatTab({ currentUser }: ChatTabProps) {
     setChatMessage('')
   }
 
+  const deleteMessage = (messageId: string) => {
+    const messages: ChatMessage[] = JSON.parse(localStorage.getItem('globalChat') || '[]')
+    const updatedMessages = messages.filter(msg => msg.id !== messageId)
+    localStorage.setItem('globalChat', JSON.stringify(updatedMessages))
+    // Принудительно обновляем компонент
+    window.dispatchEvent(new Event('storage'))
+  }
+
+  const [refreshTrigger, setRefreshTrigger] = useState(0)
+
   useEffect(() => {
+    const handleStorageChange = () => {
+      setRefreshTrigger(prev => prev + 1)
+    }
+
     const interval = setInterval(() => {
       window.dispatchEvent(new Event('storage'))
     }, 5000)
 
-    return () => clearInterval(interval)
+    window.addEventListener('storage', handleStorageChange)
+
+    return () => {
+      clearInterval(interval)
+      window.removeEventListener('storage', handleStorageChange)
+    }
   }, [])
 
   const chatMessages = getChatMessages()
+  // Используем refreshTrigger для принудительного обновления
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const _ = refreshTrigger
 
   return (
     <div className="space-y-4">
@@ -84,7 +107,7 @@ export default function ChatTab({ currentUser }: ChatTabProps) {
               chatMessages.map(message => (
                 <div 
                   key={message.id} 
-                  className={`p-3 rounded-lg border ${
+                  className={`p-3 rounded-lg border relative group ${
                     message.username === currentUser.username 
                       ? 'bg-primary/10 border-primary/20 ml-4' 
                       : 'bg-secondary/20 border-secondary/40 mr-4'
@@ -92,9 +115,20 @@ export default function ChatTab({ currentUser }: ChatTabProps) {
                 >
                   <div className="flex justify-between items-start mb-1">
                     <p className="font-semibold text-sm text-foreground">{message.username}</p>
-                    <span className="text-xs text-muted-foreground bg-background/50 px-1.5 py-0.5 rounded">
-                      {new Date(message.timestamp).toLocaleTimeString()}
-                    </span>
+                    <div className="flex items-center gap-1">
+                      <span className="text-xs text-muted-foreground bg-background/50 px-1.5 py-0.5 rounded">
+                        {new Date(message.timestamp).toLocaleTimeString()}
+                      </span>
+                      {message.username === currentUser.username && (
+                        <button
+                          onClick={() => deleteMessage(message.id)}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-red-500/20 rounded text-red-500 hover:text-red-600"
+                          title="Удалить сообщение"
+                        >
+                          <Icon name="Trash2" size={14} />
+                        </button>
+                      )}
+                    </div>
                   </div>
                   <p className="text-sm text-foreground leading-relaxed">{message.message}</p>
                 </div>
