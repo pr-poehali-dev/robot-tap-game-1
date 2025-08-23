@@ -28,15 +28,39 @@ export default function WithdrawSection({ currentUser, onAutoTapClick, onTabChan
   }
 
   const handleSubmit = () => {
-    console.log('Заявка на вывод:', {
+    const withdrawRequest = {
+      id: Date.now(),
+      userId: currentUser.id,
+      username: currentUser.username,
+      email: currentUser.email,
+      amount: parseFloat(amount),
+      coins: parseFloat(amount) * 10000,
       paymentSystem,
-      amount,
-      wallet: walletInput,
-      card: cardInput,
-      phone: phoneInput
-    })
+      paymentDetails: paymentSystem === 'yumoney' ? walletInput : 
+                      paymentSystem === 'card' ? cardInput : phoneInput,
+      status: 'pending' as const,
+      createdAt: new Date().toISOString(),
+      processedAt: null,
+      processedBy: null
+    }
+    
+    // Сохраняем заявку в localStorage
+    const existingRequests = JSON.parse(localStorage.getItem('withdrawRequests') || '[]')
+    existingRequests.push(withdrawRequest)
+    localStorage.setItem('withdrawRequests', JSON.stringify(existingRequests))
+    
+    console.log('Заявка на вывод создана:', withdrawRequest)
     setIsModalOpen(false)
-    // Здесь будет логика отправки заявки
+    
+    // Очищаем форму
+    setPaymentSystem('')
+    setWalletInput('')
+    setCardInput('')
+    setPhoneInput('+7')
+    setAmount('')
+    
+    // Показываем уведомление пользователю
+    alert('Заявка на вывод средств подана! Ожидайте обработки администратором.')
   }
 
   const getInputPlaceholder = () => {

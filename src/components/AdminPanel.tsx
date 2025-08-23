@@ -14,20 +14,39 @@ interface AdminPanelProps {
   onLogout: () => void
 }
 
+interface WithdrawRequest {
+  id: number
+  userId: string
+  username: string
+  email: string
+  amount: number
+  coins: number
+  paymentSystem: 'yumoney' | 'card' | 'phone'
+  paymentDetails: string
+  status: 'pending' | 'approved' | 'rejected'
+  createdAt: string
+  processedAt: string | null
+  processedBy: string | null
+}
+
 export default function AdminPanel({ onLogout }: AdminPanelProps) {
   const [users, setUsers] = useState<User[]>([])
+  const [withdrawRequests, setWithdrawRequests] = useState<WithdrawRequest[]>([])
   const [stats, setStats] = useState({
     totalUsers: 0,
     activeUsers: 0,
     totalCoins: 0,
     totalTaps: 0,
     vipUsers: 0,
-    onlineUsers: 0
+    onlineUsers: 0,
+    pendingWithdraws: 0,
+    totalWithdrawAmount: 0
   })
   const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
     loadUsersData()
+    loadWithdrawRequests()
   }, [])
 
   const loadUsersData = () => {
@@ -70,7 +89,8 @@ export default function AdminPanel({ onLogout }: AdminPanelProps) {
     allUsers.sort((a, b) => new Date(b.registeredAt).getTime() - new Date(a.registeredAt).getTime())
 
     setUsers(allUsers)
-    setStats({
+    setStats(prevStats => ({
+      ...prevStats,
       totalUsers: allUsers.length,
       activeUsers: allUsers.filter(u => {
         const lastActivity = localStorage.getItem(`lastActivity_${u.id}`)
@@ -80,7 +100,47 @@ export default function AdminPanel({ onLogout }: AdminPanelProps) {
       totalTaps,
       vipUsers: vipCount,
       onlineUsers: onlineCount
+    }))
+  }
+
+  const loadWithdrawRequests = () => {
+    try {
+      const requestsData = localStorage.getItem('withdrawRequests')
+      if (requestsData) {
+        const requests: WithdrawRequest[] = JSON.parse(requestsData)
+        const sortedRequests = requests.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+        setWithdrawRequests(sortedRequests)
+        
+        const pendingCount = requests.filter(r => r.status === 'pending').length
+        const totalAmount = requests.filter(r => r.status === 'approved').reduce((sum, r) => sum + r.amount, 0)
+        
+        setStats(prevStats => ({
+          ...prevStats,
+          pendingWithdraws: pendingCount,
+          totalWithdrawAmount: totalAmount
+        }))
+      }
+    } catch (error) {
+      console.error('Ошибка при загрузке заявок на вывод:', error)
+    }
+  }
+
+  const updateWithdrawStatus = (requestId: number, status: 'approved' | 'rejected') => {
+    const updatedRequests = withdrawRequests.map(request => {
+      if (request.id === requestId) {
+        return {
+          ...request,
+          status,
+          processedAt: new Date().toISOString(),
+          processedBy: 'admin'
+        }
+      }
+      return request
     })
+    
+    setWithdrawRequests(updatedRequests)
+    localStorage.setItem('withdrawRequests', JSON.stringify(updatedRequests))
+    loadWithdrawRequests() // Обновляем статистику
   }
 
   const filteredUsers = users.filter(user =>
@@ -174,6 +234,15 @@ export default function AdminPanel({ onLogout }: AdminPanelProps) {
               <Icon name="Users" size={16} className="mr-2" />
               Пользователи
             </TabsTrigger>
+            <TabsTrigger value="withdraws" className="data-[state=active]:bg-slate-700">
+              <Icon name="Banknote" size={16} className="mr-2" />
+              Вывод
+              {stats.pendingWithdraws > 0 && (
+                <Badge variant="destructive" className="ml-2 text-xs">
+                  {stats.pendingWithdraws}
+                </Badge>
+              )}
+            </TabsTrigger>
             <TabsTrigger value="settings" className="data-[state=active]:bg-slate-700">
               <Icon name="Settings" size={16} className="mr-2" />
               Настройки
@@ -182,13 +251,15 @@ export default function AdminPanel({ onLogout }: AdminPanelProps) {
 
           <TabsContent value="overview" className="space-y-6">
             {/* Статистика */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <StatCard title="Всего пользователей" value={stats.totalUsers} icon="Users" color="blue" />
               <StatCard title="Активных за день" value={stats.activeUsers} icon="UserCheck" color="green" />
               <StatCard title="Онлайн сейчас" value={stats.onlineUsers} icon="Wifi" color="green" />
               <StatCard title="VIP пользователей" value={stats.vipUsers} icon="Crown" color="yellow" />
               <StatCard title="Всего монет" value={stats.totalCoins} icon="Coins" color="orange" />
               <StatCard title="Всего заработано" value={stats.totalTaps} icon="TrendingUp" color="purple" />
+              <StatCard title="Заявок на вывод" value={stats.pendingWithdraws} icon="AlertCircle" color="orange" />
+              <StatCard title="Выведено средств" value={`${stats.totalWithdrawAmount}₽`} icon="Banknote" color="green" />
             </div>
 
             {/* Последние регистрации */}
@@ -309,6 +380,156 @@ export default function AdminPanel({ onLogout }: AdminPanelProps) {
                     <div className="text-center py-12">
                       <Icon name="Search" size={48} className="mx-auto mb-4 text-slate-600" />
                       <p className="text-slate-400">Пользователи не найдены</p>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="withdraws" className="space-y-6">
+            {/* Статистика выводов */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <StatCard 
+                title="Ожидают обработки" 
+                value={withdrawRequests.filter(r => r.status === 'pending').length} 
+                icon="Clock" 
+                color="orange" 
+              />
+              <StatCard 
+                title="Одобрено заявок" 
+                value={withdrawRequests.filter(r => r.status === 'approved').length} 
+                icon="CheckCircle" 
+                color="green" 
+              />
+              <StatCard 
+                title="Отклонено заявок" 
+                value={withdrawRequests.filter(r => r.status === 'rejected').length} 
+                icon="XCircle" 
+                color="purple" 
+              />
+            </div>
+
+            {/* Список заявок на вывод */}
+            <Card className="bg-slate-800 border-slate-700">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center justify-between">
+                  <span>Заявки на вывод средств ({withdrawRequests.length})</span>
+                  <Button 
+                    onClick={() => { loadWithdrawRequests(); loadUsersData(); }} 
+                    variant="outline" 
+                    className="border-slate-600"
+                  >
+                    <Icon name="RotateCcw" size={16} className="mr-2" />
+                    Обновить
+                  </Button>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4 max-h-96 overflow-y-auto">
+                  {withdrawRequests.map((request) => {
+                    const getPaymentSystemName = (system: string) => {
+                      switch(system) {
+                        case 'yumoney': return 'ЮMoney'
+                        case 'card': return 'Банковская карта'
+                        case 'phone': return 'Сотовая связь'
+                        default: return system
+                      }
+                    }
+
+                    const getStatusColor = (status: string) => {
+                      switch(status) {
+                        case 'pending': return 'bg-yellow-600'
+                        case 'approved': return 'bg-green-600'
+                        case 'rejected': return 'bg-red-600'
+                        default: return 'bg-slate-600'
+                      }
+                    }
+
+                    const getStatusText = (status: string) => {
+                      switch(status) {
+                        case 'pending': return 'Ожидает'
+                        case 'approved': return 'Одобрено'
+                        case 'rejected': return 'Отклонено'
+                        default: return status
+                      }
+                    }
+                    
+                    return (
+                      <div key={request.id} className="p-4 bg-slate-700 rounded-lg">
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-blue-600 rounded-full flex items-center justify-center">
+                              <Icon name="Banknote" size={20} className="text-white" />
+                            </div>
+                            <div>
+                              <p className="font-medium text-white">{request.username}</p>
+                              <p className="text-sm text-slate-400">{request.email} • ID: {request.userId}</p>
+                            </div>
+                          </div>
+                          <Badge className={getStatusColor(request.status)}>
+                            {getStatusText(request.status)}
+                          </Badge>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 text-sm">
+                          <div>
+                            <p className="text-slate-400">Сумма</p>
+                            <p className="text-white font-medium">{request.amount}₽</p>
+                            <p className="text-xs text-slate-500">{formatNumber(request.coins)} монет</p>
+                          </div>
+                          <div>
+                            <p className="text-slate-400">Платёжная система</p>
+                            <p className="text-white">{getPaymentSystemName(request.paymentSystem)}</p>
+                          </div>
+                          <div>
+                            <p className="text-slate-400">Реквизиты</p>
+                            <p className="text-white font-mono text-xs">{request.paymentDetails}</p>
+                          </div>
+                          <div>
+                            <p className="text-slate-400">Дата подачи</p>
+                            <p className="text-white text-xs">
+                              {format(new Date(request.createdAt), 'dd MMM yyyy, HH:mm', { locale: ru })}
+                            </p>
+                          </div>
+                        </div>
+
+                        {request.status === 'pending' && (
+                          <div className="flex gap-2 pt-2 border-t border-slate-600">
+                            <Button
+                              onClick={() => updateWithdrawStatus(request.id, 'approved')}
+                              className="bg-green-600 hover:bg-green-700 text-white flex-1"
+                            >
+                              <Icon name="Check" size={16} className="mr-2" />
+                              Одобрить
+                            </Button>
+                            <Button
+                              onClick={() => updateWithdrawStatus(request.id, 'rejected')}
+                              variant="destructive"
+                              className="flex-1"
+                            >
+                              <Icon name="X" size={16} className="mr-2" />
+                              Отклонить
+                            </Button>
+                          </div>
+                        )}
+
+                        {request.processedAt && (
+                          <div className="pt-2 border-t border-slate-600">
+                            <p className="text-xs text-slate-400">
+                              Обработано {format(new Date(request.processedAt), 'dd MMM yyyy, HH:mm', { locale: ru })}
+                              {request.processedBy && ` администратором ${request.processedBy}`}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })}
+                  
+                  {withdrawRequests.length === 0 && (
+                    <div className="text-center py-12">
+                      <Icon name="Banknote" size={48} className="mx-auto mb-4 text-slate-600" />
+                      <p className="text-slate-400">Заявок на вывод пока нет</p>
                     </div>
                   )}
                 </div>
