@@ -1,5 +1,10 @@
+import { useState } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import Icon from '@/components/ui/icon'
 import { User } from './GameSection'
 import StatsHeader from './StatsHeader'
@@ -11,8 +16,36 @@ interface WithdrawSectionProps {
 }
 
 export default function WithdrawSection({ currentUser, onAutoTapClick, onTabChange }: WithdrawSectionProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [paymentSystem, setPaymentSystem] = useState('')
+  const [walletInput, setWalletInput] = useState('')
+  const [cardInput, setCardInput] = useState('')
+  const [phoneInput, setPhoneInput] = useState('+7')
+  const [amount, setAmount] = useState('')
+
   if (!currentUser) {
     return null
+  }
+
+  const handleSubmit = () => {
+    console.log('Заявка на вывод:', {
+      paymentSystem,
+      amount,
+      wallet: walletInput,
+      card: cardInput,
+      phone: phoneInput
+    })
+    setIsModalOpen(false)
+    // Здесь будет логика отправки заявки
+  }
+
+  const getInputPlaceholder = () => {
+    switch(paymentSystem) {
+      case 'yumoney': return 'Введите номер кошелька ЮMoney'
+      case 'card': return 'Введите номер банковской карты'
+      case 'phone': return 'Введите номер телефона'
+      default: return ''
+    }
   }
 
   return (
@@ -28,13 +61,134 @@ export default function WithdrawSection({ currentUser, onAutoTapClick, onTabChan
       </Card>
 
       <div className="space-y-4">
-        <Button 
-          disabled={currentUser.gameStats.coins < 5000000} 
-          className="w-full bg-green-600 hover:bg-green-700"
-        >
-          <Icon name="Banknote" className="mr-2" />
-          Подать заявку на вывод
-        </Button>
+        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+          <DialogTrigger asChild>
+            <Button 
+              disabled={currentUser.gameStats.coins < 5000000} 
+              className="w-full bg-green-600 hover:bg-green-700"
+            >
+              <Icon name="Banknote" className="mr-2" />
+              Подать заявку на вывод
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Заявка на вывод средств</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="amount">Сумма вывода (в рублях)</Label>
+                <Input
+                  id="amount"
+                  type="number"
+                  placeholder="Введите сумму"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  min="500"
+                  max={Math.floor(currentUser.gameStats.coins / 10000)}
+                />
+                <div className="text-xs text-muted-foreground">
+                  Доступно: {Math.floor(currentUser.gameStats.coins / 10000)} ₽
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="payment-system">Платёжная система</Label>
+                <Select value={paymentSystem} onValueChange={setPaymentSystem}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Выберите платёжную систему" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="yumoney">
+                      <div className="flex items-center gap-2">
+                        <Icon name="Wallet" size={16} />
+                        ЮMoney
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="card">
+                      <div className="flex items-center gap-2">
+                        <Icon name="CreditCard" size={16} />
+                        Банковская карта
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="phone">
+                      <div className="flex items-center gap-2">
+                        <Icon name="Smartphone" size={16} />
+                        Сотовая связь
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {paymentSystem === 'yumoney' && (
+                <div className="space-y-2">
+                  <Label htmlFor="wallet">Номер кошелька ЮMoney</Label>
+                  <Input
+                    id="wallet"
+                    placeholder="Введите номер кошелька"
+                    value={walletInput}
+                    onChange={(e) => setWalletInput(e.target.value)}
+                  />
+                </div>
+              )}
+
+              {paymentSystem === 'card' && (
+                <div className="space-y-2">
+                  <Label htmlFor="card">Номер банковской карты</Label>
+                  <Input
+                    id="card"
+                    placeholder="1234 5678 9012 3456"
+                    value={cardInput}
+                    onChange={(e) => setCardInput(e.target.value)}
+                    maxLength={19}
+                  />
+                </div>
+              )}
+
+              {paymentSystem === 'phone' && (
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Номер телефона</Label>
+                  <Input
+                    id="phone"
+                    placeholder="+7 XXX XXX XX XX"
+                    value={phoneInput}
+                    onChange={(e) => {
+                      const value = e.target.value
+                      if (value.startsWith('+7') || value === '+') {
+                        setPhoneInput(value)
+                      } else if (!value.startsWith('+')) {
+                        setPhoneInput('+7' + value.replace(/^7/, ''))
+                      }
+                    }}
+                    maxLength={12}
+                  />
+                </div>
+              )}
+
+              <div className="flex gap-2 pt-4">
+                <Button 
+                  variant="outline" 
+                  className="flex-1"
+                  onClick={() => setIsModalOpen(false)}
+                >
+                  Отмена
+                </Button>
+                <Button 
+                  className="flex-1 bg-green-600 hover:bg-green-700"
+                  onClick={handleSubmit}
+                  disabled={!paymentSystem || !amount || 
+                    (paymentSystem === 'yumoney' && !walletInput) ||
+                    (paymentSystem === 'card' && !cardInput) ||
+                    (paymentSystem === 'phone' && phoneInput.length < 12)
+                  }
+                >
+                  Подать заявку
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
         
         <div className="text-center text-sm text-muted-foreground">
           Минимальная сумма для вывода: 5,000,000 монет (500₽)
