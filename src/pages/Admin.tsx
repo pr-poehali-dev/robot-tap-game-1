@@ -7,6 +7,9 @@ export default function Admin() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
+    // Логирование для отладки роутинга
+    console.log('Admin page loaded, current path:', window.location.pathname)
+    
     // Проверяем, авторизован ли админ
     const checkAuth = () => {
       const authStatus = localStorage.getItem('adminAuthenticated')
