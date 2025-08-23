@@ -11,23 +11,26 @@ interface NavigationProps {
 export default function Navigation({ activeTab, currentUser, onTabChange }: NavigationProps) {
   const tabs = [
     { id: 'game', label: 'Игра', icon: 'Gamepad2' },
-    { id: 'profile', label: 'Профиль', icon: 'User' },
+    { id: 'achievements', label: 'Трофеи', icon: 'Trophy' },
+    { id: 'tasks', label: 'Задания', icon: 'CheckSquare' },
+    { id: 'leagues', label: 'Лиги', icon: 'Medal' },
+    { id: 'minigames', label: 'Игры', icon: 'Dices' },
+    { id: 'social', label: 'Друзья', icon: 'Users' },
     { id: 'upgrades', label: 'Улучшения', icon: 'Zap' },
     { id: 'robots', label: 'Роботы', icon: 'Bot' },
-    { id: 'rating', label: 'Рейтинг', icon: 'Trophy' },
-    { id: 'tasks', label: 'Задания', icon: 'CheckSquare' }
+    { id: 'profile', label: 'Профиль', icon: 'User' }
   ]
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border">
-      <div className="grid grid-cols-6 gap-0.5 sm:gap-1 p-1 sm:p-2">
+    <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border overflow-x-auto">
+      <div className="flex gap-0.5 sm:gap-1 p-1 sm:p-2 min-w-max">
         {tabs.map((tab) => (
           <Button
             key={tab.id}
             variant={activeTab === tab.id ? "default" : "ghost"}
             size="sm"
             onClick={() => onTabChange(tab.id)}
-            className="flex flex-col items-center py-2 sm:py-3 h-auto px-1 sm:px-2"
+            className="flex flex-col items-center py-2 sm:py-3 h-auto px-2 sm:px-3 min-w-[60px] sm:min-w-[70px]"
             disabled={!currentUser && tab.id !== 'profile'}
           >
             <Icon name={tab.icon as any} size={16} className="sm:w-[18px] sm:h-[18px]" />

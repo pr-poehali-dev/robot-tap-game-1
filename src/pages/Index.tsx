@@ -8,6 +8,11 @@ import WithdrawSection from '@/components/WithdrawSection'
 import RatingSection from '@/components/RatingSection'
 import TasksSection from '@/components/TasksSection'
 import RobotsSection from '@/components/RobotsSection'
+import AchievementsSection from '@/components/AchievementsSection'
+import DailyTasksSection, { updateDailyTaskProgress } from '@/components/DailyTasksSection'
+import LeaguesSection from '@/components/LeaguesSection'
+import MinigamesSection from '@/components/MinigamesSection'
+import SocialSection from '@/components/SocialSection'
 import Navigation from '@/components/Navigation'
 
 export default function Index() {
@@ -183,6 +188,15 @@ export default function Index() {
     
     updateUserStats(updatedStats)
     
+    // Обновляем прогресс ежедневных заданий
+    updateDailyTaskProgress(currentUser.id, 'taps', 1)
+    updateDailyTaskProgress(currentUser.id, 'coins', totalTapPower)
+    
+    // Отмечаем истощение энергии для заданий
+    if (newTapsLeft <= 0) {
+      updateDailyTaskProgress(currentUser.id, 'energy', 1)
+    }
+    
     setTimeout(() => setIsAnimating(false), 300)
     setTimeout(() => setCoinAnimations(prev => prev.slice(1)), 1000)
   }
@@ -232,6 +246,41 @@ export default function Index() {
       
       updateUserStats(updatedStats)
     }
+  }
+
+  const handleClaimAchievementReward = (achievement: { id: string, reward: number }) => {
+    if (!currentUser) return
+    
+    const updatedStats = {
+      ...currentUser.gameStats,
+      coins: currentUser.gameStats.coins + achievement.reward
+    }
+    
+    updateUserStats(updatedStats)
+    alert(`Достижение выполнено! +${achievement.reward.toLocaleString()} монет! 🎉`)
+  }
+
+  const handleClaimDailyTaskReward = (task: { id: string, reward: number }) => {
+    if (!currentUser) return
+    
+    const updatedStats = {
+      ...currentUser.gameStats,
+      coins: currentUser.gameStats.coins + task.reward
+    }
+    
+    updateUserStats(updatedStats)
+    alert(`Задание выполнено! +${task.reward.toLocaleString()} монет! ✅`)
+  }
+
+  const handleUpdateCoinsFromMinigame = (newCoins: number) => {
+    if (!currentUser) return
+    
+    const updatedStats = {
+      ...currentUser.gameStats,
+      coins: newCoins
+    }
+    
+    updateUserStats(updatedStats)
   }
 
   useEffect(() => {
@@ -341,7 +390,30 @@ export default function Index() {
       case 'robots':
         return <RobotsSection currentUser={currentUser} onUpdateStats={updateUserStats} />
       case 'tasks': 
-        return <TasksSection currentUser={currentUser} onUpdateStats={updateUserStats} />
+        return (
+          <DailyTasksSection 
+            currentUser={currentUser}
+            onClaimReward={handleClaimDailyTaskReward}
+          />
+        )
+      case 'achievements':
+        return (
+          <AchievementsSection 
+            currentUser={currentUser}
+            onClaimReward={handleClaimAchievementReward}
+          />
+        )
+      case 'leagues':
+        return <LeaguesSection currentUser={currentUser} />
+      case 'minigames':
+        return (
+          <MinigamesSection 
+            currentUser={currentUser}
+            onUpdateCoins={handleUpdateCoinsFromMinigame}
+          />
+        )
+      case 'social':
+        return <SocialSection currentUser={currentUser} />
       default: 
         return (
           <GameSection 
