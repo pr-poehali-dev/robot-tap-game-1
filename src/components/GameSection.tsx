@@ -122,8 +122,6 @@ export default function GameSection({
 
     const updateTimer = () => {
       const now = Date.now()
-      const hasUnlimitedEnergy = localStorage.getItem(`unlimitedEnergy_${currentUser.id}`) === 'true'
-      const isVIP = localStorage.getItem(`vipStatus_${currentUser.id}`) === 'true'
       
       // Если энергия полная
       if (currentUser.gameStats.tapsLeft >= currentUser.gameStats.maxTaps) {
@@ -198,7 +196,6 @@ export default function GameSection({
     )
   }
 
-  const isVIP = localStorage.getItem(`vipStatus_${currentUser.id}`) === 'true'
   const hasUnlimitedEnergy = localStorage.getItem(`unlimitedEnergy_${currentUser.id}`) === 'true'
 
   return (
