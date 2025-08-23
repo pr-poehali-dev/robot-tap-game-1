@@ -39,6 +39,7 @@ interface GameSectionProps {
   onClaimDailyBonus: () => void
   onAutoTapClick: () => void
   onWithdrawClick: () => void
+  onTabChange: (tab: string) => void
 }
 
 export default function GameSection({ 
@@ -48,7 +49,8 @@ export default function GameSection({
   onRobotTap, 
   onClaimDailyBonus,
   onAutoTapClick,
-  onWithdrawClick 
+  onWithdrawClick,
+  onTabChange 
 }: GameSectionProps) {
   const [timeToFullEnergy, setTimeToFullEnergy] = useState('')
   const [timeToNextBonus, setTimeToNextBonus] = useState('')
@@ -204,6 +206,7 @@ export default function GameSection({
         currentUser={currentUser} 
         onAutoTapClick={onAutoTapClick}
         onWithdrawClick={onWithdrawClick}
+        onTabChange={onTabChange}
       />
 
       <div className="relative">

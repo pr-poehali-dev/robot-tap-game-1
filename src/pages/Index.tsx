@@ -350,6 +350,7 @@ export default function Index() {
             onClaimDailyBonus={handleClaimDailyBonus}
             onAutoTapClick={() => setActiveTab('auto')}
             onWithdrawClick={() => setActiveTab('withdraw')}
+            onTabChange={setActiveTab}
           />
         )
       case 'profile': 
@@ -384,7 +385,7 @@ export default function Index() {
           />
         )
       case 'withdraw': 
-        return <WithdrawSection currentUser={currentUser} onAutoTapClick={() => setActiveTab('auto')} />
+        return <WithdrawSection currentUser={currentUser} onAutoTapClick={() => setActiveTab('auto')} onTabChange={setActiveTab} />
       case 'rating': 
         return <RatingSection currentUser={currentUser} />
       case 'robots':

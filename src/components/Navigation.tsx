@@ -11,10 +11,7 @@ interface NavigationProps {
 export default function Navigation({ activeTab, currentUser, onTabChange }: NavigationProps) {
   const tabs = [
     { id: 'game', label: 'Игра', icon: 'Gamepad2' },
-    { id: 'leagues', label: 'Лиги', icon: 'Medal' },
-    { id: 'minigames', label: 'Игры', icon: 'Dices' },
     { id: 'social', label: 'Друзья', icon: 'Users' },
-    { id: 'achievements', label: 'Трофеи', icon: 'Trophy' },
     { id: 'tasks', label: 'Задания', icon: 'CheckSquare' },
     { id: 'upgrades', label: 'Улучшения', icon: 'Zap' },
     { id: 'robots', label: 'Роботы', icon: 'Bot' },

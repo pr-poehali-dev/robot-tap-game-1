@@ -7,16 +7,17 @@ import StatsHeader from './StatsHeader'
 interface WithdrawSectionProps {
   currentUser: User | null
   onAutoTapClick: () => void
+  onTabChange: (tab: string) => void
 }
 
-export default function WithdrawSection({ currentUser, onAutoTapClick }: WithdrawSectionProps) {
+export default function WithdrawSection({ currentUser, onAutoTapClick, onTabChange }: WithdrawSectionProps) {
   if (!currentUser) {
     return null
   }
 
   return (
     <div className="space-y-6">
-      <StatsHeader currentUser={currentUser} onAutoTapClick={onAutoTapClick} onWithdrawClick={() => {}} />
+      <StatsHeader currentUser={currentUser} onAutoTapClick={onAutoTapClick} onWithdrawClick={() => {}} onTabChange={onTabChange} />
       <Card>
         <CardContent className="p-6 text-center">
           <h2 className="text-2xl font-bold mb-4">Вывод средств</h2>
