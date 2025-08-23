@@ -40,7 +40,23 @@ export default function UpgradesSection({ currentUser, onUpgradeRobot, onUpdateS
     onUpdateStats(updatedStats)
   }
 
+  const handleBuyUnlimitedEnergy = () => {
+    if (!currentUser || currentUser.gameStats.coins < 950000000) return
+    
+    const updatedStats = {
+      ...currentUser.gameStats,
+      coins: currentUser.gameStats.coins - 950000000,
+      maxTaps: 1000,
+      tapsLeft: 1000
+    }
+    
+    // Сохраняем статус безлимитной энергии
+    localStorage.setItem(`unlimitedEnergy_${currentUser.id}`, 'true')
+    onUpdateStats(updatedStats)
+  }
+
   const isVIP = localStorage.getItem(`vipStatus_${currentUser.id}`) === 'true'
+  const hasUnlimitedEnergy = localStorage.getItem(`unlimitedEnergy_${currentUser.id}`) === 'true'
 
   return (
     <div className="space-y-4">
@@ -80,6 +96,32 @@ export default function UpgradesSection({ currentUser, onUpgradeRobot, onUpdateS
             className="w-full"
           >
             Улучшить за 2,000 монет
+          </Button>
+        </CardContent>
+      </Card>
+
+      <Card className={hasUnlimitedEnergy ? "border-purple-500 bg-gradient-to-br from-purple-50 to-pink-50" : ""}>
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-lg font-semibold flex items-center gap-2">
+                ⚡ Энергия навсегда
+                {hasUnlimitedEnergy && <span className="text-purple-600">✨ Активна</span>}
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                {hasUnlimitedEnergy ? '1000 энергии, восстановление 15 минут' : 'Максимум 1000 энергии, восстановление через 15 минут'}
+              </p>
+            </div>
+            <Badge variant={hasUnlimitedEnergy ? "default" : "outline"} className={hasUnlimitedEnergy ? "bg-purple-500" : ""}>
+              {hasUnlimitedEnergy ? "Куплено" : "Навсегда"}
+            </Badge>
+          </div>
+          <Button 
+            onClick={handleBuyUnlimitedEnergy}
+            disabled={currentUser.gameStats.coins < 950000000 || hasUnlimitedEnergy}
+            className={`w-full ${hasUnlimitedEnergy ? 'bg-purple-500 hover:bg-purple-600' : 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700'}`}
+          >
+            {hasUnlimitedEnergy ? '✅ Энергия куплена' : 'Купить за 950,000,000 монет'}
           </Button>
         </CardContent>
       </Card>

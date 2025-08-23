@@ -122,6 +122,8 @@ export default function GameSection({
 
     const updateTimer = () => {
       const now = Date.now()
+      const hasUnlimitedEnergy = localStorage.getItem(`unlimitedEnergy_${currentUser.id}`) === 'true'
+      const isVIP = localStorage.getItem(`vipStatus_${currentUser.id}`) === 'true'
       
       // Если энергия полная
       if (currentUser.gameStats.tapsLeft >= currentUser.gameStats.maxTaps) {
@@ -131,7 +133,17 @@ export default function GameSection({
 
       // Если энергия истощена и установлена метка времени
       if (currentUser.gameStats.energyDepletedAt) {
-        const restoreTime = currentUser.gameStats.energyDepletedAt + (5 * 60 * 60 * 1000) // 5 часов в миллисекундах
+        let restoreTimeMs
+        
+        if (hasUnlimitedEnergy) {
+          restoreTimeMs = 15 * 60 * 1000 // 15 минут для безлимитной энергии
+        } else if (isVIP) {
+          restoreTimeMs = 1 * 60 * 60 * 1000 // 1 час для VIP
+        } else {
+          restoreTimeMs = 5 * 60 * 60 * 1000 // 5 часов для обычных пользователей
+        }
+        
+        const restoreTime = currentUser.gameStats.energyDepletedAt + restoreTimeMs
         
         if (now >= restoreTime) {
           setTimeToFullEnergy('Готово к восстановлению')
@@ -199,6 +211,7 @@ export default function GameSection({
           onClick={onRobotTap}
           disabled={currentUser.gameStats.tapsLeft <= 0}
           className={`w-48 h-48 sm:w-56 sm:h-56 rounded-full p-0 bg-gradient-to-b from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 border-4 shadow-2xl overflow-hidden ${
+            hasUnlimitedEnergy ? 'border-purple-400 shadow-purple-300/50' :
             isVIP ? 'border-yellow-400 shadow-yellow-300/50' : 'border-primary/30'
           } ${isAnimating ? 'animate-tap-bounce' : ''}`}
         >
@@ -207,7 +220,12 @@ export default function GameSection({
             alt={currentRobot.name}
             className="w-full h-full object-cover rounded-full hover:scale-110 transition-transform duration-200"
           />
-          {isVIP && (
+          {hasUnlimitedEnergy && (
+            <div className="absolute -top-2 -right-2 text-3xl animate-pulse">
+              ⚡
+            </div>
+          )}
+          {isVIP && !hasUnlimitedEnergy && (
             <div className="absolute -top-2 -right-2 text-3xl animate-pulse">
               👑
             </div>
@@ -234,11 +252,23 @@ export default function GameSection({
         <p className="text-xs text-muted-foreground">
           Мощность тапа: {currentUser.gameStats.robotPower} × {currentRobot.tapPower} = {currentUser.gameStats.robotPower * currentRobot.tapPower} монет
         </p>
-        {isVIP && (
-          <p className="text-xs text-yellow-600 font-medium">
-            ⚡ Восстановление энергии: 1 час вместо 5 часов
-          </p>
-        )}
+        {(() => {
+          const hasUnlimitedEnergy = localStorage.getItem(`unlimitedEnergy_${currentUser.id}`) === 'true'
+          if (hasUnlimitedEnergy) {
+            return (
+              <p className="text-xs text-purple-600 font-medium">
+                ⚡ Безлимитная энергия: восстановление 15 минут
+              </p>
+            )
+          } else if (isVIP) {
+            return (
+              <p className="text-xs text-yellow-600 font-medium">
+                ⚡ VIP восстановление энергии: 1 час вместо 5 часов
+              </p>
+            )
+          }
+          return null
+        })()}
       </div>
 
       <div className="w-full space-y-2">

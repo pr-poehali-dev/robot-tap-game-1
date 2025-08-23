@@ -258,8 +258,17 @@ export default function Index() {
         // Проверяем, нужно ли восстановить энергию
         if (user.gameStats.energyDepletedAt) {
           const timeSinceDepletion = now - user.gameStats.energyDepletedAt
+          const hasUnlimitedEnergy = localStorage.getItem(`unlimitedEnergy_${user.id}`) === 'true'
           const isVIP = localStorage.getItem(`vipStatus_${user.id}`) === 'true'
-          const recoveryTime = isVIP ? 1 * 60 * 60 * 1000 : 5 * 60 * 60 * 1000 // 1 час для VIP, 5 часов для обычных
+          
+          let recoveryTime
+          if (hasUnlimitedEnergy) {
+            recoveryTime = 15 * 60 * 1000 // 15 минут для безлимитной энергии
+          } else if (isVIP) {
+            recoveryTime = 1 * 60 * 60 * 1000 // 1 час для VIP
+          } else {
+            recoveryTime = 5 * 60 * 60 * 1000 // 5 часов для обычных пользователей
+          }
           
           if (timeSinceDepletion >= recoveryTime) {
             // Восстанавливаем энергию полностью
