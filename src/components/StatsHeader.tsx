@@ -53,10 +53,7 @@ export default function StatsHeader({ currentUser, onAutoTapClick, onWithdrawCli
           <CardContent className="p-1 xs:p-2 sm:p-3 text-center relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-orange-400/5 to-transparent"></div>
             <div className="relative z-10 flex flex-col items-center justify-center min-h-[40px] sm:min-h-[50px]">
-              <Icon name="Car" size={16} className="text-orange-600 sm:w-5 sm:h-5 md:w-6 md:h-6 mb-1" />
-              <div className="text-xs sm:text-sm md:text-base font-black text-orange-700 drop-shadow-sm">
-                AUTO
-              </div>
+              <Icon name="Car" size={16} className="text-orange-600 sm:w-5 sm:h-5 md:w-6 md:h-6" />
             </div>
           </CardContent>
         </Card>
