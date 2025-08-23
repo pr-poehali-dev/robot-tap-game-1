@@ -31,24 +31,24 @@ export default function AdminPanel({ onLogout }: AdminPanelProps) {
   }, [])
 
   const loadUsersData = () => {
-    // Загружаем всех пользователей из localStorage
+    // Загружаем пользователей из основной системы сайта
     const allUsers: User[] = []
     let totalCoins = 0
     let totalTaps = 0
     let vipCount = 0
     let onlineCount = 0
 
-    // Проходим по всем ключам localStorage
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i)
-      if (key?.startsWith('user_')) {
-        try {
-          const userData = JSON.parse(localStorage.getItem(key) || '')
-          const user: User = userData
+    try {
+      // Получаем пользователей из ключа robotGameUsers (основная система сайта)
+      const usersData = localStorage.getItem('robotGameUsers')
+      if (usersData) {
+        const users: User[] = JSON.parse(usersData)
+        
+        for (const user of users) {
           allUsers.push(user)
           
-          totalCoins += user.gameStats.coins
-          totalTaps += user.gameStats.totalTaps
+          totalCoins += user.gameStats.coins || 0
+          totalTaps += user.gameStats.totalEarned || 0
           
           // Проверяем VIP статус
           const isVIP = localStorage.getItem(`vipStatus_${user.id}`) === 'true'
@@ -60,14 +60,14 @@ export default function AdminPanel({ onLogout }: AdminPanelProps) {
             const timeDiff = Date.now() - parseInt(lastActivity)
             if (timeDiff < 10 * 60 * 1000) onlineCount++
           }
-        } catch (error) {
-          console.error('Ошибка при загрузке пользователя:', error)
         }
       }
+    } catch (error) {
+      console.error('Ошибка при загрузке пользователей сайта:', error)
     }
 
     // Сортируем по дате регистрации (новые сверху)
-    allUsers.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    allUsers.sort((a, b) => new Date(b.registeredAt).getTime() - new Date(a.registeredAt).getTime())
 
     setUsers(allUsers)
     setStats({
@@ -85,7 +85,7 @@ export default function AdminPanel({ onLogout }: AdminPanelProps) {
 
   const filteredUsers = users.filter(user =>
     user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    user.telegramData.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
     user.id.toString().includes(searchQuery)
   )
 
@@ -188,7 +188,7 @@ export default function AdminPanel({ onLogout }: AdminPanelProps) {
               <StatCard title="Онлайн сейчас" value={stats.onlineUsers} icon="Wifi" color="green" />
               <StatCard title="VIP пользователей" value={stats.vipUsers} icon="Crown" color="yellow" />
               <StatCard title="Всего монет" value={stats.totalCoins} icon="Coins" color="orange" />
-              <StatCard title="Всего тапов" value={stats.totalTaps} icon="MousePointer" color="purple" />
+              <StatCard title="Всего заработано" value={stats.totalTaps} icon="TrendingUp" color="purple" />
             </div>
 
             {/* Последние регистрации */}
@@ -208,13 +208,13 @@ export default function AdminPanel({ onLogout }: AdminPanelProps) {
                           <span className="text-sm font-bold">{user.username[0].toUpperCase()}</span>
                         </div>
                         <div>
-                          <p className="font-medium">{user.telegramData.first_name}</p>
-                          <p className="text-sm text-slate-400">@{user.username}</p>
+                          <p className="font-medium">{user.username}</p>
+                          <p className="text-sm text-slate-400">{user.email}</p>
                         </div>
                       </div>
                       <div className="text-right">
                         <p className="text-sm text-slate-400">
-                          {format(new Date(user.createdAt), 'dd MMM, HH:mm', { locale: ru })}
+                          {format(new Date(user.registeredAt), 'dd MMM, HH:mm', { locale: ru })}
                         </p>
                         {isVIPUser(user.id.toString()) && (
                           <Badge variant="secondary" className="bg-yellow-600 text-white">
@@ -282,10 +282,10 @@ export default function AdminPanel({ onLogout }: AdminPanelProps) {
                           </div>
                           <div>
                             <div className="flex items-center gap-2">
-                              <p className="font-medium">{user.telegramData.first_name}</p>
+                              <p className="font-medium">{user.username}</p>
                               {isVIP && <span className="text-yellow-500">👑</span>}
                             </div>
-                            <p className="text-sm text-slate-400">@{user.username} • ID: {user.id}</p>
+                            <p className="text-sm text-slate-400">{user.email} • ID: {user.id}</p>
                           </div>
                         </div>
                         
@@ -297,8 +297,8 @@ export default function AdminPanel({ onLogout }: AdminPanelProps) {
                           </div>
                           <div className="text-sm text-slate-400 space-y-1">
                             <div>💰 {formatNumber(user.gameStats.coins)} монет</div>
-                            <div>👆 {formatNumber(user.gameStats.totalTaps)} тапов</div>
-                            <div>⚡ {user.gameStats.energy}/{user.gameStats.maxEnergy} энергии</div>
+                            <div>💎 {formatNumber(user.gameStats.totalEarned)} заработано</div>
+                            <div>⚡ {user.gameStats.tapsLeft}/{user.gameStats.maxTaps} тапов</div>
                           </div>
                         </div>
                       </div>
