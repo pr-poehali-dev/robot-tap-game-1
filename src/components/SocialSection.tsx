@@ -48,7 +48,7 @@ export default function SocialSection({ currentUser }: SocialSectionProps) {
         <button
           onClick={() => setActiveTab('leaderboard')}
           className={`flex-1 py-2 px-3 rounded text-sm font-medium transition-colors ${
-            activeTab === 'leaderboard' ? 'bg-background shadow-sm' : 'hover:bg-muted-foreground/10'
+            activeTab === 'leaderboard' ? 'bg-background shadow-sm text-foreground' : 'hover:bg-muted-foreground/10 text-muted-foreground'
           }`}
         >
           🏆 Рейтинг
@@ -56,7 +56,7 @@ export default function SocialSection({ currentUser }: SocialSectionProps) {
         <button
           onClick={() => setActiveTab('friends')}
           className={`flex-1 py-2 px-3 rounded text-sm font-medium transition-colors ${
-            activeTab === 'friends' ? 'bg-background shadow-sm' : 'hover:bg-muted-foreground/10'
+            activeTab === 'friends' ? 'bg-background shadow-sm text-foreground' : 'hover:bg-muted-foreground/10 text-muted-foreground'
           }`}
         >
           👫 Друзья {friendRequests.length > 0 && <Badge className="ml-1 bg-red-500">{friendRequests.length}</Badge>}
@@ -64,7 +64,7 @@ export default function SocialSection({ currentUser }: SocialSectionProps) {
         <button
           onClick={() => setActiveTab('chat')}
           className={`flex-1 py-2 px-3 rounded text-sm font-medium transition-colors ${
-            activeTab === 'chat' ? 'bg-background shadow-sm' : 'hover:bg-muted-foreground/10'
+            activeTab === 'chat' ? 'bg-background shadow-sm text-foreground' : 'hover:bg-muted-foreground/10 text-muted-foreground'
           }`}
         >
           💬 Чат
