@@ -227,12 +227,13 @@ export default function Index() {
         const now = Date.now()
         const user = users[userIndex]
         
-        // Проверяем, нужно ли восстановить энергию после 5 часов
+        // Проверяем, нужно ли восстановить энергию
         if (user.gameStats.energyDepletedAt) {
           const timeSinceDepletion = now - user.gameStats.energyDepletedAt
-          const fiveHours = 5 * 60 * 60 * 1000
+          const isVIP = localStorage.getItem(`vipStatus_${user.id}`) === 'true'
+          const recoveryTime = isVIP ? 1 * 60 * 60 * 1000 : 5 * 60 * 60 * 1000 // 1 час для VIP, 5 часов для обычных
           
-          if (timeSinceDepletion >= fiveHours) {
+          if (timeSinceDepletion >= recoveryTime) {
             // Восстанавливаем энергию полностью
             const updatedStats = {
               ...user.gameStats,

@@ -27,6 +27,21 @@ export default function UpgradesSection({ currentUser, onUpgradeRobot, onUpdateS
     onUpdateStats(updatedStats)
   }
 
+  const handleBuyVIP = () => {
+    if (!currentUser || currentUser.gameStats.coins < 50000) return
+    
+    const updatedStats = {
+      ...currentUser.gameStats,
+      coins: currentUser.gameStats.coins - 50000
+    }
+    
+    // Сохраняем VIP статус
+    localStorage.setItem(`vipStatus_${currentUser.id}`, 'true')
+    onUpdateStats(updatedStats)
+  }
+
+  const isVIP = localStorage.getItem(`vipStatus_${currentUser.id}`) === 'true'
+
   return (
     <div className="space-y-4">
       <h2 className="text-2xl font-bold text-center mb-6">Улучшения робота</h2>
@@ -65,6 +80,32 @@ export default function UpgradesSection({ currentUser, onUpgradeRobot, onUpdateS
             className="w-full"
           >
             Улучшить за 2,000 монет
+          </Button>
+        </CardContent>
+      </Card>
+
+      <Card className={isVIP ? "border-yellow-500 bg-gradient-to-br from-yellow-50 to-orange-50" : ""}>
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-lg font-semibold flex items-center gap-2">
+                👑 VIP статус
+                {isVIP && <span className="text-yellow-600">✨ Активен</span>}
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                Восстановление энергии: {isVIP ? '1 час' : '5 часов → 1 час'}
+              </p>
+            </div>
+            <Badge variant={isVIP ? "default" : "outline"} className={isVIP ? "bg-yellow-500" : ""}>
+              {isVIP ? "VIP" : "Премиум"}
+            </Badge>
+          </div>
+          <Button 
+            onClick={handleBuyVIP}
+            disabled={currentUser.gameStats.coins < 50000 || isVIP}
+            className={`w-full ${isVIP ? 'bg-yellow-500 hover:bg-yellow-600' : ''}`}
+          >
+            {isVIP ? '✅ VIP приобретен' : 'Купить VIP за 50,000 монет'}
           </Button>
         </CardContent>
       </Card>

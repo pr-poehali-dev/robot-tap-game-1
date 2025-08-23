@@ -91,6 +91,7 @@ export default function GameSection({
   }
 
   const currentRobot = getUserRobot()
+  const isVIP = currentUser ? localStorage.getItem(`vipStatus_${currentUser.id}`) === 'true' : false
 
   const getDailyBonusStatus = () => {
     if (!currentUser?.gameStats.lastDailyBonusTime) {
@@ -197,15 +198,20 @@ export default function GameSection({
         <Button
           onClick={onRobotTap}
           disabled={currentUser.gameStats.tapsLeft <= 0}
-          className={`w-48 h-48 sm:w-56 sm:h-56 rounded-full p-0 bg-gradient-to-b from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 border-4 border-primary/30 shadow-2xl overflow-hidden ${
-            isAnimating ? 'animate-tap-bounce' : ''
-          }`}
+          className={`w-48 h-48 sm:w-56 sm:h-56 rounded-full p-0 bg-gradient-to-b from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 border-4 shadow-2xl overflow-hidden ${
+            isVIP ? 'border-yellow-400 shadow-yellow-300/50' : 'border-primary/30'
+          } ${isAnimating ? 'animate-tap-bounce' : ''}`}
         >
           <img
             src={currentRobot.image}
             alt={currentRobot.name}
             className="w-full h-full object-cover rounded-full hover:scale-110 transition-transform duration-200"
           />
+          {isVIP && (
+            <div className="absolute -top-2 -right-2 text-3xl animate-pulse">
+              👑
+            </div>
+          )}
         </Button>
       
         {coinAnimations.map(coin => (
@@ -221,10 +227,18 @@ export default function GameSection({
 
       {/* Информация о текущем роботе */}
       <div className="text-center space-y-1">
-        <h3 className="font-semibold text-sm sm:text-base">{currentRobot.name}</h3>
+        <h3 className="font-semibold text-sm sm:text-base flex items-center justify-center gap-2">
+          {currentRobot.name}
+          {isVIP && <span className="text-yellow-600">👑 VIP</span>}
+        </h3>
         <p className="text-xs text-muted-foreground">
           Мощность тапа: {currentUser.gameStats.robotPower} × {currentRobot.tapPower} = {currentUser.gameStats.robotPower * currentRobot.tapPower} монет
         </p>
+        {isVIP && (
+          <p className="text-xs text-yellow-600 font-medium">
+            ⚡ Восстановление энергии: 1 час вместо 5 часов
+          </p>
+        )}
       </div>
 
       <div className="w-full space-y-2">
