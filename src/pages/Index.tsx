@@ -286,6 +286,7 @@ export default function Index() {
           <UpgradesSection 
             currentUser={currentUser}
             onUpgradeRobot={handleUpgradeRobot}
+            onUpdateStats={updateUserStats}
           />
         )
       case 'auto': 
