@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import Icon from '@/components/ui/icon'
 import AuthForm from '@/components/AuthForm'
 import GameSection from '@/components/GameSection'
 import { User, GameStats } from '@/types/user'
@@ -21,6 +22,7 @@ export default function Index() {
   const [currentUser, setCurrentUser] = useState<User | null>(null)
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login')
   const [authForm, setAuthForm] = useState({ username: '', email: '', password: '' })
+  const [registrationCount, setRegistrationCount] = useState(0)
 
   useEffect(() => {
     document.title = 'YaTitan - Робот кликер'
@@ -95,6 +97,7 @@ export default function Index() {
     
     setCurrentUser(newUser)
     setAuthForm({ username: '', email: '', password: '' })
+    setRegistrationCount(users.length) // Обновляем счетчик регистраций
   }
 
   const handleLogin = () => {
@@ -291,15 +294,33 @@ export default function Index() {
     updateUserStats(updatedStats)
   }
 
+  // Получаем количество зарегистрированных пользователей
+  const getRegistrationCount = () => {
+    const users = JSON.parse(localStorage.getItem('robotGameUsers') || '[]')
+    return users.length
+  }
+
+  // Форматируем большие числа
+  const formatNumber = (num: number) => {
+    if (num >= 1000000000) return (num / 1000000000).toFixed(1) + 'B'
+    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M'
+    if (num >= 1000) return (num / 1000).toFixed(1) + 'K'
+    return num.toString()
+  }
+
   useEffect(() => {
     const savedUserId = localStorage.getItem('currentUserId')
+    const users = JSON.parse(localStorage.getItem('robotGameUsers') || '[]')
+    
     if (savedUserId) {
-      const users = JSON.parse(localStorage.getItem('robotGameUsers') || '[]')
       const user = users.find((u: User) => u.id === savedUserId)
       if (user) {
         setCurrentUser(user)
       }
     }
+    
+    // Инициализируем счетчик регистраций
+    setRegistrationCount(users.length)
   }, [])
 
   useEffect(() => {
@@ -437,7 +458,19 @@ export default function Index() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
+    <div className="min-h-screen bg-background text-foreground flex flex-col relative">
+      {/* Кнопка счетчика регистраций - адаптивная */}
+      <div className="fixed left-1 sm:left-2 md:left-4 top-1/2 transform -translate-y-1/2 z-50">
+        <div className="bg-primary/90 backdrop-blur-sm text-primary-foreground rounded-full shadow-lg border border-primary/20 hover:bg-primary transition-all duration-200 hover:scale-105 cursor-pointer px-2 py-2 sm:px-3 sm:py-2 md:px-4 md:py-3 min-w-[50px] sm:min-w-[60px] md:min-w-[70px] text-center">
+          <div className="flex flex-col items-center">
+            <Icon name="Users" size={12} className="sm:w-4 sm:h-4 md:w-5 md:h-5 mb-0.5 sm:mb-1" />
+            <span className="text-[10px] sm:text-xs md:text-sm font-bold leading-none">
+              {formatNumber(registrationCount)}
+            </span>
+          </div>
+        </div>
+      </div>
+
       <div className="flex-1 overflow-y-auto pb-16">
         <div className="container mx-auto px-2 sm:px-4 py-2 sm:py-4 max-w-md">
           {!currentUser && activeTab !== 'profile' ? (
