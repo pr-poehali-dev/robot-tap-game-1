@@ -415,7 +415,7 @@ export default function Index() {
           />
         )
       case 'social':
-        return <SocialSection currentUser={currentUser} />
+        return <SocialSection currentUser={currentUser} onUpdateStats={updateUserStats} />
       default: 
         return (
           <GameSection 
