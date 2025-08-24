@@ -30,7 +30,7 @@ export default function UserCounters({ registrationCount, onlineCount }: UserCou
       </div>
 
       {/* Кнопка счетчика онлайн - адаптивная справа */}
-      <div className="fixed right-1 sm:right-2 md:right-4 top-1/2 transform -translate-y-1/2 z-50">
+      <div className="fixed right-1 sm:right-2 md:right-4 top-1/2 transform -translate-y-1/2 z-50 group">
         <div className="bg-green-500/90 backdrop-blur-sm text-white rounded-full shadow-lg border border-green-400/20 hover:bg-green-500 transition-all duration-200 hover:scale-105 cursor-pointer px-2 py-2 sm:px-3 sm:py-2 md:px-4 md:py-3 min-w-[50px] sm:min-w-[60px] md:min-w-[70px] text-center">
           <div className="flex flex-col items-center">
             <div className="flex items-center mb-0.5 sm:mb-1">
@@ -40,6 +40,14 @@ export default function UserCounters({ registrationCount, onlineCount }: UserCou
             <span className="text-[10px] sm:text-xs md:text-sm font-bold leading-none">
               {formatNumber(onlineCount)}
             </span>
+          </div>
+        </div>
+
+        {/* Тултип для ПК - показывается снизу при наведении */}
+        <div className="hidden md:block absolute left-1/2 top-full mt-2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+          <div className="bg-gray-800 text-white text-xs px-2 py-1 rounded-md whitespace-nowrap shadow-lg">
+            Online
+            <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-800 rotate-45"></div>
           </div>
         </div>
       </div>
