@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import Icon from '@/components/ui/icon'
 import { User } from '@/types/user'
@@ -11,6 +11,7 @@ interface NavigationProps {
 
 export default function Navigation({ activeTab, currentUser, onTabChange }: NavigationProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isTouch, setIsTouch] = useState(false)
   
   const tabs = [
     { id: 'game', label: 'Игра', icon: 'Gamepad2' },
@@ -21,6 +22,18 @@ export default function Navigation({ activeTab, currentUser, onTabChange }: Navi
     { id: 'profile', label: 'Профиль', icon: 'User' }
   ]
 
+  // Определяем touch устройства
+  useEffect(() => {
+    const checkTouch = () => {
+      setIsTouch('ontouchstart' in window || navigator.maxTouchPoints > 0)
+    }
+    
+    checkTouch()
+    window.addEventListener('resize', checkTouch)
+    
+    return () => window.removeEventListener('resize', checkTouch)
+  }, [])
+
   const handleTabChange = (tabId: string) => {
     onTabChange(tabId)
     setIsMenuOpen(false)
@@ -28,8 +41,8 @@ export default function Navigation({ activeTab, currentUser, onTabChange }: Navi
 
   return (
     <>
-      {/* Desktop Navigation - скрыто на мобильных */}
-      <div className="hidden md:block fixed bottom-0 left-0 right-0 bg-card border-t border-border z-50">
+      {/* Desktop Navigation - скрыто на мобильных и touch устройствах */}
+      <div className={`${isTouch ? 'hidden' : 'hidden md:block'} fixed bottom-0 left-0 right-0 bg-card border-t border-border z-50`}>
         <div className="flex justify-center max-w-screen-xl mx-auto">
           <div className="flex gap-2 p-2">
             {tabs.map((tab) => (
@@ -49,48 +62,76 @@ export default function Navigation({ activeTab, currentUser, onTabChange }: Navi
         </div>
       </div>
 
-      {/* Mobile Navigation - видно только на мобильных и планшетах */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border z-50">
-        {/* Мобильное меню - горизонтальная прокрутка */}
-        <div className="sm:hidden flex overflow-x-auto scrollbar-hide">
-          <div className="flex gap-1 p-1 min-w-max">
-            {tabs.map((tab) => (
-              <Button
-                key={tab.id}
-                variant={activeTab === tab.id ? "default" : "ghost"}
-                size="sm"
-                onClick={() => onTabChange(tab.id)}
-                className="flex flex-col items-center py-2 h-auto px-3 min-w-[60px] flex-shrink-0"
-                disabled={!currentUser && tab.id !== 'profile'}
-              >
-                <Icon name={tab.icon as any} size={16} />
-                <span className="text-[10px] mt-0.5 leading-tight whitespace-nowrap">{tab.label}</span>
-              </Button>
-            ))}
+      {/* Touch Navigation - только для touch устройств */}
+      {isTouch && (
+        <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border z-50">
+          {/* Touch меню - адаптивная сетка */}
+          <div className="block">
+            <div className="flex justify-center">
+              <div className="flex gap-1 p-1 max-w-full overflow-hidden">
+                {tabs.map((tab) => (
+                  <Button
+                    key={tab.id}
+                    variant={activeTab === tab.id ? "default" : "ghost"}
+                    size="sm"
+                    onClick={() => onTabChange(tab.id)}
+                    className="flex flex-col items-center py-2 h-auto px-2 min-w-[60px] flex-1 touch-manipulation"
+                    disabled={!currentUser && tab.id !== 'profile'}
+                  >
+                    <Icon name={tab.icon as any} size={18} />
+                    <span className="text-[11px] mt-0.5 leading-tight">{tab.label}</span>
+                  </Button>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
+      )}
 
-        {/* Планшетное меню - обычная сетка */}
-        <div className="hidden sm:block md:hidden">
-          <div className="flex justify-center">
-            <div className="flex gap-1 p-1 max-w-full overflow-hidden">
+      {/* Mobile Navigation - видно только на не-touch устройствах */}
+      {!isTouch && (
+        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border z-50">
+          {/* Мобильное меню - горизонтальная прокрутка */}
+          <div className="sm:hidden flex overflow-x-auto scrollbar-hide">
+            <div className="flex gap-1 p-1 min-w-max">
               {tabs.map((tab) => (
                 <Button
                   key={tab.id}
                   variant={activeTab === tab.id ? "default" : "ghost"}
                   size="sm"
                   onClick={() => onTabChange(tab.id)}
-                  className="flex flex-col items-center py-2 h-auto px-2 min-w-[70px] flex-1"
+                  className="flex flex-col items-center py-2 h-auto px-3 min-w-[60px] flex-shrink-0"
                   disabled={!currentUser && tab.id !== 'profile'}
                 >
-                  <Icon name={tab.icon as any} size={18} />
-                  <span className="text-[11px] mt-0.5 leading-tight">{tab.label}</span>
+                  <Icon name={tab.icon as any} size={16} />
+                  <span className="text-[10px] mt-0.5 leading-tight whitespace-nowrap">{tab.label}</span>
                 </Button>
               ))}
             </div>
           </div>
+
+          {/* Планшетное меню - обычная сетка */}
+          <div className="hidden sm:block md:hidden">
+            <div className="flex justify-center">
+              <div className="flex gap-1 p-1 max-w-full overflow-hidden">
+                {tabs.map((tab) => (
+                  <Button
+                    key={tab.id}
+                    variant={activeTab === tab.id ? "default" : "ghost"}
+                    size="sm"
+                    onClick={() => onTabChange(tab.id)}
+                    className="flex flex-col items-center py-2 h-auto px-2 min-w-[70px] flex-1"
+                    disabled={!currentUser && tab.id !== 'profile'}
+                  >
+                    <Icon name={tab.icon as any} size={18} />
+                    <span className="text-[11px] mt-0.5 leading-tight">{tab.label}</span>
+                  </Button>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
 
 
     </>
