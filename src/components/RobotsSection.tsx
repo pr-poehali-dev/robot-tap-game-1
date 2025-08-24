@@ -81,6 +81,16 @@ const availableRobots: Robot[] = [
     tapPower: 20,
     lifespan: 100,
     description: 'Легендарный робот будущего'
+  },
+  {
+    id: 'student',
+    name: 'Работа школьника',
+    emoji: '🎓',
+    image: '/img/ac2ca91c-0b9f-44f7-b5b4-a2d871140891.jpg',
+    price: 780000,
+    tapPower: 35,
+    lifespan: 120,
+    description: 'Умный ученик готов к новому учебному году!'
   }
 ]
 
@@ -209,7 +219,9 @@ export default function RobotsSection({ currentUser, onUpdateStats }: RobotsSect
               <div className="flex">
                 {/* Красивое изображение робота */}
                 <div className={`w-32 h-40 flex items-end justify-center rounded-l-lg overflow-hidden ${
-                  robot.id === 'cyborg' 
+                  robot.id === 'student'
+                    ? 'bg-gradient-to-br from-blue-500/20 via-indigo-500/15 to-purple-500/10 relative'
+                    : robot.id === 'cyborg' 
                     ? 'bg-gradient-to-br from-purple-500/20 via-blue-500/20 to-cyan-500/20 animate-pulse' 
                     : robot.id === 'commander'
                     ? 'bg-gradient-to-br from-yellow-500/15 via-orange-500/15 to-red-500/15'
@@ -221,9 +233,19 @@ export default function RobotsSection({ currentUser, onUpdateStats }: RobotsSect
                     src={robot.image}
                     alt={robot.name}
                     className={`w-full h-full object-cover transition-transform duration-300 ${
-                      robot.id === 'cyborg' ? 'hover:scale-110 filter hover:brightness-110' : 'hover:scale-105'
+                      robot.id === 'student' 
+                        ? 'hover:scale-110 filter hover:brightness-110'
+                        : robot.id === 'cyborg' 
+                        ? 'hover:scale-110 filter hover:brightness-110' 
+                        : 'hover:scale-105'
                     }`}
                   />
+                  {robot.id === 'student' && (
+                    <>
+                      <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-blue-400/10 pointer-events-none" />
+                      <div className="absolute top-2 right-2 text-xl animate-bounce">🍎</div>
+                    </>
+                  )}
                   {robot.id === 'cyborg' && (
                     <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-cyan-400/10 pointer-events-none" />
                   )}
