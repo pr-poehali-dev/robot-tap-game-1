@@ -152,7 +152,9 @@ export default function Index() {
         'engineer': { tapPower: 3, lifespan: 45 },
         'scientist': { tapPower: 5, lifespan: 60 },
         'commander': { tapPower: 10, lifespan: 90 },
-        'cyborg': { tapPower: 20, lifespan: 100 }
+        'cyborg': { tapPower: 20, lifespan: 100 },
+        'student': { tapPower: 35, lifespan: 120 },
+        'quantum': { tapPower: 75, lifespan: 180 }
       }
       
       const robot = robots[robotId as keyof typeof robots]
@@ -161,6 +163,11 @@ export default function Index() {
       // Проверяем срок жизни
       const daysPassed = Math.floor((Date.now() - purchaseDate) / (1000 * 60 * 60 * 24))
       if (daysPassed >= robot.lifespan && robotId !== 'basic') {
+        // Срок истёк, возвращаем к базовому роботу
+        localStorage.setItem(`userRobot_${currentUser.id}`, JSON.stringify({
+          robotId: 'basic',
+          purchaseDate: Date.now()
+        }))
         return 1 // Базовый робот
       }
       

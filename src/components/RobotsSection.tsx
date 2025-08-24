@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -106,6 +106,7 @@ const availableRobots: Robot[] = [
 
 export default function RobotsSection({ currentUser, onUpdateStats }: RobotsSectionProps) {
   const [selectedRobot, setSelectedRobot] = useState<string | null>(null)
+  const [refreshTrigger, setRefreshTrigger] = useState(0)
 
   if (!currentUser) {
     return null
@@ -134,7 +135,7 @@ export default function RobotsSection({ currentUser, onUpdateStats }: RobotsSect
     return robot
   }
 
-  const currentRobot = getUserRobot()
+  const currentRobot = useMemo(() => getUserRobot(), [refreshTrigger, currentUser.id])
 
   const handleBuyRobot = (robot: Robot) => {
     if (currentUser.gameStats.coins < robot.price) {
@@ -155,6 +156,7 @@ export default function RobotsSection({ currentUser, onUpdateStats }: RobotsSect
 
     onUpdateStats(updatedStats)
     setSelectedRobot(null)
+    setRefreshTrigger(prev => prev + 1)
   }
 
   const getRemainingDays = (robot: Robot) => {
