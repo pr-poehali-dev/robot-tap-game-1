@@ -23,6 +23,7 @@ export default function Index() {
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login')
   const [authForm, setAuthForm] = useState({ username: '', email: '', password: '' })
   const [registrationCount, setRegistrationCount] = useState(0)
+  const [onlineCount, setOnlineCount] = useState(0)
 
   useEffect(() => {
     document.title = 'YaTitan - Робот кликер'
@@ -33,6 +34,8 @@ export default function Index() {
     const updateActivity = () => {
       if (currentUser) {
         localStorage.setItem(`lastActivity_${currentUser.id}`, Date.now().toString())
+        // Обновляем счетчик онлайн после обновления активности
+        setOnlineCount(getOnlineCount())
       }
     }
 
@@ -300,6 +303,23 @@ export default function Index() {
     return users.length
   }
 
+  // Получаем количество онлайн пользователей
+  const getOnlineCount = () => {
+    const users = JSON.parse(localStorage.getItem('robotGameUsers') || '[]')
+    const now = Date.now()
+    const onlineThreshold = 5 * 60 * 1000 // 5 минут в миллисекундах
+    
+    const onlineUsers = users.filter((user: User) => {
+      const lastActivity = localStorage.getItem(`lastActivity_${user.id}`)
+      if (!lastActivity) return false
+      
+      const timeSinceActivity = now - parseInt(lastActivity)
+      return timeSinceActivity <= onlineThreshold
+    })
+    
+    return onlineUsers.length
+  }
+
   // Форматируем большие числа
   const formatNumber = (num: number) => {
     if (num >= 1000000000) return (num / 1000000000).toFixed(1) + 'B'
@@ -366,6 +386,21 @@ export default function Index() {
     
     return () => clearInterval(timer)
   }, [currentUser])
+
+  // Обновляем счетчик онлайн пользователей каждые 30 секунд
+  useEffect(() => {
+    const updateOnlineCount = () => {
+      setOnlineCount(getOnlineCount())
+    }
+
+    // Обновляем сразу при загрузке
+    updateOnlineCount()
+
+    // Обновляем каждые 30 секунд
+    const onlineTimer = setInterval(updateOnlineCount, 30000)
+
+    return () => clearInterval(onlineTimer)
+  }, [currentUser]) // Пересчитываем при смене пользователя
 
   const renderActiveTab = () => {
     switch (activeTab) {
@@ -459,13 +494,28 @@ export default function Index() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col relative">
-      {/* Кнопка счетчика регистраций - адаптивная */}
+      {/* Кнопка счетчика регистраций - адаптивная слева */}
       <div className="fixed left-1 sm:left-2 md:left-4 top-1/2 transform -translate-y-1/2 z-50">
         <div className="bg-primary/90 backdrop-blur-sm text-primary-foreground rounded-full shadow-lg border border-primary/20 hover:bg-primary transition-all duration-200 hover:scale-105 cursor-pointer px-2 py-2 sm:px-3 sm:py-2 md:px-4 md:py-3 min-w-[50px] sm:min-w-[60px] md:min-w-[70px] text-center">
           <div className="flex flex-col items-center">
             <Icon name="Users" size={12} className="sm:w-4 sm:h-4 md:w-5 md:h-5 mb-0.5 sm:mb-1" />
             <span className="text-[10px] sm:text-xs md:text-sm font-bold leading-none">
               {formatNumber(registrationCount)}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Кнопка счетчика онлайн - адаптивная справа */}
+      <div className="fixed right-1 sm:right-2 md:right-4 top-1/2 transform -translate-y-1/2 z-50">
+        <div className="bg-green-500/90 backdrop-blur-sm text-white rounded-full shadow-lg border border-green-400/20 hover:bg-green-500 transition-all duration-200 hover:scale-105 cursor-pointer px-2 py-2 sm:px-3 sm:py-2 md:px-4 md:py-3 min-w-[50px] sm:min-w-[60px] md:min-w-[70px] text-center">
+          <div className="flex flex-col items-center">
+            <div className="flex items-center mb-0.5 sm:mb-1">
+              <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 md:w-3 md:h-3 bg-green-300 rounded-full animate-pulse mr-1"></div>
+              <Icon name="Wifi" size={10} className="sm:w-3 sm:h-3 md:w-4 md:h-4" />
+            </div>
+            <span className="text-[10px] sm:text-xs md:text-sm font-bold leading-none">
+              {formatNumber(onlineCount)}
             </span>
           </div>
         </div>
