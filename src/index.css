@@ -171,3 +171,13 @@
 .animate-robot-active {
   animation: robot-active 0.4s ease-in-out;
 }
+
+/* Скрытие скроллбара для мобильного меню */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

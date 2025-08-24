@@ -92,16 +92,7 @@ export default function Navigation({ activeTab, currentUser, onTabChange }: Navi
         </div>
       </div>
 
-      {/* Стили для скрытия скроллбара */}
-      <style jsx>{`
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
+
     </>
   )
 }
