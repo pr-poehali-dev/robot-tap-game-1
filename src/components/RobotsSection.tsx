@@ -309,15 +309,15 @@ export default function RobotsSection({ currentUser, onUpdateStats }: RobotsSect
       </div>
 
       {/* Информация */}
-      <Card className="bg-muted/50">
+      <Card className="bg-card border-border">
         <CardContent className="p-4">
           <div className="flex items-start gap-2">
             <Icon name="Info" size={16} className="mt-0.5 text-blue-500" />
             <div className="text-sm">
-              <p className="mb-1">
-                <strong>Как работают роботы:</strong>
+              <p className="mb-2 text-foreground font-semibold">
+                Как работают роботы:
               </p>
-              <ul className="text-xs text-muted-foreground space-y-1">
+              <ul className="text-sm text-foreground/80 space-y-2">
                 <li>• Каждый робот увеличивает количество монет за тап</li>
                 <li>• У роботов есть срок жизни (кроме базового)</li>
                 <li>• После окончания срока робот заменяется на базового</li>
