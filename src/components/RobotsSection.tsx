@@ -91,6 +91,16 @@ const availableRobots: Robot[] = [
     tapPower: 35,
     lifespan: 120,
     description: 'Умный ученик готов к новому учебному году!'
+  },
+  {
+    id: 'quantum',
+    name: 'Квантовый титан',
+    emoji: '⚡',
+    image: '/img/8e056dbc-5c2c-42e4-ae1e-4b9f2306236f.jpg',
+    price: 5700000,
+    tapPower: 75,
+    lifespan: 180,
+    description: 'Элитный робот будущего с квантовой технологией'
   }
 ]
 
@@ -219,7 +229,9 @@ export default function RobotsSection({ currentUser, onUpdateStats }: RobotsSect
               <div className="flex">
                 {/* Красивое изображение робота */}
                 <div className={`w-32 h-40 flex items-end justify-center rounded-l-lg overflow-hidden ${
-                  robot.id === 'student'
+                  robot.id === 'quantum'
+                    ? 'bg-gradient-to-br from-blue-600/30 via-purple-600/25 to-cyan-600/20 relative animate-pulse'
+                    : robot.id === 'student'
                     ? 'bg-gradient-to-br from-blue-500/20 via-indigo-500/15 to-purple-500/10 relative'
                     : robot.id === 'cyborg' 
                     ? 'bg-gradient-to-br from-purple-500/20 via-blue-500/20 to-cyan-500/20 animate-pulse' 
@@ -233,13 +245,23 @@ export default function RobotsSection({ currentUser, onUpdateStats }: RobotsSect
                     src={robot.image}
                     alt={robot.name}
                     className={`w-full h-full object-cover transition-transform duration-300 ${
-                      robot.id === 'student' 
+                      robot.id === 'quantum'
+                        ? 'hover:scale-115 filter hover:brightness-125 hover:saturate-150'
+                        : robot.id === 'student' 
                         ? 'hover:scale-110 filter hover:brightness-110'
                         : robot.id === 'cyborg' 
                         ? 'hover:scale-110 filter hover:brightness-110' 
                         : 'hover:scale-105'
                     }`}
                   />
+                  {robot.id === 'quantum' && (
+                    <>
+                      <div className="absolute inset-0 bg-gradient-to-t from-transparent via-blue-400/5 to-purple-400/15 pointer-events-none" />
+                      <div className="absolute top-1 right-1 text-xs animate-ping">⚡</div>
+                      <div className="absolute bottom-1 left-1 text-xs animate-pulse">⭐</div>
+                      <div className="absolute inset-0 border-2 border-transparent bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-lg animate-pulse" />
+                    </>
+                  )}
                   {robot.id === 'student' && (
                     <>
                       <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-blue-400/10 pointer-events-none" />
