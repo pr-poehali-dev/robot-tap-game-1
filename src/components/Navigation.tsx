@@ -14,7 +14,7 @@ export default function Navigation({ activeTab, currentUser, onTabChange }: Navi
   
   const tabs = [
     { id: 'game', label: 'Игра', icon: 'Gamepad2' },
-    { id: 'social', label: 'Друзья', icon: 'Users' },
+    { id: 'social', label: 'Фортуна', icon: 'TrendingUp' },
     { id: 'tasks', label: 'Задания', icon: 'CheckSquare' },
     { id: 'upgrades', label: 'Улучшения', icon: 'Zap' },
     { id: 'robots', label: 'Роботы', icon: 'Bot' },
