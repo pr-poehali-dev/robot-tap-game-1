@@ -97,7 +97,7 @@ const earnMethods = [
     title: 'Клики по Роботу',
     description: 'Кликайте по роботу и получайте монеты. Чем сильнее робот, тем больше награда!',
     icon: 'MousePointer2',
-    reward: '1-500 монет за клик'
+    reward: '1-75 монет за клик'
   },
   {
     title: 'Ежедневные Задания',
@@ -110,6 +110,12 @@ const earnMethods = [
     description: 'Роботы работают даже когда вы не в игре! Заходите и собирайте награды.',
     icon: 'Zap',
     reward: 'Пассивный доход'
+  },
+  {
+    title: 'Вывод Денег',
+    description: 'Зарабатывайте реальные деньги! Выводите заработанные монеты на свои счета.',
+    icon: 'Wallet',
+    reward: 'Реальные деньги!'
   },
   {
     title: 'Улучшения',
@@ -146,6 +152,7 @@ export default function LandingPage({ onLogin, onRegister }: LandingPageProps) {
             </h1>
             <p className="text-xl md:text-2xl mb-2">🚀 Робот Кликер Будущего!</p>
             <p className="text-lg opacity-90">Кликайте, улучшайте, зарабатывайте!</p>
+            <p className="text-md opacity-80 mt-2">💰 <strong>Выводите реальные деньги</strong> за игровые достижения!</p>
           </div>
           
           {/* CTA Buttons */}
@@ -364,6 +371,21 @@ export default function LandingPage({ onLogin, onRegister }: LandingPageProps) {
             <Card className="bg-white/10 border-white/20 text-white backdrop-blur-sm">
               <CardHeader>
                 <CardTitle className="flex items-center gap-3">
+                  <Icon name="Wallet" size={24} className="text-yellow-400" />
+                  Вывод Денег
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <p>• Зарабатывайте реальные деньги за игру</p>
+                <p>• Выводите монеты на банковские карты</p>
+                <p>• Минимальная сумма для вывода - доступна всем</p>
+                <p>• Быстрые выплаты в течение 24 часов</p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white/10 border-white/20 text-white backdrop-blur-sm">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-3">
                   <Icon name="Gamepad2" size={24} className="text-yellow-400" />
                   Мини-игры
                 </CardTitle>
@@ -383,8 +405,11 @@ export default function LandingPage({ onLogin, onRegister }: LandingPageProps) {
             <h2 className="text-3xl font-bold mb-6 text-white">
               🚀 Готовы Начать Зарабатывать?
             </h2>
-            <p className="text-xl mb-8 text-gray-300">
+            <p className="text-xl mb-4 text-gray-300">
               Присоединяйтесь к тысячам игроков уже зарабатывающих в YaTitan!
+            </p>
+            <p className="text-lg mb-8 text-yellow-300">
+              💰 <strong>Зарабатывайте реальные деньги играя!</strong> Выводите заработанные монеты прямо на карту!
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
