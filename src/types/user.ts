@@ -8,6 +8,7 @@ export interface GameStats {
   totalEarned: number
   lastDailyBonusTime?: string
   energyDepletedAt?: number | null
+  robotsOwned?: Record<string, number>
   autoTapData?: {
     chargingStarted: number | null
     activatedAt: number | null

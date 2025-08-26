@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import Icon from '@/components/ui/icon'
 import { Badge } from '@/components/ui/badge'
 import AuthModal from '@/components/AuthModal'
+import { useRealTimeStats } from '@/hooks/useRealTimeStats'
 
 interface LandingPageProps {
   onLogin: (form: { username: string; email: string; password: string }) => void
@@ -142,6 +143,8 @@ export default function LandingPage({ onLogin, onRegister }: LandingPageProps) {
   const [activeRobot, setActiveRobot] = useState(0)
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
   const [authModalTab, setAuthModalTab] = useState<'login' | 'register'>('register')
+  
+  const { stats, formatNumber } = useRealTimeStats()
 
   const handleOpenLogin = () => {
     setAuthModalTab('login')
@@ -193,15 +196,15 @@ export default function LandingPage({ onLogin, onRegister }: LandingPageProps) {
           <div className="flex flex-wrap justify-center gap-6 text-sm">
             <div className="flex items-center gap-2">
               <Icon name="Users" size={16} />
-              <span>Активных игроков: <strong>1,247</strong></span>
+              <span>Активных игроков: <strong>{stats.activeUsers || 0}</strong></span>
             </div>
             <div className="flex items-center gap-2">
               <Icon name="Coins" size={16} />
-              <span>Монет заработано: <strong>12.5M+</strong></span>
+              <span>Монет заработано: <strong>{formatNumber(stats.totalCoinsEarned)}</strong></span>
             </div>
             <div className="flex items-center gap-2">
               <Icon name="Bot" size={16} />
-              <span>Роботов создано: <strong>8,931</strong></span>
+              <span>Роботов создано: <strong>{stats.totalRobots || 0}</strong></span>
             </div>
           </div>
         </div>
