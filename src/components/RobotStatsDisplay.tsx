@@ -14,7 +14,9 @@ const robotNames: Record<string, { name: string; icon: string }> = {
   commander: { name: 'Командир', icon: '👨‍✈️' },
   cyborg: { name: 'Киборг', icon: '🦾' },
   student: { name: 'Работа школьника', icon: '🎓' },
-  quantum: { name: 'Квантовый титан', icon: '⚡' }
+  quantum: { name: 'Квантовый титан', icon: '⚡' },
+  gingerbread: { name: 'Пряничный Робот', icon: '🍪' },
+  coffee: { name: 'Кофейный робот', icon: '☕' }
 }
 
 export default function RobotStatsDisplay({ totalRobots, robotBreakdown }: RobotStatsDisplayProps) {
