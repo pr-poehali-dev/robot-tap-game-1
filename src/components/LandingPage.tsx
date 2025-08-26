@@ -3,10 +3,11 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import Icon from '@/components/ui/icon'
 import { Badge } from '@/components/ui/badge'
+import AuthModal from '@/components/AuthModal'
 
 interface LandingPageProps {
-  onLogin: () => void
-  onRegister: () => void
+  onLogin: (form: { username: string; email: string; password: string }) => void
+  onRegister: (form: { username: string; email: string; password: string }) => void
 }
 
 const robots = [
@@ -139,6 +140,18 @@ const earnMethods = [
 
 export default function LandingPage({ onLogin, onRegister }: LandingPageProps) {
   const [activeRobot, setActiveRobot] = useState(0)
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
+  const [authModalTab, setAuthModalTab] = useState<'login' | 'register'>('register')
+
+  const handleOpenLogin = () => {
+    setAuthModalTab('login')
+    setIsAuthModalOpen(true)
+  }
+
+  const handleOpenRegister = () => {
+    setAuthModalTab('register')
+    setIsAuthModalOpen(true)
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900">
@@ -158,7 +171,7 @@ export default function LandingPage({ onLogin, onRegister }: LandingPageProps) {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
             <Button 
-              onClick={onRegister}
+              onClick={handleOpenRegister}
               size="lg" 
               className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold px-8 py-3 text-lg"
             >
@@ -166,7 +179,7 @@ export default function LandingPage({ onLogin, onRegister }: LandingPageProps) {
               Начать Играть
             </Button>
             <Button 
-              onClick={onLogin}
+              onClick={handleOpenLogin}
               size="lg" 
               variant="outline" 
               className="border-white/30 text-white hover:bg-white/10 font-semibold px-8 py-3 text-lg"
@@ -413,7 +426,7 @@ export default function LandingPage({ onLogin, onRegister }: LandingPageProps) {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
-                onClick={onRegister}
+                onClick={handleOpenRegister}
                 size="lg" 
                 className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold px-12 py-4 text-xl"
               >
@@ -432,6 +445,15 @@ export default function LandingPage({ onLogin, onRegister }: LandingPageProps) {
           <p className="text-sm opacity-70">© 2024 Все права защищены. Создано с ❤️ для геймеров!</p>
         </div>
       </footer>
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        defaultTab={authModalTab}
+        onLogin={onLogin}
+        onRegister={onRegister}
+      />
     </div>
   )
 }

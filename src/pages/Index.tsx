@@ -74,17 +74,22 @@ export default function Index() {
     }
   }, [authRegister])
 
-  const handleLandingLogin = useCallback(() => {
-    setShowLanding(false)
-    setAuthMode('login')
-    setActiveTab('profile')
-  }, [setAuthMode])
+  const handleLandingLogin = useCallback((form: { username: string; email: string; password: string }) => {
+    setAuthForm(form)
+    const success = handleLogin()
+    if (success) {
+      setShowLanding(false)
+    }
+  }, [handleLogin])
 
-  const handleLandingRegister = useCallback(() => {
-    setShowLanding(false)
-    setAuthMode('register')
-    setActiveTab('profile')
-  }, [setAuthMode])
+  const handleLandingRegister = useCallback((form: { username: string; email: string; password: string }) => {
+    setAuthForm(form)
+    const success = authRegister()
+    if (success) {
+      setShowLanding(false)
+      setRegistrationCount(prev => prev + 1)
+    }
+  }, [authRegister])
 
   const handleLogout = useCallback(() => {
     authLogout()
