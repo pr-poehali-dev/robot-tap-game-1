@@ -408,6 +408,7 @@ export default function RobotsSection({ currentUser, onUpdateStats }: RobotsSect
               </div>
             </CardContent>
           </Card>
+          )
         })}
       </div>
 
