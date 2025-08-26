@@ -112,6 +112,17 @@ const robots = [
     icon: '☕',
     image: '/img/82ee2bff-d0ba-488c-b30b-edf4b77af986.jpg',
     lifespan: '160 дней'
+  },
+  {
+    id: 'autumn',
+    name: 'Осенний робот',
+    power: 100,
+    price: 15980752,
+    description: 'Сезонный робот с силой осеннего урожая! x100 монет, 200 дней.',
+    icon: '🍂',
+    image: '/img/1274db0f-36b9-4bb9-b0ce-0f4a14760b3b.jpg',
+    lifespan: '200 дней',
+    availableFrom: '1 сентября 2025'
   }
 ]
 
@@ -307,6 +318,11 @@ export default function LandingPage({ onLogin, onRegister }: LandingPageProps) {
                   <CardDescription className="text-gray-300 text-sm">
                     {robot.description}
                   </CardDescription>
+                  {robot.availableFrom && (
+                    <div className="text-xs text-orange-400 font-medium">
+                      🔒 Доступен с {robot.availableFrom}
+                    </div>
+                  )}
                 </CardHeader>
                 
                 <CardContent className="pt-0">

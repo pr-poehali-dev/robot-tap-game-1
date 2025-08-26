@@ -14,6 +14,7 @@ interface Robot {
   tapPower: number
   lifespan: number // в днях
   description: string
+  availableFrom?: Date // дата когда робот станет доступным
 }
 
 interface RobotsSectionProps {
@@ -121,6 +122,17 @@ const availableRobots: Robot[] = [
     tapPower: 50,
     lifespan: 160,
     description: 'Бодрящий робот для истинных кофеманов!'
+  },
+  {
+    id: 'autumn',
+    name: 'Осенний робот',
+    emoji: '🍂',
+    image: '/img/1274db0f-36b9-4bb9-b0ce-0f4a14760b3b.jpg',
+    price: 15980752,
+    tapPower: 100,
+    lifespan: 200,
+    description: 'Сезонный робот с силой осеннего урожая!',
+    availableFrom: new Date('2025-09-01')
   }
 ]
 
@@ -192,6 +204,21 @@ export default function RobotsSection({ currentUser, onUpdateStats }: RobotsSect
     return remaining
   }
 
+  const isRobotAvailable = (robot: Robot) => {
+    if (!robot.availableFrom) return true
+    const now = new Date()
+    return now >= robot.availableFrom
+  }
+
+  const getAvailabilityText = (robot: Robot) => {
+    if (!robot.availableFrom) return null
+    const now = new Date()
+    if (now < robot.availableFrom) {
+      return `Доступен с ${robot.availableFrom.toLocaleDateString('ru-RU')}`
+    }
+    return null
+  }
+
   return (
     <div className="space-y-4 pb-20">
       <div className="text-center">
@@ -239,13 +266,18 @@ export default function RobotsSection({ currentUser, onUpdateStats }: RobotsSect
       {/* Доступные роботы */}
       <div className="grid gap-3">
         <h2 className="text-lg font-semibold">Магазин роботов</h2>
-        {availableRobots.slice(1).map((robot) => (
+        {availableRobots.slice(1).map((robot) => {
+          const available = isRobotAvailable(robot)
+          const availabilityText = getAvailabilityText(robot)
+          
+          return (
           <Card 
             key={robot.id}
             className={`transition-all duration-300 hover:shadow-lg hover:-translate-y-1 ${
               selectedRobot === robot.id ? 'border-primary shadow-lg' : ''
-            } ${currentUser.gameStats.coins < robot.price ? 'opacity-50' : 'hover:border-primary/50'}
-            ${currentRobot.id === robot.id ? 'border-green-500 bg-green-50/50' : ''}`}
+            } ${currentUser.gameStats.coins < robot.price || !available ? 'opacity-50' : 'hover:border-primary/50'}
+            ${currentRobot.id === robot.id ? 'border-green-500 bg-green-50/50' : ''}
+            ${robot.id === 'autumn' ? 'border-orange-400/50 bg-gradient-to-br from-orange-50/30 to-yellow-50/20' : ''}`}
           >
             <CardContent className="p-0">
               <div className="flex">
@@ -261,6 +293,8 @@ export default function RobotsSection({ currentUser, onUpdateStats }: RobotsSect
                     ? 'bg-gradient-to-br from-yellow-500/15 via-orange-500/15 to-red-500/15'
                     : robot.id === 'scientist'
                     ? 'bg-gradient-to-br from-green-500/15 via-emerald-500/15 to-teal-500/15'
+                    : robot.id === 'autumn'
+                    ? 'bg-gradient-to-br from-orange-500/25 via-yellow-500/20 to-red-500/15 relative'
                     : 'bg-gradient-to-br from-primary/10 via-primary/5 to-secondary/10'
                 }`}>
                   <img 
@@ -293,6 +327,20 @@ export default function RobotsSection({ currentUser, onUpdateStats }: RobotsSect
                   {robot.id === 'cyborg' && (
                     <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-cyan-400/10 pointer-events-none" />
                   )}
+                  {robot.id === 'autumn' && (
+                    <>
+                      <div className="absolute inset-0 bg-gradient-to-t from-transparent via-orange-400/5 to-yellow-400/15 pointer-events-none" />
+                      <div className="absolute top-2 right-2 text-lg animate-bounce">🍂</div>
+                      <div className="absolute bottom-2 left-2 text-sm animate-pulse">🍁</div>
+                      {!available && (
+                        <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                          <div className="text-white text-xs text-center px-2">
+                            🔒<br/>с 1 сентября
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  )}
                 </div>
                 
                 {/* Информация о роботе */}
@@ -301,6 +349,11 @@ export default function RobotsSection({ currentUser, onUpdateStats }: RobotsSect
                     <div>
                       <h3 className="font-bold text-lg">{robot.name}</h3>
                       <p className="text-sm text-muted-foreground">{robot.description}</p>
+                      {availabilityText && (
+                        <p className="text-xs text-orange-600 font-medium mt-1">
+                          🔒 {availabilityText}
+                        </p>
+                      )}
                     </div>
                     
                     <div className="flex items-center gap-2">
@@ -327,11 +380,17 @@ export default function RobotsSection({ currentUser, onUpdateStats }: RobotsSect
                         onClick={() => handleBuyRobot(robot)}
                         disabled={
                           currentUser.gameStats.coins < robot.price || 
-                          currentRobot.id === robot.id
+                          currentRobot.id === robot.id ||
+                          !available
                         }
                         className={currentRobot.id === robot.id ? "bg-green-500 hover:bg-green-600" : ""}
                       >
-                        {currentRobot.id === robot.id ? (
+                        {!available ? (
+                          <>
+                            <Icon name="Lock" size={16} className="mr-1" />
+                            Заблокирован
+                          </>
+                        ) : currentRobot.id === robot.id ? (
                           <>
                             <Icon name="Check" size={16} className="mr-1" />
                             Активен
@@ -349,7 +408,7 @@ export default function RobotsSection({ currentUser, onUpdateStats }: RobotsSect
               </div>
             </CardContent>
           </Card>
-        ))}
+        })}
       </div>
 
       {/* Информация */}
