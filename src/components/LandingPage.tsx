@@ -110,7 +110,7 @@ const robots = [
     price: 3450000,
     description: 'Бодрящий робот для истинных кофеманов! x50 монет, 160 дней.',
     icon: '☕',
-    image: '/img/646c617e-8b01-47fc-a700-b85b270caaee.jpg',
+    image: '/img/82ee2bff-d0ba-488c-b30b-edf4b77af986.jpg',
     lifespan: '160 дней'
   }
 ]

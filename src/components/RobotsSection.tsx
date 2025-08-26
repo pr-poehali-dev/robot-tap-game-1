@@ -116,7 +116,7 @@ const availableRobots: Robot[] = [
     id: 'coffee',
     name: 'Кофейный робот',
     emoji: '☕',
-    image: '/img/646c617e-8b01-47fc-a700-b85b270caaee.jpg',
+    image: '/img/82ee2bff-d0ba-488c-b30b-edf4b77af986.jpg',
     price: 3450000,
     tapPower: 50,
     lifespan: 160,
