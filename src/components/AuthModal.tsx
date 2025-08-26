@@ -115,9 +115,11 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'register', on
               </Button>
             </form>
 
-            <div className="text-xs text-center text-muted-foreground mt-4 p-3 bg-muted/50 rounded">
-              <Icon name="Shield" size={14} className="inline mr-1" />
-              Ваши данные защищены. Начните зарабатывать уже сегодня!
+            <div className="text-xs text-center text-foreground mt-4 p-3 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded">
+              <Icon name="Shield" size={14} className="inline mr-1 text-green-600 dark:text-green-400" />
+              <span className="text-green-700 dark:text-green-300">
+                ✅ Ваши данные защищены. Начните зарабатывать уже сегодня!
+              </span>
             </div>
           </TabsContent>
 
