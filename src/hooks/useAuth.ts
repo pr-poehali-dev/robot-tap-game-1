@@ -1,6 +1,5 @@
 import { useState, useCallback } from 'react'
-import { User } from '@/types/user'
-import { useGameLogic } from './useGameLogic'
+import { User, GameStats } from '@/types/user'
 
 interface AuthForm {
   username: string
@@ -8,12 +7,20 @@ interface AuthForm {
   password: string
 }
 
+const initialGameStats: GameStats = {
+  coins: 0,
+  dailyBonus: 50,
+  tapsLeft: 100,
+  maxTaps: 100,
+  level: 1,
+  robotPower: 10,
+  totalEarned: 0
+}
+
 export const useAuth = () => {
   const [currentUser, setCurrentUser] = useState<User | null>(null)
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login')
   const [authForm, setAuthForm] = useState<AuthForm>({ username: '', email: '', password: '' })
-
-  const { initialGameStats } = useGameLogic(currentUser, () => {})
 
   const handleRegister = useCallback(() => {
     if (!authForm.username.trim() || !authForm.email.trim() || !authForm.password.trim()) {
