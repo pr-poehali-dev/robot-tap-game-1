@@ -106,7 +106,7 @@ const availableRobots: Robot[] = [
     id: 'gingerbread',
     name: 'Пряничный Робот',
     emoji: '🍪',
-    image: '/img/ac2ca91c-0b9f-44f7-b5b4-a2d871140891.jpg',
+    image: '/img/c8c90612-581c-47ce-b99a-4c397fa0f01b.jpg',
     price: 1700000,
     tapPower: 40,
     lifespan: 140,
