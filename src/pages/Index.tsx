@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import AuthForm from '@/components/AuthForm'
 import GameSection from '@/components/GameSection'
+import LandingPage from '@/components/LandingPage'
 import { User, GameStats } from '@/types/user'
 import ProfileSection from '@/components/ProfileSection'
 import UpgradesSection from '@/components/UpgradesSection'
@@ -22,6 +23,7 @@ import { useEnergyRecovery } from '@/hooks/useEnergyRecovery'
 
 export default function Index() {
   const [activeTab, setActiveTab] = useState('game')
+  const [showLanding, setShowLanding] = useState(true)
   const [registrationCount, setRegistrationCount] = useState(0)
   const [onlineCount, setOnlineCount] = useState(0)
 
@@ -71,6 +73,18 @@ export default function Index() {
       setRegistrationCount(newCount)
     }
   }, [authRegister])
+
+  const handleLandingLogin = useCallback(() => {
+    setShowLanding(false)
+    setAuthMode('login')
+    setActiveTab('profile')
+  }, [setAuthMode])
+
+  const handleLandingRegister = useCallback(() => {
+    setShowLanding(false)
+    setAuthMode('register')
+    setActiveTab('profile')
+  }, [setAuthMode])
 
   const handleLogout = useCallback(() => {
     authLogout()
@@ -124,6 +138,7 @@ export default function Index() {
       const user = users.find((u: User) => u.id === savedUserId)
       if (user) {
         setCurrentUser(user)
+        setShowLanding(false)
       }
     }
     
@@ -230,6 +245,15 @@ export default function Index() {
           />
         )
     }
+  }
+
+  if (showLanding) {
+    return (
+      <LandingPage 
+        onLogin={handleLandingLogin}
+        onRegister={handleLandingRegister}
+      />
+    )
   }
 
   return (
