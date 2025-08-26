@@ -174,6 +174,18 @@ export default function RobotsSection({ currentUser, onUpdateStats }: RobotsSect
       return // Недостаточно монет
     }
 
+    // Записываем трату в историю
+    const spentHistory = JSON.parse(localStorage.getItem(`spentHistory_${currentUser.id}`) || '[]')
+    spentHistory.push({
+      id: Date.now(),
+      type: 'robot',
+      itemName: robot.name,
+      amount: robot.price,
+      timestamp: Date.now(),
+      date: new Date().toISOString()
+    })
+    localStorage.setItem(`spentHistory_${currentUser.id}`, JSON.stringify(spentHistory))
+
     // Списываем монеты
     const updatedStats = {
       ...currentUser.gameStats,

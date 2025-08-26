@@ -27,7 +27,33 @@ export default function WithdrawSection({ currentUser, onAutoTapClick, onTabChan
     return null
   }
 
+  // Проверка активности игрока для доступа к выводу
+  const checkPlayerActivity = () => {
+    const registrationDate = new Date(currentUser.createdAt)
+    const now = new Date()
+    const daysSinceRegistration = Math.floor((now.getTime() - registrationDate.getTime()) / (1000 * 60 * 60 * 24))
+    
+    // Проверяем историю трат
+    const spentHistory = JSON.parse(localStorage.getItem(`spentHistory_${currentUser.id}`) || '[]')
+    const totalSpent = spentHistory.reduce((sum: number, record: any) => sum + record.amount, 0)
+    
+    return {
+      daysSinceRegistration,
+      totalSpent,
+      canWithdraw: daysSinceRegistration >= 10 && totalSpent > 0,
+      minDaysRequired: 10,
+      hasSpent: totalSpent > 0
+    }
+  }
+
+  const activityCheck = checkPlayerActivity()
+
   const handleSubmit = () => {
+    // Проверяем активность перед созданием заявки
+    if (!activityCheck.canWithdraw) {
+      return // Блокируем создание заявки
+    }
+
     const withdrawRequest = {
       id: Date.now(),
       userId: currentUser.id,
@@ -84,15 +110,69 @@ export default function WithdrawSection({ currentUser, onAutoTapClick, onTabChan
         </CardContent>
       </Card>
 
+      {/* Блок требований для доступа к выводу */}
+      {!activityCheck.canWithdraw && (
+        <Card className="border-orange-500/50 bg-orange-50/50">
+          <CardContent className="p-4">
+            <div className="flex items-start gap-3">
+              <Icon name="Lock" size={20} className="text-orange-500 mt-0.5" />
+              <div>
+                <h3 className="font-semibold text-orange-700 mb-2">
+                  🔒 Вывод временно заблокирован
+                </h3>
+                <p className="text-sm text-orange-600 mb-3">
+                  Для доступа к выводу средств необходимо выполнить условия:
+                </p>
+                <div className="space-y-2 text-sm">
+                  <div className={`flex items-center gap-2 ${
+                    activityCheck.daysSinceRegistration >= 10 ? 'text-green-600' : 'text-orange-600'
+                  }`}>
+                    <Icon 
+                      name={activityCheck.daysSinceRegistration >= 10 ? "CheckCircle" : "Circle"} 
+                      size={16} 
+                    />
+                    <span>
+                      Играть минимум 10 дней 
+                      <span className="font-medium">
+                        ({activityCheck.daysSinceRegistration}/10 дней)
+                      </span>
+                    </span>
+                  </div>
+                  <div className={`flex items-center gap-2 ${
+                    activityCheck.hasSpent ? 'text-green-600' : 'text-orange-600'
+                  }`}>
+                    <Icon 
+                      name={activityCheck.hasSpent ? "CheckCircle" : "Circle"} 
+                      size={16} 
+                    />
+                    <span>
+                      Потратить монеты на улучшения/роботов 
+                      <span className="font-medium">
+                        ({activityCheck.totalSpent.toLocaleString()} потрачено)
+                      </span>
+                    </span>
+                  </div>
+                </div>
+                <div className="mt-3 p-3 bg-blue-50 rounded-lg">
+                  <p className="text-xs text-blue-600">
+                    💡 <strong>Совет:</strong> Покупайте роботов и улучшения, чтобы увеличить доход и получить доступ к выводу!
+                  </p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <div className="space-y-4">
         <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
           <DialogTrigger asChild>
             <Button 
-              disabled={currentUser.gameStats.coins < 5000000} 
-              className="w-full bg-green-600 hover:bg-green-700"
+              disabled={currentUser.gameStats.coins < 5000000 || !activityCheck.canWithdraw} 
+              className="w-full bg-green-600 hover:bg-green-700 disabled:opacity-50"
             >
               <Icon name="Banknote" className="mr-2" />
-              Подать заявку на вывод
+              {activityCheck.canWithdraw ? 'Подать заявку на вывод' : 'Вывод заблокирован'}
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">

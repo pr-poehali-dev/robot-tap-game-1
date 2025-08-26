@@ -120,6 +120,18 @@ export const useGameLogic = (
     
     const upgradeCost = currentUser.gameStats.level * 1000
     if (currentUser.gameStats.coins >= upgradeCost) {
+      // Записываем трату в историю
+      const spentHistory = JSON.parse(localStorage.getItem(`spentHistory_${currentUser.id}`) || '[]')
+      spentHistory.push({
+        id: Date.now(),
+        type: 'upgrade',
+        itemName: `Улучшение робота (уровень ${currentUser.gameStats.level + 1})`,
+        amount: upgradeCost,
+        timestamp: Date.now(),
+        date: new Date().toISOString()
+      })
+      localStorage.setItem(`spentHistory_${currentUser.id}`, JSON.stringify(spentHistory))
+      
       const updatedStats = {
         ...currentUser.gameStats,
         coins: currentUser.gameStats.coins - upgradeCost,

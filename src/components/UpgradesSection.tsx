@@ -17,6 +17,18 @@ export default function UpgradesSection({ currentUser, onUpgradeRobot, onUpdateS
   const handleUpgradeEnergy = () => {
     if (!currentUser || currentUser.gameStats.coins < 2000) return
     
+    // Записываем трату в историю
+    const spentHistory = JSON.parse(localStorage.getItem(`spentHistory_${currentUser.id}`) || '[]')
+    spentHistory.push({
+      id: Date.now(),
+      type: 'upgrade',
+      itemName: 'Улучшение энергии (+20 тапов)',
+      amount: 2000,
+      timestamp: Date.now(),
+      date: new Date().toISOString()
+    })
+    localStorage.setItem(`spentHistory_${currentUser.id}`, JSON.stringify(spentHistory))
+    
     const updatedStats = {
       ...currentUser.gameStats,
       coins: currentUser.gameStats.coins - 2000,
@@ -30,6 +42,18 @@ export default function UpgradesSection({ currentUser, onUpgradeRobot, onUpdateS
   const handleBuyVIP = () => {
     if (!currentUser || currentUser.gameStats.coins < 50000) return
     
+    // Записываем трату в историю
+    const spentHistory = JSON.parse(localStorage.getItem(`spentHistory_${currentUser.id}`) || '[]')
+    spentHistory.push({
+      id: Date.now(),
+      type: 'upgrade',
+      itemName: 'VIP статус',
+      amount: 50000,
+      timestamp: Date.now(),
+      date: new Date().toISOString()
+    })
+    localStorage.setItem(`spentHistory_${currentUser.id}`, JSON.stringify(spentHistory))
+    
     const updatedStats = {
       ...currentUser.gameStats,
       coins: currentUser.gameStats.coins - 50000
@@ -42,6 +66,18 @@ export default function UpgradesSection({ currentUser, onUpgradeRobot, onUpdateS
 
   const handleBuyUnlimitedEnergy = () => {
     if (!currentUser || currentUser.gameStats.coins < 950000000) return
+    
+    // Записываем трату в историю
+    const spentHistory = JSON.parse(localStorage.getItem(`spentHistory_${currentUser.id}`) || '[]')
+    spentHistory.push({
+      id: Date.now(),
+      type: 'upgrade',
+      itemName: 'Безлимитная энергия',
+      amount: 950000000,
+      timestamp: Date.now(),
+      date: new Date().toISOString()
+    })
+    localStorage.setItem(`spentHistory_${currentUser.id}`, JSON.stringify(spentHistory))
     
     const updatedStats = {
       ...currentUser.gameStats,
