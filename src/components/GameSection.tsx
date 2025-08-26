@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import Icon from '@/components/ui/icon'
 import StatsHeader from './StatsHeader'
 import { User, GameStats } from '@/types/user'
@@ -18,6 +19,7 @@ interface GameSectionProps {
   onClaimDailyBonus: () => void
   onAutoTapClick: () => void
   onWithdrawClick: () => void
+  onUpdateStats: (stats: GameStats) => void
   onTabChange: (tab: string) => void
 }
 
@@ -29,12 +31,14 @@ export default function GameSection({
   onClaimDailyBonus,
   onAutoTapClick,
   onWithdrawClick,
+  onUpdateStats,
   onTabChange 
 }: GameSectionProps) {
   const [timeToFullEnergy, setTimeToFullEnergy] = useState('')
   const [timeToNextBonus, setTimeToNextBonus] = useState('')
   const [canClaimBonus, setCanClaimBonus] = useState(true)
   const [isRobotAnimating, setIsRobotAnimating] = useState(false)
+  const [showRefuelDialog, setShowRefuelDialog] = useState(false)
 
   // Получаем текущего робота пользователя
   const getUserRobot = () => {
@@ -188,6 +192,22 @@ export default function GameSection({
     onRobotTap(e)
   }
 
+  const handleRefuelEnergy = () => {
+    if (!currentUser || currentUser.gameStats.coins < 5000) {
+      return
+    }
+
+    const updatedStats = {
+      ...currentUser.gameStats,
+      coins: currentUser.gameStats.coins - 5000,
+      tapsLeft: currentUser.gameStats.maxTaps,
+      energyDepletedAt: null
+    }
+
+    onUpdateStats(updatedStats)
+    setShowRefuelDialog(false)
+  }
+
   return (
     <div className="flex flex-col items-center space-y-3 sm:space-y-4">
       <StatsHeader 
@@ -259,9 +279,22 @@ export default function GameSection({
       </div>
 
       <div className="w-full space-y-2">
-        <div className="flex justify-between text-xs sm:text-sm">
+        <div className="flex justify-between items-center text-xs sm:text-sm">
           <span>Энергия: {currentUser.gameStats.tapsLeft}/{currentUser.gameStats.maxTaps}</span>
-          <span className="text-primary">⚡</span>
+          <div className="flex items-center gap-2">
+            <span className="text-primary">⚡</span>
+            {currentUser.gameStats.tapsLeft < currentUser.gameStats.maxTaps && (
+              <Button
+                onClick={() => setShowRefuelDialog(true)}
+                size="sm"
+                variant="outline"
+                className="h-6 px-2 text-xs"
+              >
+                <Icon name="Fuel" size={12} className="mr-1" />
+                Заправить
+              </Button>
+            )}
+          </div>
         </div>
         <Progress value={(currentUser.gameStats.tapsLeft / currentUser.gameStats.maxTaps) * 100} className="h-2 sm:h-3" />
         <div className="text-center text-xs text-muted-foreground">
@@ -285,6 +318,58 @@ export default function GameSection({
           `Следующий бонус через: ${timeToNextBonus}`
         )}
       </Button>
+
+      {/* Модальное окно для восстановления энергии */}
+      <Dialog open={showRefuelDialog} onOpenChange={setShowRefuelDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Icon name="Fuel" size={20} />
+              Восстановление энергии
+            </DialogTitle>
+            <DialogDescription>
+              Хотите мгновенно восстановить энергию до максимума?
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            <div className="bg-primary/10 rounded-lg p-4 space-y-2">
+              <div className="flex justify-between text-sm">
+                <span>Текущая энергия:</span>
+                <span>{currentUser.gameStats.tapsLeft}/{currentUser.gameStats.maxTaps}</span>
+              </div>
+              <div className="flex justify-between text-sm font-medium">
+                <span>Стоимость восстановления:</span>
+                <span className="text-secondary">5,000 💰</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span>Ваши монеты:</span>
+                <span className={currentUser.gameStats.coins >= 5000 ? 'text-green-600' : 'text-red-600'}>
+                  {currentUser.gameStats.coins.toLocaleString()} 💰
+                </span>
+              </div>
+            </div>
+
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={() => setShowRefuelDialog(false)}
+                className="flex-1"
+              >
+                Отмена
+              </Button>
+              <Button
+                onClick={handleRefuelEnergy}
+                disabled={currentUser.gameStats.coins < 5000}
+                className="flex-1"
+              >
+                <Icon name="Zap" size={16} className="mr-2" />
+                Заправить за 5,000
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

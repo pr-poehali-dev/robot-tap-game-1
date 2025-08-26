@@ -179,6 +179,7 @@ export default function Index() {
             onClaimDailyBonus={handleClaimDailyBonus}
             onAutoTapClick={() => setActiveTab('auto')}
             onWithdrawClick={() => setActiveTab('withdraw')}
+            onUpdateStats={updateUserStats}
             onTabChange={setActiveTab}
           />
         )
@@ -243,6 +244,10 @@ export default function Index() {
             coinAnimations={coinAnimations}
             onRobotTap={handleRobotTap}
             onClaimDailyBonus={handleClaimDailyBonus}
+            onUpdateStats={updateUserStats}
+            onAutoTapClick={() => setActiveTab('auto')}
+            onWithdrawClick={() => setActiveTab('withdraw')}
+            onTabChange={setActiveTab}
           />
         )
     }
