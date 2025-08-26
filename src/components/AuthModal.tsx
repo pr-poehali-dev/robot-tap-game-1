@@ -21,6 +21,8 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'register', on
     password: ''
   })
 
+  const [agreed, setAgreed] = useState(false)
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
     onLogin(authForm)
@@ -105,9 +107,27 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'register', on
                 />
               </div>
 
+              <div className="flex items-start space-x-2">
+                <input 
+                  type="checkbox" 
+                  id="agreement" 
+                  checked={agreed}
+                  onChange={(e) => setAgreed(e.target.checked)}
+                  className="mt-1"
+                  required
+                />
+                <label htmlFor="agreement" className="text-xs text-foreground cursor-pointer">
+                  <Icon name="Shield" size={14} className="inline mr-1 text-green-600 dark:text-green-400" />
+                  <span className="text-green-700 dark:text-green-300">
+                    Ваши данные защищены. Начните зарабатывать уже сегодня!
+                  </span>
+                </label>
+              </div>
+
               <Button 
                 type="submit" 
-                className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+                disabled={!agreed}
+                className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 size="lg"
               >
                 <Icon name="Rocket" size={18} className="mr-2" />
@@ -115,12 +135,7 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'register', on
               </Button>
             </form>
 
-            <div className="text-xs text-center text-foreground mt-4 p-3 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded">
-              <Icon name="Shield" size={14} className="inline mr-1 text-green-600 dark:text-green-400" />
-              <span className="text-green-700 dark:text-green-300">
-                ✅ Ваши данные защищены. Начните зарабатывать уже сегодня!
-              </span>
-            </div>
+
           </TabsContent>
 
           <TabsContent value="login" className="space-y-4">
