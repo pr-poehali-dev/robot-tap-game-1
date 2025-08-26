@@ -14,29 +14,40 @@ const queryClient = new QueryClient();
 const App = () => {
   // Обработка переадресации для SPA
   React.useEffect(() => {
-    const redirect = sessionStorage.getItem('path');
-    if (redirect) {
-      sessionStorage.removeItem('path');
-      window.history.replaceState(null, null, redirect);
+    try {
+      const redirect = sessionStorage.getItem('path');
+      if (redirect) {
+        sessionStorage.removeItem('path');
+        window.history.replaceState(null, null, redirect);
+      }
+    } catch (error) {
+      console.error('Error handling redirect:', error);
     }
   }, []);
 
-  return (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/admin" element={<Admin />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-  );
+  console.log('App component rendering...');
+
+  try {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <HashRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/admin" element={<Admin />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </HashRouter>
+        </TooltipProvider>
+      </QueryClientProvider>
+    );
+  } catch (error) {
+    console.error('Error in App component:', error);
+    return <div style={{ padding: '20px', color: 'red' }}>Error loading app components</div>;
+  }
 };
 
 export default App;

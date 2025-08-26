@@ -22,6 +22,8 @@ import { useUserActivity, getOnlineCount, getRegistrationCount } from '@/hooks/u
 import { useEnergyRecovery } from '@/hooks/useEnergyRecovery'
 
 export default function Index() {
+  console.log('Index component rendering...');
+  
   const [activeTab, setActiveTab] = useState('game')
   const [showLanding, setShowLanding] = useState(true)
   const [registrationCount, setRegistrationCount] = useState(0)
