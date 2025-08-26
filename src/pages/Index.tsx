@@ -93,6 +93,7 @@ export default function Index() {
 
   const handleLogout = useCallback(() => {
     authLogout()
+    setShowLanding(true)
     setActiveTab('game')
   }, [authLogout])
 
@@ -144,7 +145,11 @@ export default function Index() {
       if (user) {
         setCurrentUser(user)
         setShowLanding(false)
+      } else {
+        setShowLanding(true)
       }
+    } else {
+      setShowLanding(true)
     }
     
     setRegistrationCount(users.length)
@@ -178,19 +183,10 @@ export default function Index() {
           />
         )
       case 'profile': 
-        return currentUser ? (
+        return (
           <ProfileSection 
             currentUser={currentUser}
             onLogout={handleLogout}
-          />
-        ) : (
-          <AuthForm
-            authMode={authMode}
-            authForm={authForm}
-            onAuthFormChange={setAuthForm}
-            onLogin={handleLogin}
-            onRegister={handleRegister}
-            onModeChange={setAuthMode}
           />
         )
       case 'upgrades': 
@@ -252,7 +248,7 @@ export default function Index() {
     }
   }
 
-  if (showLanding) {
+  if (showLanding || !currentUser) {
     return (
       <LandingPage 
         onLogin={handleLandingLogin}
@@ -274,16 +270,7 @@ export default function Index() {
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px] pointer-events-none"></div>
       <div className="flex-1 overflow-y-auto pb-16">
         <div className="container mx-auto px-2 sm:px-4 py-2 sm:py-4 max-w-md">
-          {!currentUser && activeTab !== 'profile' ? (
-            <AuthForm
-              authMode={authMode}
-              authForm={authForm}
-              onAuthFormChange={setAuthForm}
-              onLogin={handleLogin}
-              onRegister={handleRegister}
-              onModeChange={setAuthMode}
-            />
-          ) : renderActiveTab()}
+          {renderActiveTab()}
         </div>
       </div>
 
