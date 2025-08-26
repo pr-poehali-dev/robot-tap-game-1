@@ -5,6 +5,7 @@ import Icon from '@/components/ui/icon'
 import { Badge } from '@/components/ui/badge'
 import AuthModal from '@/components/AuthModal'
 import { useRealTimeStats } from '@/hooks/useRealTimeStats'
+import RobotStatsDisplay from '@/components/RobotStatsDisplay'
 
 interface LandingPageProps {
   onLogin: (form: { username: string; email: string; password: string }) => void
@@ -202,10 +203,10 @@ export default function LandingPage({ onLogin, onRegister }: LandingPageProps) {
               <Icon name="Coins" size={16} />
               <span>Монет заработано: <strong>{formatNumber(stats.totalCoinsEarned)}</strong></span>
             </div>
-            <div className="flex items-center gap-2">
-              <Icon name="Bot" size={16} />
-              <span>Роботов создано: <strong>{stats.totalRobots || 0}</strong></span>
-            </div>
+            <RobotStatsDisplay 
+              totalRobots={stats.totalRobots} 
+              robotBreakdown={stats.robotBreakdown} 
+            />
           </div>
         </div>
       </header>

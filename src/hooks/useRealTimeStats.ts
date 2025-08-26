@@ -5,13 +5,15 @@ interface RealTimeStats {
   activeUsers: number
   totalCoinsEarned: number
   totalRobots: number
+  robotBreakdown: Record<string, number>
 }
 
 export const useRealTimeStats = () => {
   const [stats, setStats] = useState<RealTimeStats>({
     activeUsers: 0,
     totalCoinsEarned: 0,
-    totalRobots: 0
+    totalRobots: 0,
+    robotBreakdown: {}
   })
 
   const updateStats = () => {
@@ -26,16 +28,24 @@ export const useRealTimeStats = () => {
       return total + (user.gameStats?.totalEarned || 0)
     }, 0)
     
-    // Общее количество роботов у всех игроков
-    const totalRobots = users.reduce((total, user) => {
+    // Общее количество роботов у всех игроков и разбивка по типам
+    const robotBreakdown: Record<string, number> = {}
+    let totalRobots = 0
+    
+    users.forEach(user => {
       const robotsOwned = user.gameStats?.robotsOwned || {}
-      return total + Object.values(robotsOwned).reduce((sum: number, count: any) => sum + (count || 0), 0)
-    }, 0)
+      Object.entries(robotsOwned).forEach(([robotId, count]) => {
+        const robotCount = count || 0
+        robotBreakdown[robotId] = (robotBreakdown[robotId] || 0) + robotCount
+        totalRobots += robotCount
+      })
+    })
     
     setStats({
       activeUsers,
       totalCoinsEarned,
-      totalRobots
+      totalRobots,
+      robotBreakdown
     })
   }
 
