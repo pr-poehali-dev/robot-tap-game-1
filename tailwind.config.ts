@@ -96,6 +96,10 @@ export default {
 				'pulse-slow': {
 					'0%, 100%': { opacity: '1' },
 					'50%': { opacity: '0.5' }
+				},
+				'spin-slow': {
+					'0%': { transform: 'rotate(0deg)' },
+					'100%': { transform: 'rotate(360deg)' }
 				}
 			},
 			animation: {
@@ -103,7 +107,8 @@ export default {
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'tap-bounce': 'tap-bounce 0.3s ease-out',
 				'coin-collect': 'coin-collect 1s ease-out',
-				'pulse-slow': 'pulse-slow 2s ease-in-out infinite'
+				'pulse-slow': 'pulse-slow 2s ease-in-out infinite',
+				'spin-slow': 'spin-slow 20s linear infinite'
 			}
 		}
 	},
