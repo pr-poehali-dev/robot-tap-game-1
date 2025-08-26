@@ -12,48 +12,83 @@ interface LandingPageProps {
 const robots = [
   {
     id: 'basic',
-    name: 'Базовый Робот',
+    name: 'Базовый робот',
     power: 1,
     price: 0,
-    description: 'Стартовый робот для новичков. Приносит 1 монету за клик.',
+    description: 'Стандартный робот для начинающих игроков. Бесплатный и вечный!',
     icon: '🤖',
-    level: 1
+    image: '/img/0c89b02e-e86a-4f7d-ab06-628ffeff8291.jpg',
+    lifespan: '∞'
   },
   {
-    id: 'advanced',
-    name: 'Продвинутый Робот',
+    id: 'worker',
+    name: 'Рабочий робот',
+    power: 2,
+    price: 5000,
+    description: 'Добывает в 2 раза больше монет. Надёжный помощник на 30 дней.',
+    icon: '👷‍♂️',
+    image: '/img/6298380d-94b8-449b-8539-a248456cf888.jpg',
+    lifespan: '30 дней'
+  },
+  {
+    id: 'engineer',
+    name: 'Инженер',
+    power: 3,
+    price: 15000,
+    description: 'Умный робот с тройной мощностью. Работает 45 дней.',
+    icon: '👨‍💻',
+    image: '/img/8b9dcf07-12d5-4043-a5a5-907c0a63627b.jpg',
+    lifespan: '45 дней'
+  },
+  {
+    id: 'scientist',
+    name: 'Учёный',
     power: 5,
-    price: 1000,
-    description: 'Улучшенный робот с повышенной мощностью. +5 монет за клик.',
-    icon: '🚀',
-    level: 2
+    price: 50000,
+    description: 'Продвинутый робот-исследователь. Мощность x5, работает 60 дней.',
+    icon: '👨‍🔬',
+    image: '/img/2ec52712-5033-4e4d-91cd-4251a6f218c1.jpg',
+    lifespan: '60 дней'
   },
   {
-    id: 'titanium',
-    name: 'Титановый Робот',
-    power: 25,
-    price: 10000,
-    description: 'Мощный титановый робот для опытных игроков. +25 монет за клик.',
-    icon: '⚡',
-    level: 3
+    id: 'commander',
+    name: 'Командир',
+    power: 10,
+    price: 150000,
+    description: 'Элитный робот высшего класса. Мощность x10, срок службы 90 дней.',
+    icon: '👨‍✈️',
+    image: '/img/646c617e-8b01-47fc-a700-b85b270caaee.jpg',
+    lifespan: '90 дней'
+  },
+  {
+    id: 'cyborg',
+    name: 'Киборг',
+    power: 20,
+    price: 500000,
+    description: 'Легендарный робот будущего! Мощность x20, работает 100 дней.',
+    icon: '🦾',
+    image: '/img/89a0d696-e417-48e9-82be-fc15e0417ff4.jpg',
+    lifespan: '100 дней'
+  },
+  {
+    id: 'student',
+    name: 'Работа школьника',
+    power: 35,
+    price: 780000,
+    description: 'Умный ученик готов к новому учебному году! x35 монет, 120 дней.',
+    icon: '🎓',
+    image: '/img/ac2ca91c-0b9f-44f7-b5b4-a2d871140891.jpg',
+    lifespan: '120 дней'
   },
   {
     id: 'quantum',
-    name: 'Квантовый Робот',
-    power: 100,
-    price: 100000,
-    description: 'Сверхмощный квантовый робот. +100 монет за клик!',
-    icon: '🌟',
-    level: 4
-  },
-  {
-    id: 'cosmic',
-    name: 'Космический Робот',
-    power: 500,
-    price: 1000000,
-    description: 'Легендарный космический робот. +500 монет за клик!',
-    icon: '🌌',
-    level: 5
+    name: 'Квантовый титан',
+    power: 75,
+    price: 5700000,
+    description: 'Элитный робот будущего с квантовой технологией! x75 монет, 180 дней.',
+    icon: '⚡',
+    image: '/img/8e056dbc-5c2c-42e4-ae1e-4b9f2306236f.jpg',
+    lifespan: '180 дней'
   }
 ]
 
@@ -196,35 +231,54 @@ export default function LandingPage({ onLogin, onRegister }: LandingPageProps) {
           <h2 className="text-3xl font-bold text-center mb-12 text-white">
             🤖 Коллекция Роботов
           </h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {robots.map((robot, index) => (
               <Card 
                 key={robot.id}
-                className={`cursor-pointer transition-all duration-300 backdrop-blur-sm ${
+                className={`cursor-pointer transition-all duration-300 backdrop-blur-sm overflow-hidden ${
                   activeRobot === index 
                     ? 'bg-gradient-to-br from-yellow-500/20 to-orange-500/20 border-yellow-500/50 scale-105' 
                     : 'bg-white/10 border-white/20 hover:bg-white/20'
                 } text-white`}
                 onClick={() => setActiveRobot(index)}
               >
-                <CardHeader className="text-center">
-                  <div className="text-5xl mb-2">{robot.icon}</div>
-                  <CardTitle className="flex items-center justify-between">
-                    {robot.name}
-                    <Badge variant={robot.level === 1 ? "secondary" : robot.level <= 2 ? "default" : "destructive"}>
-                      Ур. {robot.level}
+                {/* Изображение робота */}
+                <div className="relative h-40 overflow-hidden">
+                  <img 
+                    src={robot.image}
+                    alt={robot.name}
+                    className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                  <div className="absolute top-2 right-2 text-2xl">{robot.icon}</div>
+                  <div className="absolute bottom-2 left-2">
+                    <Badge className="bg-black/50 text-white border-white/20">
+                      x{robot.power} мощность
                     </Badge>
-                  </CardTitle>
-                  <CardDescription className="text-gray-300">
-                    Мощность: <strong>+{robot.power} монет/клик</strong>
+                  </div>
+                </div>
+
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-lg">{robot.name}</CardTitle>
+                  <CardDescription className="text-gray-300 text-sm">
+                    {robot.description}
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <p className="text-sm mb-4">{robot.description}</p>
-                  <div className="text-center">
+                
+                <CardContent className="pt-0">
+                  <div className="flex items-center justify-between mb-3">
                     <Badge variant="outline" className="text-yellow-400 border-yellow-400/50">
-                      {robot.price === 0 ? 'Бесплатно' : `${robot.price.toLocaleString()} монет`}
+                      {robot.price === 0 ? 'Бесплатно' : `${robot.price.toLocaleString()} 💰`}
                     </Badge>
+                    <Badge variant="secondary" className="text-xs">
+                      ⏱️ {robot.lifespan}
+                    </Badge>
+                  </div>
+                  
+                  <div className="text-center">
+                    <div className="text-xs text-gray-400">
+                      Доход за клик: <strong className="text-green-400">+{robot.power} монет</strong>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
