@@ -15,7 +15,7 @@ import LeaguesSection from '@/components/LeaguesSection'
 import MinigamesSection from '@/components/MinigamesSection'
 import SocialSection from '@/components/SocialSection'
 import Navigation from '@/components/Navigation'
-import UserCounters from '@/components/UserCounters'
+
 import { useAuth } from '@/hooks/useAuth'
 import { useGameLogic } from '@/hooks/useGameLogic'
 import { useUserActivity, getOnlineCount, getRegistrationCount } from '@/hooks/useUserActivity'
@@ -263,11 +263,6 @@ export default function Index() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col relative">
-      <UserCounters 
-        registrationCount={registrationCount}
-        onlineCount={onlineCount}
-      />
-
       <div className="flex-1 overflow-y-auto pb-16">
         <div className="container mx-auto px-2 sm:px-4 py-2 sm:py-4 max-w-md">
           {!currentUser && activeTab !== 'profile' ? (
