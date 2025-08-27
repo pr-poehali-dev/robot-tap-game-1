@@ -25,7 +25,7 @@ export const useAuth = () => {
   const handleRegister = useCallback(() => {
     if (!authForm.username.trim() || !authForm.email.trim() || !authForm.password.trim()) {
       alert('Заполните все поля')
-      return
+      return false
     }
     
     const users = JSON.parse(localStorage.getItem('robotGameUsers') || '[]')
@@ -33,7 +33,7 @@ export const useAuth = () => {
     
     if (existingUser) {
       alert('Пользователь с таким именем уже существует')
-      return
+      return false
     }
     
     const newUser: User = {
@@ -52,13 +52,13 @@ export const useAuth = () => {
     setCurrentUser(newUser)
     setAuthForm({ username: '', email: '', password: '' })
     
-    return users.length
+    return true
   }, [authForm, initialGameStats])
 
   const handleLogin = useCallback(() => {
     if (!authForm.username.trim() || !authForm.password.trim()) {
       alert('Заполните все поля')
-      return
+      return false
     }
     
     const users = JSON.parse(localStorage.getItem('robotGameUsers') || '[]')
@@ -71,8 +71,10 @@ export const useAuth = () => {
       localStorage.setItem('currentUserId', user.id)
       setCurrentUser(user)
       setAuthForm({ username: '', email: '', password: '' })
+      return true
     } else {
       alert('Неверный логин или пароль')
+      return false
     }
   }, [authForm])
 

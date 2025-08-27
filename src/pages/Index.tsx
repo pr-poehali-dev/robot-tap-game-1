@@ -82,7 +82,7 @@ export default function Index() {
     if (success) {
       setShowLanding(false)
     }
-  }, [handleLogin])
+  }, [handleLogin, setAuthForm])
 
   const handleLandingRegister = useCallback((form: { username: string; email: string; password: string }) => {
     setAuthForm(form)
@@ -91,7 +91,7 @@ export default function Index() {
       setShowLanding(false)
       setRegistrationCount(prev => prev + 1)
     }
-  }, [authRegister])
+  }, [authRegister, setAuthForm])
 
   const handleLogout = useCallback(() => {
     authLogout()
