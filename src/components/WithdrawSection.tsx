@@ -29,7 +29,7 @@ export default function WithdrawSection({ currentUser, onAutoTapClick, onTabChan
 
   // Проверка активности игрока для доступа к выводу
   const checkPlayerActivity = () => {
-    const registrationDate = new Date(currentUser.createdAt)
+    const registrationDate = new Date(currentUser.registeredAt)
     const now = new Date()
     const daysSinceRegistration = Math.floor((now.getTime() - registrationDate.getTime()) / (1000 * 60 * 60 * 24))
     
