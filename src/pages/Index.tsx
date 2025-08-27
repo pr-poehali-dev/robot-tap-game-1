@@ -260,6 +260,8 @@ export default function Index() {
       <LandingPage 
         onLogin={handleLandingLogin}
         onRegister={handleLandingRegister}
+        registrationCount={registrationCount}
+        onlineCount={onlineCount}
       />
     )
   }

@@ -10,6 +10,8 @@ import RobotStatsDisplay from '@/components/RobotStatsDisplay'
 interface LandingPageProps {
   onLogin: (form: { username: string; email: string; password: string }) => void
   onRegister: (form: { username: string; email: string; password: string }) => void
+  registrationCount: number
+  onlineCount: number
 }
 
 const robots = [
@@ -171,12 +173,18 @@ const earnMethods = [
   }
 ]
 
-export default function LandingPage({ onLogin, onRegister }: LandingPageProps) {
+export default function LandingPage({ onLogin, onRegister, registrationCount, onlineCount }: LandingPageProps) {
   const [activeRobot, setActiveRobot] = useState(0)
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
   const [authModalTab, setAuthModalTab] = useState<'login' | 'register'>('register')
   
   const { stats, formatNumber } = useRealTimeStats()
+  
+  const formatCount = (num: number): string => {
+    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M'  
+    if (num >= 1000) return (num / 1000).toFixed(1) + 'K'
+    return num.toString()
+  }
 
   const handleOpenLogin = () => {
     setAuthModalTab('login')
@@ -224,20 +232,26 @@ export default function LandingPage({ onLogin, onRegister }: LandingPageProps) {
             </Button>
           </div>
 
-          {/* Game Stats */}
-          <div className="flex flex-wrap justify-center gap-6 text-sm">
-            <div className="flex items-center gap-2">
-              <Icon name="Users" size={16} />
-              <span>Активных игроков: <strong>{stats.activeUsers || 0}</strong></span>
+          {/* Beautiful User Counter */}
+          <div className="flex justify-center gap-4 sm:gap-8">
+            <div className="bg-gradient-to-br from-emerald-500/20 to-green-600/30 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/20 shadow-lg">
+              <div className="flex items-center gap-2 text-emerald-200">
+                <Icon name="UserCheck" size={18} className="text-emerald-400" />
+                <div>
+                  <div className="text-lg font-bold text-white">{formatCount(registrationCount)}</div>
+                  <div className="text-xs opacity-90">Регистраций</div>
+                </div>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Icon name="Coins" size={16} />
-              <span>Монет заработано: <strong>{formatNumber(stats.totalCoinsEarned)}</strong></span>
+            <div className="bg-gradient-to-br from-blue-500/20 to-cyan-600/30 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/20 shadow-lg">
+              <div className="flex items-center gap-2 text-cyan-200">
+                <Icon name="Users" size={18} className="text-cyan-400" />
+                <div>
+                  <div className="text-lg font-bold text-white">{formatCount(onlineCount)}</div>
+                  <div className="text-xs opacity-90">Онлайн</div>
+                </div>
+              </div>
             </div>
-            <RobotStatsDisplay 
-              totalRobots={stats.totalRobots} 
-              robotBreakdown={stats.robotBreakdown} 
-            />
           </div>
         </div>
       </header>
