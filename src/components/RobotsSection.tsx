@@ -124,6 +124,16 @@ const availableRobots: Robot[] = [
     description: 'Бодрящий робот для истинных кофеманов!'
   },
   {
+    id: 'radionoumi',
+    name: 'Radio Noumi',
+    emoji: '📻',
+    image: '/img/f918766f-2718-497f-9cfb-29e12bc98904.jpg',
+    price: 9800500,
+    tapPower: 85,
+    lifespan: 190,
+    description: 'Высокотехнологичный робот с системой радиосвязи!'
+  },
+  {
     id: 'autumn',
     name: 'Осенний робот',
     emoji: '🍂',

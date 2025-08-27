@@ -58,6 +58,7 @@ export default function GameSection({
       'scientist': { emoji: '👨‍🔬', image: '/img/2ec52712-5033-4e4d-91cd-4251a6f218c1.jpg', tapPower: 5, name: 'Учёный', lifespan: 60 },
       'commander': { emoji: '👨‍✈️', image: '/img/646c617e-8b01-47fc-a700-b85b270caaee.jpg', tapPower: 10, name: 'Командир', lifespan: 90 },
       'cyborg': { emoji: '🦾', image: '/img/89a0d696-e417-48e9-82be-fc15e0417ff4.jpg', tapPower: 20, name: 'Киборг', lifespan: 100 },
+      'radionoumi': { emoji: '📻', image: '/img/f918766f-2718-497f-9cfb-29e12bc98904.jpg', tapPower: 85, name: 'Radio Noumi', lifespan: 190 },
       'autumn': { emoji: '🍂', image: '/img/1274db0f-36b9-4bb9-b0ce-0f4a14760b3b.jpg', tapPower: 100, name: 'Осенний робот', lifespan: 200 }
     }
     
