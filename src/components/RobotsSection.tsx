@@ -304,7 +304,7 @@ export default function RobotsSection({ currentUser, onUpdateStats }: RobotsSect
             <CardContent className="p-0">
               <div className="flex">
                 {/* Красивое изображение робота */}
-                <div className={`w-32 h-40 flex items-end justify-center rounded-l-lg overflow-hidden ${
+                <div className={`w-32 h-40 relative rounded-l-lg overflow-hidden ${
                   robot.id === 'quantum'
                     ? 'bg-gradient-to-br from-blue-600/30 via-purple-600/25 to-cyan-600/20 relative animate-pulse'
                     : robot.id === 'student'
@@ -322,7 +322,7 @@ export default function RobotsSection({ currentUser, onUpdateStats }: RobotsSect
                   <img 
                     src={robot.image}
                     alt={robot.name}
-                    className={`w-full h-full object-cover transition-transform duration-300 ${
+                    className={`absolute inset-0 w-full h-full object-cover transition-transform duration-300 ${
                       robot.id === 'quantum'
                         ? 'hover:scale-115 filter hover:brightness-125 hover:saturate-150'
                         : robot.id === 'student' 
