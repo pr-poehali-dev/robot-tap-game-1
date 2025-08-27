@@ -40,9 +40,10 @@ export default function WithdrawSection({ currentUser, onAutoTapClick, onTabChan
     return {
       daysSinceRegistration,
       totalSpent,
-      canWithdraw: daysSinceRegistration >= 10 && totalSpent > 0,
+      canWithdraw: daysSinceRegistration >= 10 && totalSpent >= 1000000,
       minDaysRequired: 10,
-      hasSpent: totalSpent > 0
+      hasSpent: totalSpent >= 1000000,
+      minSpentRequired: 1000000
     }
   }
 
@@ -146,9 +147,9 @@ export default function WithdrawSection({ currentUser, onAutoTapClick, onTabChan
                       size={16} 
                     />
                     <span>
-                      Потратить монеты на улучшения/роботов 
+                      Потратить не меньше 1,000,000 монет
                       <span className="font-medium">
-                        ({activityCheck.totalSpent.toLocaleString()} потрачено)
+                        ({activityCheck.totalSpent.toLocaleString()}/1,000,000 потрачено)
                       </span>
                     </span>
                   </div>
