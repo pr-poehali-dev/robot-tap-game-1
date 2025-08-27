@@ -9,6 +9,13 @@ interface StatsHeaderProps {
   onTabChange: (tab: string) => void
 }
 
+const formatNumber = (num: number): string => {
+  if (num >= 1000000000) return (num / 1000000000).toFixed(1) + 'B'
+  if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M'  
+  if (num >= 1000) return (num / 1000).toFixed(1) + 'K'
+  return num.toLocaleString()
+}
+
 export default function StatsHeader({ currentUser, onAutoTapClick, onWithdrawClick, onTabChange }: StatsHeaderProps) {
   if (!currentUser) return null
 
@@ -21,7 +28,7 @@ export default function StatsHeader({ currentUser, onAutoTapClick, onWithdrawCli
             <div className="relative z-10 flex flex-col items-center justify-center min-h-[40px] sm:min-h-[50px]">
               <Icon name="Coins" size={16} className="text-yellow-600 sm:w-5 sm:h-5 md:w-6 md:h-6 mb-1" />
               <div className="text-xs sm:text-sm md:text-base font-black text-yellow-700 drop-shadow-sm">
-                {currentUser.gameStats.coins.toLocaleString()}
+                {formatNumber(currentUser.gameStats.coins)}
               </div>
             </div>
           </CardContent>
