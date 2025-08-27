@@ -93,18 +93,18 @@ export default function Navigation({ activeTab, currentUser, onTabChange }: Navi
         <div className="md:hidden fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-lg border-t border-border z-50 animate-in slide-in-from-bottom duration-300">
           {/* Мобильное меню - горизонтальная прокрутка */}
           <div className="sm:hidden flex overflow-x-auto scrollbar-hide">
-            <div className="flex gap-1 p-1 min-w-max">
+            <div className="flex gap-0.5 p-1 min-w-max">
               {tabs.map((tab) => (
                 <Button
                   key={tab.id}
                   variant={activeTab === tab.id ? "default" : "ghost"}
                   size="sm"
                   onClick={() => onTabChange(tab.id)}
-                  className={`flex flex-col items-center py-2 h-auto px-3 min-w-[60px] flex-shrink-0 transition-all duration-200 transform active:scale-95 ${activeTab === tab.id ? 'animate-pulse bg-gradient-to-r from-primary to-primary/80' : 'hover:bg-gradient-to-r hover:from-primary/20 hover:to-primary/10'}`}
+                  className={`flex flex-col items-center py-2 h-auto px-2 min-w-[50px] flex-shrink-0 transition-all duration-200 transform active:scale-95 ${activeTab === tab.id ? 'animate-pulse bg-gradient-to-r from-primary to-primary/80' : 'hover:bg-gradient-to-r hover:from-primary/20 hover:to-primary/10'}`}
                   disabled={!currentUser && tab.id !== 'profile'}
                 >
-                  <Icon name={tab.icon as any} size={16} className={`transition-all duration-200 ${activeTab === tab.id ? 'animate-bounce' : ''}`} />
-                  <span className="text-[10px] mt-0.5 leading-tight whitespace-nowrap">{tab.label}</span>
+                  <Icon name={tab.icon as any} size={14} className={`transition-all duration-200 ${activeTab === tab.id ? 'animate-bounce' : ''}`} />
+                  <span className="text-[9px] mt-0.5 leading-tight whitespace-nowrap">{tab.label}</span>
                 </Button>
               ))}
             </div>
