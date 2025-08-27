@@ -39,6 +39,7 @@ export default function GameSection({
   const [canClaimBonus, setCanClaimBonus] = useState(true)
   const [isRobotAnimating, setIsRobotAnimating] = useState(false)
   const [showRefuelDialog, setShowRefuelDialog] = useState(false)
+  const [isPulsing, setIsPulsing] = useState(false)
 
   // Получаем текущего робота пользователя
   const getUserRobot = () => {
@@ -188,7 +189,9 @@ export default function GameSection({
   const handleRobotClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (currentUser.gameStats.tapsLeft > 0) {
       setIsRobotAnimating(true)
+      setIsPulsing(true)
       setTimeout(() => setIsRobotAnimating(false), 400)
+      setTimeout(() => setIsPulsing(false), 600)
     }
     onRobotTap(e)
   }
@@ -226,6 +229,8 @@ export default function GameSection({
             hasUnlimitedEnergy ? 'border-purple-400 shadow-purple-300/50 animate-energy-pulse' :
             isVIP ? 'border-yellow-400 shadow-yellow-300/50' : 'border-primary/30'
           } ${isAnimating ? 'animate-tap-bounce' : ''} ${isRobotAnimating ? 'animate-robot-active animate-tap-glow' : ''} ${
+            isPulsing ? 'animate-click-pulse' : ''
+          } ${
             currentUser.gameStats.tapsLeft > 0 ? 'hover:scale-105 cursor-pointer' : 'opacity-60'
           }`}
         >
