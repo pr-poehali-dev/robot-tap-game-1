@@ -229,16 +229,7 @@ export default function GameSection({
     setShowRefuelDialog(false)
   }
 
-  const handleAdReward = () => {
-    if (!currentUser) return
-    
-    const updatedStats = {
-      ...currentUser.gameStats,
-      coins: currentUser.gameStats.coins + 100
-    }
-    
-    onUpdateStats(updatedStats)
-  }
+
 
   return (
     <div className="flex flex-col items-center space-y-3 sm:space-y-4">
@@ -411,7 +402,7 @@ export default function GameSection({
       <AdModal
         isOpen={showAdModal}
         onClose={() => setShowAdModal(false)}
-        onReward={handleAdReward}
+        onReward={() => {}}
       />
     </div>
   )
