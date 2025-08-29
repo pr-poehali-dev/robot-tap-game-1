@@ -27,7 +27,42 @@
   </head>
 
 <body>
-<div id="root"></div>
+<div id="root">
+  <!-- Простой индикатор загрузки -->
+  <div style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1e293b, #7c3aed);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    z-index: 9999;
+  ">
+    <div style="
+      width: 60px;
+      height: 60px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-top: 3px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    "></div>
+    <h2 style="margin: 0; font-size: 24px; font-weight: 600;">YaTitan</h2>
+    <p style="margin: 10px 0 0 0; opacity: 0.8;">Загрузка игры...</p>
+  </div>
+  <style>
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</div>
 <script type="module" src="/src/main.tsx"></script>
 
 <!-- Yandex.Metrika counter -->
