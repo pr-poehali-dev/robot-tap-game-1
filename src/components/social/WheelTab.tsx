@@ -71,7 +71,7 @@ export default function WheelTab({ currentUser, onUpdateStats }: WheelTabProps) 
     const prize = getRandomPrize()
     const prizeIndex = prizes.findIndex(p => p.coins === prize.coins)
     const degreesPerSegment = 360 / prizes.length
-    const targetRotation = rotation + 360 * 5 + (prizeIndex * degreesPerSegment) + (degreesPerSegment / 2)
+    const targetRotation = rotation + 360 * 8 + (prizeIndex * degreesPerSegment) + (degreesPerSegment / 2)
 
     setRotation(targetRotation)
 
@@ -123,15 +123,15 @@ export default function WheelTab({ currentUser, onUpdateStats }: WheelTabProps) 
       <Card className="relative overflow-hidden">
         <CardContent className="p-8 text-center">
           {/* Колесо */}
-          <div className="relative w-80 h-80 mx-auto mb-6">
+          <div className={`relative w-80 h-80 mx-auto mb-6 ${isSpinning ? 'scale-105 transition-transform duration-300' : 'transition-transform duration-300'}`}>
             {/* Стрелка указатель */}
-            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 z-10">
+            <div className={`absolute top-0 left-1/2 transform -translate-x-1/2 z-10 ${isSpinning ? 'animate-bounce' : ''}`}>
               <div className="w-0 h-0 border-l-4 border-r-4 border-b-8 border-transparent border-b-red-500"></div>
             </div>
             
             {/* Само колесо */}
             <div 
-              className="w-full h-full rounded-full border-8 border-gray-300 relative transition-transform duration-[4000ms] ease-out"
+              className={`w-full h-full rounded-full border-8 border-gray-300 relative transition-transform duration-[4000ms] ease-out ${isSpinning ? 'animate-pulse shadow-lg shadow-yellow-400/50' : ''}`}
               style={{ 
                 transform: `rotate(${rotation}deg)`,
                 background: `conic-gradient(${prizes.map((prize, index) => 
