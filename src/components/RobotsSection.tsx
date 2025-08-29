@@ -143,6 +143,16 @@ const availableRobots: Robot[] = [
     lifespan: 200,
     description: 'Сезонный робот с силой осеннего урожая!',
     availableFrom: new Date('2025-09-01')
+  },
+  {
+    id: 'volcanic',
+    name: 'Вулканический робот',
+    emoji: '🌋',
+    image: '/img/volcanic-robot.jpg',
+    price: 58250956,
+    tapPower: 150,
+    lifespan: 250,
+    description: 'Огненная мощь вулкана в металлическом корпусе!'
   }
 ]
 
@@ -299,7 +309,8 @@ export default function RobotsSection({ currentUser, onUpdateStats }: RobotsSect
               selectedRobot === robot.id ? 'border-primary shadow-lg' : ''
             } ${currentUser.gameStats.coins < robot.price || !available ? 'opacity-50' : 'hover:border-primary/50'}
             ${currentRobot.id === robot.id ? 'border-green-500 bg-green-50/50' : ''}
-            ${robot.id === 'autumn' ? 'border-orange-400/50 bg-gradient-to-br from-orange-50/30 to-yellow-50/20' : ''}`}
+            ${robot.id === 'autumn' ? 'border-orange-400/50 bg-gradient-to-br from-orange-50/30 to-yellow-50/20' : ''}
+            ${robot.id === 'volcanic' ? 'border-red-500/50 bg-gradient-to-br from-red-50/30 to-orange-50/20' : ''}`}
           >
             <CardContent className="p-0">
               <div className="flex">
@@ -317,6 +328,8 @@ export default function RobotsSection({ currentUser, onUpdateStats }: RobotsSect
                     ? 'bg-gradient-to-br from-green-500/15 via-emerald-500/15 to-teal-500/15'
                     : robot.id === 'autumn'
                     ? 'bg-gradient-to-br from-orange-500/25 via-yellow-500/20 to-red-500/15 relative'
+                    : robot.id === 'volcanic'
+                    ? 'bg-gradient-to-br from-red-500/30 via-orange-500/25 to-yellow-500/15 relative animate-pulse'
                     : 'bg-gradient-to-br from-primary/10 via-primary/5 to-secondary/10'
                 }`}>
                   <img 
@@ -328,7 +341,9 @@ export default function RobotsSection({ currentUser, onUpdateStats }: RobotsSect
                         : robot.id === 'student' 
                         ? 'hover:scale-110 filter hover:brightness-110'
                         : robot.id === 'cyborg' 
-                        ? 'hover:scale-110 filter hover:brightness-110' 
+                        ? 'hover:scale-110 filter hover:brightness-110'
+                        : robot.id === 'volcanic'
+                        ? 'hover:scale-115 filter hover:brightness-125 hover:saturate-150'
                         : 'hover:scale-105'
                     }`}
                   />
@@ -361,6 +376,15 @@ export default function RobotsSection({ currentUser, onUpdateStats }: RobotsSect
                           </div>
                         </div>
                       )}
+                    </>
+                  )}
+                  {robot.id === 'volcanic' && (
+                    <>
+                      <div className="absolute inset-0 bg-gradient-to-t from-transparent via-red-400/10 to-orange-400/20 pointer-events-none" />
+                      <div className="absolute top-1 right-1 text-xs animate-ping">🔥</div>
+                      <div className="absolute top-2 left-2 text-lg animate-bounce">🌋</div>
+                      <div className="absolute bottom-1 right-1 text-xs animate-pulse">💥</div>
+                      <div className="absolute inset-0 border-2 border-transparent bg-gradient-to-br from-red-400/20 to-orange-400/20 rounded-lg animate-pulse" />
                     </>
                   )}
                 </div>
