@@ -59,7 +59,7 @@ export default function VerificationModal({ isOpen, onClose, onSubmit }: Verific
           <div className="text-center">
             <div className="mb-4">
               <img 
-                src="/img/16b4f45c-5ce5-4c66-a7c5-acb6e58f7975.jpg" 
+                src="/img/375e5305-eb4d-4e3e-b057-072537857320.jpg" 
                 alt="Образец позы" 
                 className="w-32 h-32 mx-auto rounded-lg border-2 border-blue-200"
               />
