@@ -188,6 +188,7 @@ export default function Index() {
           <ProfileSection 
             currentUser={currentUser}
             onLogout={handleLogout}
+            onUpdateUser={setCurrentUser}
           />
         )
       case 'upgrades': 

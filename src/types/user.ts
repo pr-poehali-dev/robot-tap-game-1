@@ -23,4 +23,6 @@ export interface User {
   password: string
   gameStats: GameStats
   registeredAt: string
+  verificationStatus?: 'pending' | 'approved' | 'rejected' | null
+  isVerified?: boolean
 }

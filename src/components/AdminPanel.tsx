@@ -9,6 +9,7 @@ import AdminOverview from './AdminOverview'
 import AdminUsers from './AdminUsers'
 import AdminWithdraws from './AdminWithdraws'
 import AdminSettings from './AdminSettings'
+import VerificationAdmin from './admin/VerificationAdmin'
 
 interface AdminPanelProps {
   onLogout: () => void
@@ -170,6 +171,10 @@ export default function AdminPanel({ onLogout }: AdminPanelProps) {
                 </Badge>
               )}
             </TabsTrigger>
+            <TabsTrigger value="verification" className="data-[state=active]:bg-slate-700">
+              <Icon name="Shield" size={16} className="mr-2" />
+              Верификация
+            </TabsTrigger>
             <TabsTrigger value="settings" className="data-[state=active]:bg-slate-700">
               <Icon name="Settings" size={16} className="mr-2" />
               Настройки
@@ -203,6 +208,10 @@ export default function AdminPanel({ onLogout }: AdminPanelProps) {
               onUpdateStatus={updateWithdrawStatus}
               formatNumber={formatNumber}
             />
+          </TabsContent>
+
+          <TabsContent value="verification" className="space-y-6">
+            <VerificationAdmin />
           </TabsContent>
 
           <TabsContent value="settings" className="space-y-6">
