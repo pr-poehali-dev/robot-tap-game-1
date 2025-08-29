@@ -326,10 +326,9 @@ export default function GameSection({
                 onClick={() => setShowRefuelDialog(true)}
                 size="sm"
                 variant="outline"
-                className="h-6 px-2 text-xs"
+                className="h-6 w-6 p-0"
               >
-                <Icon name="Fuel" size={12} className="mr-1" />
-                Заправить
+                <Icon name="Fuel" size={12} />
               </Button>
             )}
         </div>
