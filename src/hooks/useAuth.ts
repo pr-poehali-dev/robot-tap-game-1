@@ -22,14 +22,16 @@ export const useAuth = () => {
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login')
   const [authForm, setAuthForm] = useState<AuthForm>({ username: '', email: '', password: '' })
 
-  const handleRegister = useCallback(() => {
-    if (!authForm.username.trim() || !authForm.email.trim() || !authForm.password.trim()) {
+  const handleRegister = useCallback((form?: AuthForm) => {
+    const formData = form || authForm
+    
+    if (!formData.username.trim() || !formData.email.trim() || !formData.password.trim()) {
       alert('Заполните все поля')
       return false
     }
     
     const users = JSON.parse(localStorage.getItem('robotGameUsers') || '[]')
-    const existingUser = users.find((u: User) => u.username === authForm.username.trim())
+    const existingUser = users.find((u: User) => u.username === formData.username.trim())
     
     if (existingUser) {
       alert('Пользователь с таким именем уже существует')
@@ -38,9 +40,9 @@ export const useAuth = () => {
     
     const newUser: User = {
       id: Date.now().toString(),
-      username: authForm.username.trim(),
-      email: authForm.email.trim(),
-      password: authForm.password.trim(),
+      username: formData.username.trim(),
+      email: formData.email.trim(),
+      password: formData.password.trim(),
       gameStats: { ...initialGameStats },
       registeredAt: new Date().toISOString()
     }
@@ -53,18 +55,20 @@ export const useAuth = () => {
     setAuthForm({ username: '', email: '', password: '' })
     
     return true
-  }, [authForm, initialGameStats])
+  }, [authForm])
 
-  const handleLogin = useCallback(() => {
-    if (!authForm.username.trim() || !authForm.password.trim()) {
+  const handleLogin = useCallback((form?: AuthForm) => {
+    const formData = form || authForm
+    
+    if (!formData.username.trim() || !formData.password.trim()) {
       alert('Заполните все поля')
       return false
     }
     
     const users = JSON.parse(localStorage.getItem('robotGameUsers') || '[]')
     const user = users.find((u: User) => 
-      u.username === authForm.username.trim() && 
-      (u.password === authForm.password.trim() || u.email === authForm.password.trim())
+      u.username === formData.username.trim() && 
+      (u.password === formData.password.trim() || u.email === formData.password.trim())
     )
     
     if (user) {

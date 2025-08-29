@@ -70,28 +70,26 @@ export default function Index() {
   useEnergyRecovery(currentUser, setCurrentUser)
 
   const handleRegister = useCallback(() => {
-    const newCount = authRegister()
-    if (newCount) {
-      setRegistrationCount(newCount)
+    const success = authRegister()
+    if (success) {
+      setRegistrationCount(prev => prev + 1)
     }
   }, [authRegister])
 
   const handleLandingLogin = useCallback((form: { username: string; email: string; password: string }) => {
-    setAuthForm(form)
-    const success = handleLogin()
+    const success = handleLogin(form)
     if (success) {
       setShowLanding(false)
     }
-  }, [handleLogin, setAuthForm])
+  }, [handleLogin])
 
   const handleLandingRegister = useCallback((form: { username: string; email: string; password: string }) => {
-    setAuthForm(form)
-    const success = authRegister()
+    const success = authRegister(form)
     if (success) {
       setShowLanding(false)
       setRegistrationCount(prev => prev + 1)
     }
-  }, [authRegister, setAuthForm])
+  }, [authRegister])
 
   const handleLogout = useCallback(() => {
     authLogout()
