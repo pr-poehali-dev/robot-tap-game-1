@@ -127,9 +127,19 @@ export default function AdModal({ isOpen, onClose, onReward }: AdModalProps) {
             </Button>
           </div>
 
-          <p className="text-xs text-center text-muted-foreground">
-            Благодарим за терпение! Ваша поддержка позволяет нам развивать игру 💙
-          </p>
+          <div className="space-y-2 text-center">
+            <p className="text-xs text-muted-foreground">
+              Благодарим за терпение! Ваша поддержка позволяет нам развивать игру 💙
+            </p>
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+              <p className="text-xs text-blue-700 font-medium mb-1">
+                📢 Хотите разместить свою рекламу?
+              </p>
+              <p className="text-xs text-blue-600">
+                Заказать рекламу можно в WhatsApp: <strong>+7 904 980 82 75</strong>
+              </p>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>
