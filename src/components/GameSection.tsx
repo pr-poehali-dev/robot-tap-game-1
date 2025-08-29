@@ -5,6 +5,7 @@ import { Progress } from '@/components/ui/progress'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import Icon from '@/components/ui/icon'
 import StatsHeader from './StatsHeader'
+import AdModal from '@/components/AdModal'
 import { User, GameStats } from '@/types/user'
 
 
@@ -40,6 +41,11 @@ export default function GameSection({
   const [isRobotAnimating, setIsRobotAnimating] = useState(false)
   const [showRefuelDialog, setShowRefuelDialog] = useState(false)
   const [isPulsing, setIsPulsing] = useState(false)
+  const [showAdModal, setShowAdModal] = useState(false)
+  const [clickCount, setClickCount] = useState(() => {
+    if (!currentUser) return 0
+    return parseInt(localStorage.getItem(`adClickCount_${currentUser.id}`) || '0')
+  })
 
   // Получаем текущего робота пользователя
   const getUserRobot = () => {
@@ -193,6 +199,16 @@ export default function GameSection({
       setIsPulsing(true)
       setTimeout(() => setIsRobotAnimating(false), 400)
       setTimeout(() => setIsPulsing(false), 600)
+      
+      // Подсчёт кликов для показа рекламы
+      const newClickCount = clickCount + 1
+      setClickCount(newClickCount)
+      localStorage.setItem(`adClickCount_${currentUser.id}`, newClickCount.toString())
+      
+      // Показываем рекламу каждые 50 кликов
+      if (newClickCount % 50 === 0) {
+        setShowAdModal(true)
+      }
     }
     onRobotTap(e)
   }
@@ -211,6 +227,17 @@ export default function GameSection({
 
     onUpdateStats(updatedStats)
     setShowRefuelDialog(false)
+  }
+
+  const handleAdReward = () => {
+    if (!currentUser) return
+    
+    const updatedStats = {
+      ...currentUser.gameStats,
+      coins: currentUser.gameStats.coins + 100
+    }
+    
+    onUpdateStats(updatedStats)
   }
 
   return (
@@ -288,8 +315,12 @@ export default function GameSection({
       <div className="w-full space-y-2">
         <div className="flex justify-between items-center text-xs sm:text-sm">
           <span>Энергия: {currentUser.gameStats.tapsLeft}/{currentUser.gameStats.maxTaps}</span>
-          <div className="flex items-center gap-2">
-            <span className="text-primary">⚡</span>
+          <span className="text-xs text-muted-foreground">
+            До рекламы: {50 - (clickCount % 50)} кликов
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-primary">⚡</span>
             {currentUser.gameStats.tapsLeft < currentUser.gameStats.maxTaps && (
               <Button
                 onClick={() => setShowRefuelDialog(true)}
@@ -301,7 +332,6 @@ export default function GameSection({
                 Заправить
               </Button>
             )}
-          </div>
         </div>
         <Progress value={(currentUser.gameStats.tapsLeft / currentUser.gameStats.maxTaps) * 100} className="h-2 sm:h-3" />
         <div className="text-center text-xs text-muted-foreground">
@@ -377,6 +407,13 @@ export default function GameSection({
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Рекламное модальное окно */}
+      <AdModal
+        isOpen={showAdModal}
+        onClose={() => setShowAdModal(false)}
+        onReward={handleAdReward}
+      />
     </div>
   )
 }
