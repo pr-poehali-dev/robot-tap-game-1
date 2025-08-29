@@ -148,7 +148,7 @@ const availableRobots: Robot[] = [
     id: 'volcanic',
     name: 'Вулканический робот',
     emoji: '🌋',
-    image: '/img/volcanic-robot.jpg',
+    image: '/img/ed865552-df19-4979-9421-f7ccc1c4d99d.jpg',
     price: 58250956,
     tapPower: 150,
     lifespan: 250,
