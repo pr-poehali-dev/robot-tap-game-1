@@ -37,13 +37,13 @@ const adTemplates = [
 ]
 
 export default function AdModal({ isOpen, onClose, onReward }: AdModalProps) {
-  const [countdown, setCountdown] = useState(5)
+  const [countdown, setCountdown] = useState(60)
   const [canClose, setCanClose] = useState(false)
   const [currentAd, setCurrentAd] = useState(0)
 
   useEffect(() => {
     if (isOpen) {
-      setCountdown(5)
+      setCountdown(60)
       setCanClose(false)
       setCurrentAd(Math.floor(Math.random() * adTemplates.length))
       
