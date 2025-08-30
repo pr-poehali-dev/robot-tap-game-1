@@ -8,18 +8,22 @@
         // Универсальная переадресация для GitHub Pages и других хостингов
         (function() {
             var path = window.location.pathname;
+            var hash = window.location.hash;
             var redirect = sessionStorage.getItem('path');
             
             if (redirect) {
                 sessionStorage.removeItem('path');
-                history.replaceState(null, null, redirect);
+                // Используем hash routing для правильной переадресации
+                window.location.href = '/#' + redirect;
+                return;
             } else if (path !== '/') {
-                // Сохраняем текущий путь и переходим на главную
-                sessionStorage.setItem('path', path + window.location.search + window.location.hash);
-                history.replaceState(null, null, '/');
+                // Конвертируем путь в hash для SPA роутинга
+                var targetHash = '#' + path + window.location.search;
+                window.location.href = '/' + targetHash;
+                return;
             }
             
-            // Перезагружаем страницу для загрузки React приложения
+            // Если уже на главной странице, просто перезагружаем
             window.location.reload();
         })();
     </script>

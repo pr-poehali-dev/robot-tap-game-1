@@ -12,13 +12,14 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const App = () => {
-  // Обработка переадресации для SPA
+  // Обработка переадресации для SPA (не нужно для HashRouter)
   React.useEffect(() => {
+    // Очищаем sessionStorage от старых редиректов, так как HashRouter обрабатывает маршруты автоматически
     try {
       const redirect = sessionStorage.getItem('path');
       if (redirect) {
         sessionStorage.removeItem('path');
-        window.history.replaceState(null, null, redirect);
+        console.log('Cleared legacy redirect:', redirect);
       }
     } catch (error) {
       console.error('Error handling redirect:', error);
