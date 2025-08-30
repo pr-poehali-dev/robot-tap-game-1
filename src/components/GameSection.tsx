@@ -21,6 +21,7 @@ interface GameSectionProps {
   onAutoTapClick: () => void
   onUpdateStats: (stats: GameStats) => void
   onTabChange: (tab: string) => void
+  onAdReward: () => void
 }
 
 export default function GameSection({ 
@@ -31,7 +32,8 @@ export default function GameSection({
   onClaimDailyBonus,
   onAutoTapClick,
   onUpdateStats,
-  onTabChange 
+  onTabChange,
+  onAdReward 
 }: GameSectionProps) {
   const [timeToFullEnergy, setTimeToFullEnergy] = useState('')
   const [timeToNextBonus, setTimeToNextBonus] = useState('')
@@ -399,7 +401,7 @@ export default function GameSection({
       <AdModal
         isOpen={showAdModal}
         onClose={() => setShowAdModal(false)}
-        onReward={() => {}}
+        onReward={onAdReward}
       />
     </div>
   )

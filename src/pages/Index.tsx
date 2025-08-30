@@ -132,6 +132,18 @@ export default function Index() {
     updateUserStats(updatedStats)
   }, [currentUser, updateUserStats])
 
+  const handleAdReward = useCallback(() => {
+    if (!currentUser) return
+    
+    const updatedStats = {
+      ...currentUser.gameStats,
+      coins: currentUser.gameStats.coins + 200000
+    }
+    
+    updateUserStats(updatedStats)
+    alert('Спасибо за просмотр рекламы! +200,000 монет! 🎉')
+  }, [currentUser, updateUserStats])
+
   useEffect(() => {
     document.title = 'YaTitan - Робот кликер'
   }, [])
@@ -180,6 +192,7 @@ export default function Index() {
             onAutoTapClick={() => setActiveTab('auto')}
             onUpdateStats={updateUserStats}
             onTabChange={setActiveTab}
+            onAdReward={handleAdReward}
           />
         )
       case 'profile': 
