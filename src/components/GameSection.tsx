@@ -241,7 +241,7 @@ export default function GameSection({
         <Button
           onClick={handleRobotClick}
           disabled={currentUser.gameStats.tapsLeft <= 0}
-          className={`w-48 h-48 sm:w-56 sm:h-56 rounded-full p-0 bg-gradient-to-b from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 border-4 shadow-2xl overflow-hidden transition-all duration-300 ${
+          className={`w-48 h-48 sm:w-56 sm:h-56 rounded-full p-0 bg-gradient-to-br from-cyan-400 via-purple-500 to-pink-500 hover:from-cyan-300 hover:via-purple-400 hover:to-pink-400 border-4 shadow-2xl overflow-hidden transition-all duration-500 animate-gradient-shift ${
             hasUnlimitedEnergy ? 'border-purple-400 shadow-purple-300/50 animate-energy-pulse' :
             isVIP ? 'border-yellow-400 shadow-yellow-300/50' : 'border-primary/30'
           } ${isAnimating ? 'animate-tap-bounce' : ''} ${isRobotAnimating ? 'animate-robot-active animate-tap-glow' : ''} ${
