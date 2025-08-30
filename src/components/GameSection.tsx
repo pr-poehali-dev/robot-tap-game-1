@@ -19,7 +19,6 @@ interface GameSectionProps {
   onRobotTap: (e: React.MouseEvent<HTMLButtonElement>) => void
   onClaimDailyBonus: () => void
   onAutoTapClick: () => void
-  onWithdrawClick: () => void
   onUpdateStats: (stats: GameStats) => void
   onTabChange: (tab: string) => void
 }
@@ -31,7 +30,6 @@ export default function GameSection({
   onRobotTap, 
   onClaimDailyBonus,
   onAutoTapClick,
-  onWithdrawClick,
   onUpdateStats,
   onTabChange 
 }: GameSectionProps) {
@@ -236,7 +234,6 @@ export default function GameSection({
       <StatsHeader 
         currentUser={currentUser} 
         onAutoTapClick={onAutoTapClick}
-        onWithdrawClick={onWithdrawClick}
         onTabChange={onTabChange}
       />
 

@@ -6,7 +6,7 @@ import { User, GameStats } from '@/types/user'
 import ProfileSection from '@/components/ProfileSection'
 import UpgradesSection from '@/components/UpgradesSection'
 import AutoSection from '@/components/AutoSection'
-import WithdrawSection from '@/components/WithdrawSection'
+
 import RatingSection from '@/components/RatingSection'
 import RobotsSection from '@/components/RobotsSection'
 import AchievementsSection from '@/components/AchievementsSection'
@@ -178,7 +178,6 @@ export default function Index() {
             onRobotTap={handleRobotTap}
             onClaimDailyBonus={handleClaimDailyBonus}
             onAutoTapClick={() => setActiveTab('auto')}
-            onWithdrawClick={() => setActiveTab('withdraw')}
             onUpdateStats={updateUserStats}
             onTabChange={setActiveTab}
           />
@@ -206,8 +205,7 @@ export default function Index() {
             onUpdateStats={updateUserStats}
           />
         )
-      case 'withdraw': 
-        return <WithdrawSection currentUser={currentUser} onAutoTapClick={() => setActiveTab('auto')} onTabChange={setActiveTab} />
+
       case 'rating': 
         return <RatingSection currentUser={currentUser} />
       case 'robots':
@@ -247,7 +245,6 @@ export default function Index() {
             onClaimDailyBonus={handleClaimDailyBonus}
             onUpdateStats={updateUserStats}
             onAutoTapClick={() => setActiveTab('auto')}
-            onWithdrawClick={() => setActiveTab('withdraw')}
             onTabChange={setActiveTab}
           />
         )
