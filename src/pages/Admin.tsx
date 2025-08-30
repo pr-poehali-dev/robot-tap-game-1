@@ -10,10 +10,10 @@ export default function Admin() {
     // Логирование для отладки роутинга
     console.log('Admin page loaded, current path:', window.location.pathname)
     
-    // Проверяем, авторизован ли админ
+    // Проверяем, авторизован ли админ (используем изолированные ключи)
     const checkAuth = () => {
-      const authStatus = localStorage.getItem('adminAuthenticated')
-      const loginTime = localStorage.getItem('adminLoginTime')
+      const authStatus = localStorage.getItem('titan_admin_authenticated')
+      const loginTime = localStorage.getItem('titan_admin_login_time')
       
       if (authStatus === 'true' && loginTime) {
         const timeDiff = Date.now() - parseInt(loginTime)
@@ -22,8 +22,8 @@ export default function Admin() {
           setIsAuthenticated(true)
         } else {
           // Сессия истекла
-          localStorage.removeItem('adminAuthenticated')
-          localStorage.removeItem('adminLoginTime')
+          localStorage.removeItem('titan_admin_authenticated')
+          localStorage.removeItem('titan_admin_login_time')
           setIsAuthenticated(false)
         }
       }
@@ -38,8 +38,8 @@ export default function Admin() {
   }
 
   const handleLogout = () => {
-    localStorage.removeItem('adminAuthenticated')
-    localStorage.removeItem('adminLoginTime')
+    localStorage.removeItem('titan_admin_authenticated')
+    localStorage.removeItem('titan_admin_login_time')
     setIsAuthenticated(false)
   }
 

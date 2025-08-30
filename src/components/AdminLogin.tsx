@@ -29,8 +29,9 @@ export default function AdminLogin({ onLogin }: AdminLoginProps) {
     await new Promise(resolve => setTimeout(resolve, 1000))
 
     if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-      localStorage.setItem('adminAuthenticated', 'true')
-      localStorage.setItem('adminLoginTime', Date.now().toString())
+      // Используем отдельные ключи для админки, полностью изолированные от игры
+      localStorage.setItem('titan_admin_authenticated', 'true')
+      localStorage.setItem('titan_admin_login_time', Date.now().toString())
       onLogin()
     } else {
       setError('Неверный email или пароль')
