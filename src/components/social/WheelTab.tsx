@@ -176,22 +176,22 @@ export default function WheelTab({ currentUser, onUpdateStats }: WheelTabProps) 
               onClick={spinWheel}
               disabled={!canSpin() || isSpinning}
               size="lg"
-              className="px-8 py-4 text-lg font-bold"
+              className="px-4 py-3 text-base font-bold w-full max-w-xs mx-auto"
             >
               {isSpinning ? (
                 <>
-                  <Icon name="RotateCw" size={20} className="mr-2 animate-spin" />
+                  <Icon name="RotateCw" size={18} className="mr-2 animate-spin" />
                   Крутится...
                 </>
               ) : canSpin() ? (
                 <>
-                  <Icon name="Play" size={20} className="mr-2" />
+                  <Icon name="Play" size={18} className="mr-2" />
                   Крутить колесо!
                 </>
               ) : (
                 <>
-                  <Icon name="Clock" size={20} className="mr-2" />
-                  Следующее вращение через {timeUntilNext}
+                  <Icon name="Clock" size={18} className="mr-2" />
+                  <span className="text-sm">До вращения: {timeUntilNext}</span>
                 </>
               )}
             </Button>
