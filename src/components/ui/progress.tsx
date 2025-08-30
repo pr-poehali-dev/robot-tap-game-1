@@ -21,7 +21,7 @@ const Progress = React.forwardRef<
     >
       {/* Робот на краю полосы */}
       <div 
-        className="absolute right-1 top-1/2 -translate-y-1/2 text-sm animate-bounce z-10"
+        className="absolute right-1 top-1/2 -translate-y-1/2 text-sm animate-bounce z-10 bg-white/90 rounded-full px-1 shadow-sm"
         style={{ 
           animationDuration: '2s',
           animationDelay: '0.5s'
