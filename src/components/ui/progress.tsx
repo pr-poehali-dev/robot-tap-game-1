@@ -16,19 +16,19 @@ const Progress = React.forwardRef<
     {...props}
   >
     <ProgressPrimitive.Indicator
-      className="h-full w-full flex-1 bg-primary transition-all relative"
+      className="h-full w-full flex-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 transition-all relative overflow-hidden"
       style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
     >
-      {/* Робот на краю полосы */}
+      {/* Блестящий эффект */}
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse" />
+      {/* Движущийся блик */}
       <div 
-        className="absolute right-1 top-1/2 -translate-y-1/2 text-sm animate-bounce z-10 bg-white/90 rounded-full px-1 shadow-sm"
+        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent w-8 animate-bounce"
         style={{ 
-          animationDuration: '2s',
-          animationDelay: '0.5s'
+          animationDuration: '3s',
+          animationIterationCount: 'infinite'
         }}
-      >
-        🤖
-      </div>
+      />
     </ProgressPrimitive.Indicator>
   </ProgressPrimitive.Root>
 ))
