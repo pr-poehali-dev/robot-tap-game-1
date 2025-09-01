@@ -333,6 +333,14 @@ export default function GameSection({
                 <Icon name="Fuel" size={12} />
               </Button>
             )}
+            <Button
+              onClick={onAutoTapClick}
+              size="sm"
+              variant="outline" 
+              className="h-6 w-6 p-0"
+            >
+              <Icon name="Car" size={12} />
+            </Button>
         </div>
         <Progress value={(currentUser.gameStats.tapsLeft / currentUser.gameStats.maxTaps) * 100} className="h-2 sm:h-3" />
         <div className="text-center text-xs text-muted-foreground">
