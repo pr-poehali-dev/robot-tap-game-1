@@ -72,7 +72,8 @@ export default function GameSection({
       'coffee': { emoji: '☕', image: '/img/82ee2bff-d0ba-488c-b30b-edf4b77af986.jpg', tapPower: 50, name: 'Кофейный робот', lifespan: 160 },
       'radionoumi': { emoji: '📻', image: '/img/f918766f-2718-497f-9cfb-29e12bc98904.jpg', tapPower: 85, name: 'Radio Noumi', lifespan: 190 },
       'autumn': { emoji: '🍂', image: '/img/1274db0f-36b9-4bb9-b0ce-0f4a14760b3b.jpg', tapPower: 100, name: 'Осенний робот', lifespan: 200 },
-      'volcanic': { emoji: '🌋', image: '/img/ed865552-df19-4979-9421-f7ccc1c4d99d.jpg', tapPower: 150, name: 'Вулканический робот', lifespan: 250 }
+      'volcanic': { emoji: '🌋', image: '/img/ed865552-df19-4979-9421-f7ccc1c4d99d.jpg', tapPower: 150, name: 'Вулканический робот', lifespan: 250 },
+      'emperor': { emoji: '👑', image: '/img/a04eb0c3-6ac8-46f6-913a-b04ddf509b96.jpg', tapPower: 300, name: 'Робот Император', lifespan: 500 }
     }
     
     const robot = robots[robotId as keyof typeof robots]
