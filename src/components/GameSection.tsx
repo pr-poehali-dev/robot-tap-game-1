@@ -66,8 +66,13 @@ export default function GameSection({
       'scientist': { emoji: '👨‍🔬', image: '/img/2ec52712-5033-4e4d-91cd-4251a6f218c1.jpg', tapPower: 5, name: 'Учёный', lifespan: 60 },
       'commander': { emoji: '👨‍✈️', image: '/img/646c617e-8b01-47fc-a700-b85b270caaee.jpg', tapPower: 10, name: 'Командир', lifespan: 90 },
       'cyborg': { emoji: '🦾', image: '/img/89a0d696-e417-48e9-82be-fc15e0417ff4.jpg', tapPower: 20, name: 'Киборг', lifespan: 100 },
+      'student': { emoji: '🎓', image: '/img/ac2ca91c-0b9f-44f7-b5b4-a2d871140891.jpg', tapPower: 35, name: 'Работа школьника', lifespan: 120 },
+      'quantum': { emoji: '⚡', image: '/img/8e056dbc-5c2c-42e4-ae1e-4b9f2306236f.jpg', tapPower: 75, name: 'Квантовый титан', lifespan: 180 },
+      'gingerbread': { emoji: '🍪', image: '/img/c8c90612-581c-47ce-b99a-4c397fa0f01b.jpg', tapPower: 40, name: 'Пряничный Робот', lifespan: 140 },
+      'coffee': { emoji: '☕', image: '/img/82ee2bff-d0ba-488c-b30b-edf4b77af986.jpg', tapPower: 50, name: 'Кофейный робот', lifespan: 160 },
       'radionoumi': { emoji: '📻', image: '/img/f918766f-2718-497f-9cfb-29e12bc98904.jpg', tapPower: 85, name: 'Radio Noumi', lifespan: 190 },
-      'autumn': { emoji: '🍂', image: '/img/1274db0f-36b9-4bb9-b0ce-0f4a14760b3b.jpg', tapPower: 100, name: 'Осенний робот', lifespan: 200 }
+      'autumn': { emoji: '🍂', image: '/img/1274db0f-36b9-4bb9-b0ce-0f4a14760b3b.jpg', tapPower: 100, name: 'Осенний робот', lifespan: 200 },
+      'volcanic': { emoji: '🌋', image: '/img/ed865552-df19-4979-9421-f7ccc1c4d99d.jpg', tapPower: 150, name: 'Вулканический робот', lifespan: 250 }
     }
     
     const robot = robots[robotId as keyof typeof robots]
