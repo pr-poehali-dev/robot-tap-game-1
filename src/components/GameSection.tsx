@@ -255,6 +255,9 @@ export default function GameSection({
           currentTarget: { getBoundingClientRect: () => ({ left: 0, top: 0, width: 200, height: 200 }) }
         } as React.MouseEvent<HTMLButtonElement>
         onRobotTap(fakeEvent)
+      } else {
+        // Если энергия закончилась, останавливаем автотапы
+        stopHolding()
       }
     }, 100)
   }
