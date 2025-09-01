@@ -97,16 +97,16 @@ export default function StatsHeader({ currentUser, onAutoTapClick, onTabChange }
       </div>
 
       <div className="group relative">
-        <Card className="bg-gradient-to-br from-amber-400/20 via-yellow-500/10 to-orange-500/20 border-amber-500/30 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer" onClick={() => onTabChange('achievements')}>
+        <Card className="bg-gradient-to-br from-green-400/20 via-emerald-500/10 to-teal-500/20 border-green-500/30 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer" onClick={() => onTabChange('robots')}>
           <CardContent className="p-1 xs:p-2 sm:p-3 text-center relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-amber-400/5 to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-green-400/5 to-transparent"></div>
             <div className="relative z-10 flex flex-col items-center justify-center min-h-[40px] sm:min-h-[50px]">
-              <Icon name="Trophy" size={16} className="text-amber-600 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+              <Icon name="Bot" size={16} className="text-green-600 sm:w-5 sm:h-5 md:w-6 md:h-6" />
             </div>
           </CardContent>
         </Card>
         <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-2 py-1 bg-black text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
-          Трофеи награды
+          Роботы
         </div>
       </div>
     </div>

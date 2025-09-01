@@ -248,8 +248,7 @@ export default function Index() {
             onUpdateCoins={handleUpdateCoinsFromMinigame}
           />
         )
-      case 'social':
-        return <SocialSection currentUser={currentUser} onUpdateStats={updateUserStats} />
+
       default: 
         return (
           <GameSection 
