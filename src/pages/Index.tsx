@@ -28,6 +28,7 @@ export default function Index() {
   const [showLanding, setShowLanding] = useState(true)
   const [registrationCount, setRegistrationCount] = useState(0)
   const [onlineCount, setOnlineCount] = useState(0)
+  const [isAdModalOpen, setIsAdModalOpen] = useState(false)
 
   const {
     currentUser,
@@ -193,6 +194,7 @@ export default function Index() {
             onUpdateStats={updateUserStats}
             onTabChange={setActiveTab}
             onAdReward={handleAdReward}
+            onAdModalStateChange={setIsAdModalOpen}
           />
         )
       case 'profile': 
@@ -295,7 +297,11 @@ export default function Index() {
       <Navigation 
         activeTab={activeTab}
         currentUser={currentUser}
-        onTabChange={setActiveTab}
+        onTabChange={(tab) => {
+          if (!isAdModalOpen) {
+            setActiveTab(tab)
+          }
+        }}
       />
     </div>
   )

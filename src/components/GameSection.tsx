@@ -22,6 +22,7 @@ interface GameSectionProps {
   onUpdateStats: (stats: GameStats) => void
   onTabChange: (tab: string) => void
   onAdReward: () => void
+  onAdModalStateChange?: (isOpen: boolean) => void
 }
 
 export default function GameSection({ 
@@ -33,7 +34,8 @@ export default function GameSection({
   onAutoTapClick,
   onUpdateStats,
   onTabChange,
-  onAdReward 
+  onAdReward,
+  onAdModalStateChange
 }: GameSectionProps) {
   const [timeToFullEnergy, setTimeToFullEnergy] = useState('')
   const [timeToNextBonus, setTimeToNextBonus] = useState('')
@@ -208,6 +210,7 @@ export default function GameSection({
       // Показываем рекламу каждые 50 кликов
       if (newClickCount % 50 === 0) {
         setShowAdModal(true)
+        onAdModalStateChange?.(true)
       }
     }
     onRobotTap(e)
@@ -400,7 +403,10 @@ export default function GameSection({
       {/* Рекламное модальное окно */}
       <AdModal
         isOpen={showAdModal}
-        onClose={() => setShowAdModal(false)}
+        onClose={() => {
+          setShowAdModal(false)
+          onAdModalStateChange?.(false)
+        }}
         onReward={onAdReward}
       />
     </div>

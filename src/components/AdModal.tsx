@@ -47,26 +47,46 @@ export default function AdModal({ isOpen, onClose, onReward }: AdModalProps) {
       setCanClose(false)
       setCurrentAd(Math.floor(Math.random() * adTemplates.length))
       
+      // Блокируем прокрутку страницы
+      document.body.style.overflow = 'hidden'
+      
       const timer = setInterval(() => {
         setCountdown(prev => {
           if (prev <= 1) {
             setCanClose(true)
             clearInterval(timer)
+            // Разблокируем прокрутку после завершения
+            document.body.style.overflow = 'unset'
             return 0
           }
           return prev - 1
         })
       }, 1000)
 
-      return () => clearInterval(timer)
+      return () => {
+        clearInterval(timer)
+        // Разблокируем прокрутку при закрытии
+        document.body.style.overflow = 'unset'
+      }
+    } else {
+      // Разблокируем прокрутку если модалка закрыта
+      document.body.style.overflow = 'unset'
     }
   }, [isOpen])
 
   const handleClose = () => {
     if (canClose) {
+      // Разблокируем прокрутку перед закрытием
+      document.body.style.overflow = 'unset'
       onReward()
       onClose()
     }
+  }
+
+  // Блокируем все клики вне модалки во время просмотра
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    // Не закрываем модалку при клике на фон
   }
 
   const ad = adTemplates[currentAd]
@@ -74,7 +94,10 @@ export default function AdModal({ isOpen, onClose, onReward }: AdModalProps) {
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2 sm:p-4 md:p-6">
+    <div 
+      className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-2 sm:p-4 md:p-6"
+      onClick={handleBackdropClick}
+    >
       <Card className="w-full max-w-xs xs:max-w-sm sm:max-w-md lg:max-w-lg xl:max-w-xl mx-2 sm:mx-4 animate-in fade-in-0 zoom-in-95 duration-300 max-h-[90vh] overflow-y-auto">
         <CardHeader className="pb-2 sm:pb-4 px-3 sm:px-6">
           <CardTitle className="text-center text-sm sm:text-base lg:text-lg">
