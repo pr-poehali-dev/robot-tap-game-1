@@ -202,15 +202,17 @@ export default function GameSection({
       setTimeout(() => setIsRobotAnimating(false), 400)
       setTimeout(() => setIsPulsing(false), 600)
       
-      // Подсчёт кликов для показа рекламы
-      const newClickCount = clickCount + 1
-      setClickCount(newClickCount)
-      localStorage.setItem(`adClickCount_${currentUser.id}`, newClickCount.toString())
-      
-      // Показываем рекламу каждые 50 кликов
-      if (newClickCount % 50 === 0) {
-        setShowAdModal(true)
-        onAdModalStateChange?.(true)
+      // Подсчёт кликов для показа рекламы (только для не-VIP пользователей)
+      if (!isVIP) {
+        const newClickCount = clickCount + 1
+        setClickCount(newClickCount)
+        localStorage.setItem(`adClickCount_${currentUser.id}`, newClickCount.toString())
+        
+        // Показываем рекламу каждые 50 кликов
+        if (newClickCount % 50 === 0) {
+          setShowAdModal(true)
+          onAdModalStateChange?.(true)
+        }
       }
     }
     onRobotTap(e)
@@ -308,9 +310,11 @@ export default function GameSection({
       <div className="w-full space-y-2">
         <div className="flex justify-between items-center text-xs sm:text-sm">
           <span>Энергия: {currentUser.gameStats.tapsLeft}/{currentUser.gameStats.maxTaps}</span>
-          <span className="text-xs text-muted-foreground">
-            До рекламы: {50 - (clickCount % 50)} кликов
-          </span>
+          {!isVIP && (
+            <span className="text-xs text-muted-foreground">
+              До рекламы: {50 - (clickCount % 50)} кликов
+            </span>
+          )}
         </div>
         <div className="flex items-center gap-2">
           <span className="text-primary">⚡</span>
