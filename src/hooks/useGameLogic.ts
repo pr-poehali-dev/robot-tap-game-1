@@ -35,7 +35,13 @@ export const useGameLogic = (
         'commander': { tapPower: 10, lifespan: 90 },
         'cyborg': { tapPower: 20, lifespan: 100 },
         'student': { tapPower: 35, lifespan: 120 },
-        'quantum': { tapPower: 75, lifespan: 180 }
+        'quantum': { tapPower: 75, lifespan: 180 },
+        'gingerbread': { tapPower: 40, lifespan: 140 },
+        'coffee': { tapPower: 50, lifespan: 160 },
+        'radionoumi': { tapPower: 85, lifespan: 190 },
+        'autumn': { tapPower: 100, lifespan: 200 },
+        'volcanic': { tapPower: 150, lifespan: 250 },
+        'emperor': { tapPower: 300, lifespan: 500 }
       }
       
       const robot = robots[robotId as keyof typeof robots]

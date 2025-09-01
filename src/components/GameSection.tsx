@@ -252,7 +252,9 @@ export default function GameSection({
         
         // Симулируем клик
         const fakeEvent = { 
-          currentTarget: { getBoundingClientRect: () => ({ left: 0, top: 0, width: 200, height: 200 }) }
+          currentTarget: { getBoundingClientRect: () => ({ left: 0, top: 0, width: 200, height: 200 }) },
+          clientX: 100,
+          clientY: 100
         } as React.MouseEvent<HTMLButtonElement>
         onRobotTap(fakeEvent)
       } else {
