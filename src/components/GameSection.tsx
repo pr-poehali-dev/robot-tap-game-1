@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
@@ -48,8 +48,7 @@ export default function GameSection({
     if (!currentUser) return 0
     return parseInt(localStorage.getItem(`adClickCount_${currentUser.id}`) || '0')
   })
-  const [isHolding, setIsHolding] = useState(false)
-  const holdIntervalRef = useRef<NodeJS.Timeout | null>(null)
+
 
   // Получаем текущего робота пользователя
   const getUserRobot = () => {
@@ -226,61 +225,6 @@ export default function GameSection({
     onRobotTap(e)
   }
 
-  const startHolding = () => {
-    if (currentUser.gameStats.tapsLeft <= 0 || isHolding) return
-    
-    setIsHolding(true)
-    
-    // Начинаем автоматические тапы каждые 100мс
-    holdIntervalRef.current = setInterval(() => {
-      if (currentUser.gameStats.tapsLeft > 0) {
-        setIsRobotAnimating(true)
-        setTimeout(() => setIsRobotAnimating(false), 200)
-        
-        // Подсчёт кликов для показа рекламы (только для не-VIP пользователей)
-        if (!isVIP) {
-          const newClickCount = clickCount + 1
-          setClickCount(newClickCount)
-          localStorage.setItem(`adClickCount_${currentUser.id}`, newClickCount.toString())
-          
-          // Показываем рекламу каждые 50 кликов
-          if (newClickCount % 50 === 0) {
-            setShowAdModal(true)
-            onAdModalStateChange?.(true)
-          }
-        }
-        
-        // Симулируем клик
-        const fakeEvent = { 
-          currentTarget: { getBoundingClientRect: () => ({ left: 0, top: 0, width: 200, height: 200 }) },
-          clientX: 100,
-          clientY: 100
-        } as React.MouseEvent<HTMLButtonElement>
-        onRobotTap(fakeEvent)
-      } else {
-        // Если энергия закончилась, останавливаем автотапы
-        stopHolding()
-      }
-    }, 100)
-  }
-  
-  const stopHolding = () => {
-    setIsHolding(false)
-    if (holdIntervalRef.current) {
-      clearInterval(holdIntervalRef.current)
-      holdIntervalRef.current = null
-    }
-  }
-  
-  // Очищаем интервал при размонтировании компонента
-  useEffect(() => {
-    return () => {
-      if (holdIntervalRef.current) {
-        clearInterval(holdIntervalRef.current)
-      }
-    }
-  }, [])
-
   const handleRefuelEnergy = () => {
     if (!currentUser || currentUser.gameStats.coins < 5000) {
       return
@@ -310,11 +254,6 @@ export default function GameSection({
       <div className="relative">
         <Button
           onClick={handleRobotClick}
-          onMouseDown={startHolding}
-          onMouseUp={stopHolding}
-          onMouseLeave={stopHolding}
-          onTouchStart={startHolding}
-          onTouchEnd={stopHolding}
           disabled={currentUser.gameStats.tapsLeft <= 0}
           className={`w-48 h-48 sm:w-56 sm:h-56 rounded-full p-0 bg-gradient-to-br from-cyan-400 via-purple-500 to-pink-500 hover:from-cyan-300 hover:via-purple-400 hover:to-pink-400 border-4 shadow-2xl overflow-hidden transition-all duration-500 animate-gradient-shift ${
             hasUnlimitedEnergy ? 'border-purple-400 shadow-purple-300/50 animate-energy-pulse' :
