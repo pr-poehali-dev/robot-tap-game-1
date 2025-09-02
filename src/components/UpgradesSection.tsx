@@ -40,7 +40,7 @@ export default function UpgradesSection({ currentUser, onUpgradeRobot, onUpdateS
   }
 
   const handleBuyVIP = () => {
-    if (!currentUser || currentUser.gameStats.coins < 50000) return
+    if (!currentUser || currentUser.gameStats.coins < 790000000) return
     
     // Записываем трату в историю
     const spentHistory = JSON.parse(localStorage.getItem(`spentHistory_${currentUser.id}`) || '[]')
@@ -48,7 +48,7 @@ export default function UpgradesSection({ currentUser, onUpgradeRobot, onUpdateS
       id: Date.now(),
       type: 'upgrade',
       itemName: 'VIP статус',
-      amount: 50000,
+      amount: 790000000,
       timestamp: Date.now(),
       date: new Date().toISOString()
     })
@@ -56,7 +56,7 @@ export default function UpgradesSection({ currentUser, onUpgradeRobot, onUpdateS
     
     const updatedStats = {
       ...currentUser.gameStats,
-      coins: currentUser.gameStats.coins - 50000
+      coins: currentUser.gameStats.coins - 790000000
     }
     
     // Сохраняем VIP статус
@@ -180,10 +180,10 @@ export default function UpgradesSection({ currentUser, onUpgradeRobot, onUpdateS
           </div>
           <Button 
             onClick={handleBuyVIP}
-            disabled={currentUser.gameStats.coins < 50000 || isVIP}
+            disabled={currentUser.gameStats.coins < 790000000 || isVIP}
             className={`w-full ${isVIP ? 'bg-yellow-500 hover:bg-yellow-600' : ''}`}
           >
-            {isVIP ? '✅ VIP приобретен' : 'Купить VIP за 50,000 монет'}
+            {isVIP ? '✅ VIP приобретен' : 'Купить VIP за 790,000,000 монет'}
           </Button>
         </CardContent>
       </Card>
