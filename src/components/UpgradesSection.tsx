@@ -65,7 +65,7 @@ export default function UpgradesSection({ currentUser, onUpgradeRobot, onUpdateS
   }
 
   const handleBuyUnlimitedEnergy = () => {
-    if (!currentUser || currentUser.gameStats.coins < 950000000) return
+    if (!currentUser || currentUser.gameStats.coins < 12900000000) return
     
     // Записываем трату в историю
     const spentHistory = JSON.parse(localStorage.getItem(`spentHistory_${currentUser.id}`) || '[]')
@@ -73,7 +73,7 @@ export default function UpgradesSection({ currentUser, onUpgradeRobot, onUpdateS
       id: Date.now(),
       type: 'upgrade',
       itemName: 'Безлимитная энергия',
-      amount: 950000000,
+      amount: 12900000000,
       timestamp: Date.now(),
       date: new Date().toISOString()
     })
@@ -81,7 +81,7 @@ export default function UpgradesSection({ currentUser, onUpgradeRobot, onUpdateS
     
     const updatedStats = {
       ...currentUser.gameStats,
-      coins: currentUser.gameStats.coins - 950000000,
+      coins: currentUser.gameStats.coins - 12900000000,
       maxTaps: 1000,
       tapsLeft: 1000
     }
@@ -154,10 +154,10 @@ export default function UpgradesSection({ currentUser, onUpgradeRobot, onUpdateS
           </div>
           <Button 
             onClick={handleBuyUnlimitedEnergy}
-            disabled={currentUser.gameStats.coins < 950000000 || hasUnlimitedEnergy}
+            disabled={currentUser.gameStats.coins < 12900000000 || hasUnlimitedEnergy}
             className={`w-full ${hasUnlimitedEnergy ? 'bg-purple-500 hover:bg-purple-600' : 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700'}`}
           >
-            {hasUnlimitedEnergy ? '✅ Энергия куплена' : 'Купить за 950,000,000 монет'}
+            {hasUnlimitedEnergy ? '✅ Энергия куплена' : 'Купить за 12,900,000,000 монет'}
           </Button>
         </CardContent>
       </Card>
