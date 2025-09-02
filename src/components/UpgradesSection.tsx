@@ -109,10 +109,10 @@ export default function UpgradesSection({ currentUser, onUpgradeRobot, onUpdateS
           </div>
           <Button 
             onClick={onUpgradeRobot}
-            disabled={currentUser.gameStats.coins < currentUser.gameStats.level * 1000}
+            disabled={currentUser.gameStats.coins < currentUser.gameStats.level * 3000000}
             className="w-full"
           >
-            Улучшить за {(currentUser.gameStats.level * 1000).toLocaleString()} монет
+            Улучшить за {(currentUser.gameStats.level * 3000000).toLocaleString()} монет
           </Button>
         </CardContent>
       </Card>
