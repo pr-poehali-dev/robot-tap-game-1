@@ -38,7 +38,7 @@ const availableRobots: Robot[] = [
     name: 'Рабочий робот',
     emoji: '👷‍♂️',
     image: '/img/6298380d-94b8-449b-8539-a248456cf888.jpg',
-    price: 50000,
+    price: 120000,
     tapPower: 2,
     lifespan: 30,
     description: 'Добывает в 2 раза больше монет'
