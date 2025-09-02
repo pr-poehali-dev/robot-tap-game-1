@@ -15,7 +15,7 @@ export default function UpgradesSection({ currentUser, onUpgradeRobot, onUpdateS
   }
 
   const handleUpgradeEnergy = () => {
-    if (!currentUser || currentUser.gameStats.coins < 2000) return
+    if (!currentUser || currentUser.gameStats.coins < 100000) return
     
     // Записываем трату в историю
     const spentHistory = JSON.parse(localStorage.getItem(`spentHistory_${currentUser.id}`) || '[]')
@@ -23,7 +23,7 @@ export default function UpgradesSection({ currentUser, onUpgradeRobot, onUpdateS
       id: Date.now(),
       type: 'upgrade',
       itemName: 'Улучшение энергии (+20 тапов)',
-      amount: 2000,
+      amount: 100000,
       timestamp: Date.now(),
       date: new Date().toISOString()
     })
@@ -31,7 +31,7 @@ export default function UpgradesSection({ currentUser, onUpgradeRobot, onUpdateS
     
     const updatedStats = {
       ...currentUser.gameStats,
-      coins: currentUser.gameStats.coins - 2000,
+      coins: currentUser.gameStats.coins - 100000,
       maxTaps: currentUser.gameStats.maxTaps + 20,
       tapsLeft: currentUser.gameStats.tapsLeft + 20
     }
@@ -128,10 +128,10 @@ export default function UpgradesSection({ currentUser, onUpgradeRobot, onUpdateS
           </div>
           <Button 
             onClick={handleUpgradeEnergy}
-            disabled={currentUser.gameStats.coins < 2000}
+            disabled={currentUser.gameStats.coins < 100000}
             className="w-full"
           >
-            Улучшить за 2,000 монет
+            Улучшить за 100,000 монет
           </Button>
         </CardContent>
       </Card>
